@@ -1,0 +1,34 @@
+<!doctype html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Ventes</title>
+</head>
+<body>
+
+<h1>Ventes</h1>
+
+<table border="1">
+    <thead>
+    <tr>
+        <th>ID</th>
+        <th>Date</th>
+        <th>Statut</th>
+        <th>Utilisateur</th>
+        <th>Nombre d'articles</th>
+    </tr>
+    </thead>
+
+    <tbody>
+    <tr th:each="sale : ${sales}">
+        <td th:text="${sale.id}">1</td>
+        <td th:text="${sale.saleDate}">date</td>
+        <td th:text="${sale.status}">VALIDEE</td>
+        <td th:text="${sale.user.role}">GERANT</td>
+        <td th:text="${sale.items.size()}">0</td>
+    </tr>
+    </tbody>
+</table>
+
+</body>
+</html>
