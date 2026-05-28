@@ -10,23 +10,11 @@
 
 <ul>
     <li th:each="product : ${products}">
-
-        <strong th:text="${product.name}">
-            Nom produit
-        </strong>
-
+        <strong th:text="${product.name}">Nom produit</strong>
         -
-
-        <span th:text="${product.category.name}">
-      Catégorie
-    </span>
-
+        <span th:text="${product.category.name}">Catégorie</span>
         -
-
-        <span th:text="${product.active}">
-      true
-    </span>
-
+        <span th:text="${priceService.getActivePrice(product.id)}">0</span> FCFA
     </li>
 </ul>
 
