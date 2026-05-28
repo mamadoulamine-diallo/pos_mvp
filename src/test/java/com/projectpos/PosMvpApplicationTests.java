@@ -1,4 +1,4 @@
-package com.pos_mvp;
+package com.projectpos;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;

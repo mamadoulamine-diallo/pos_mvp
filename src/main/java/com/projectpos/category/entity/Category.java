@@ -1,4 +1,4 @@
-package com.pos_mvp.category.entity;
+package com.projectpos.category.entity;
 
 import jakarta.persistence.*;
 import lombok.Getter;

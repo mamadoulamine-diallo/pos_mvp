@@ -1,4 +1,4 @@
-package com.pos_mvp;
+package com.projectpos;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;

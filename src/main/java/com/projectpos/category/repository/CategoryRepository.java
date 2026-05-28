@@ -1,6 +1,6 @@
-package com.pos_mvp.category.repository;
+package com.projectpos.category.repository;
 
-import com.pos_mvp.category.entity.Category;
+import com.projectpos.category.entity.Category;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface CategoryRepository extends JpaRepository<Category, Integer> {

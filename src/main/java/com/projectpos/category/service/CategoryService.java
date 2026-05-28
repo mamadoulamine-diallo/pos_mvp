@@ -1,7 +1,7 @@
-package com.pos_mvp.category.service;
+package com.projectpos.category.service;
 
-import com.pos_mvp.category.entity.Category;
-import com.pos_mvp.category.repository.CategoryRepository;
+import com.projectpos.category.entity.Category;
+import com.projectpos.category.repository.CategoryRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.List;

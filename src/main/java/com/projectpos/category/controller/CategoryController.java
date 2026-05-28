@@ -1,6 +1,6 @@
-package com.pos_mvp.category.controller;
+package com.projectpos.category.controller;
 
-import com.pos_mvp.category.service.CategoryService;
+import com.projectpos.category.service.CategoryService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
