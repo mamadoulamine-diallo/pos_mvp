@@ -1,0 +1,18 @@
+<!doctype html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Catégories</title>
+</head>
+<body>
+<h1>Catégories</h1>
+
+<ul>
+    <li th:each="category : ${categories}">
+        <span th:text="${category.name}">Nom catégorie</span>
+        -
+        <span th:text="${category.active}">true</span>
+    </li>
+</ul>
+</body>
+</html>
