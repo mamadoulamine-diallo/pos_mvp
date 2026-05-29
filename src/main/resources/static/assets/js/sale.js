@@ -1,5 +1,4 @@
 import { createCart } from "./components/cart.js";
-import { products } from "./data/products-mock.js";
 
 document.addEventListener("DOMContentLoaded", () => {
   const saleProductCards = document.querySelectorAll(".SaleProducts .ProductCard");
@@ -167,7 +166,7 @@ document.addEventListener("DOMContentLoaded", () => {
     );
   }
 
-  function renderReceipt() {
+  function renderReceipt(saleId) {
     if (!receiptItems) return;
 
     receiptItems.innerHTML = "";
@@ -197,7 +196,7 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     if (receiptNumber) {
-      receiptNumber.textContent = generateReceiptNumber();
+      receiptNumber.textContent = `Reçu #${saleId}`;
     }
 
     if (receiptDate) {
@@ -207,6 +206,29 @@ document.addEventListener("DOMContentLoaded", () => {
 
   function closeReceipt() {
     receiptOverlay?.classList.remove("open");
+  }
+
+  async function persistSale() {
+    const payload = {
+      items: cart.getItems().map((item) => ({
+        productId: Number(item.id),
+        quantity: item.quantity,
+      })),
+    };
+
+    const response = await fetch("/sales", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(payload),
+    });
+
+    if (!response.ok) {
+      throw new Error("Erreur lors de l'enregistrement de la vente");
+    }
+
+    return response.json();
   }
 
   saleProductCards.forEach((card) => {
@@ -262,15 +284,30 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   });
 
-  checkoutConfirm?.addEventListener("click", () => {
-    renderReceipt();
+  checkoutConfirm?.addEventListener("click", async () => {
+    try {
+      checkoutConfirm.disabled = true;
+      checkoutConfirm.textContent = "Enregistrement...";
 
-    closeCheckout();
+      const savedSale = await persistSale();
 
-    receiptOverlay?.classList.add("open");
+      renderReceipt(savedSale.saleId);
 
-    cart.clear();
-    cartPanel?.classList.remove("open");
+      closeCheckout();
+
+      receiptOverlay?.classList.add("open");
+
+      cart.clear();
+      cartPanel?.classList.remove("open");
+
+      showToast("Vente enregistrée ✅");
+    } catch (error) {
+      console.error(error);
+      showToast("Erreur lors de la vente");
+    } finally {
+      checkoutConfirm.disabled = false;
+      checkoutConfirm.textContent = "Confirmer la vente";
+    }
   });
 
   checkoutCancel?.addEventListener("click", closeCheckout);
