@@ -1,0 +1,390 @@
+@use "../abstracts/variables" as *;
+@use "../abstracts/mixins" as *;
+
+/* =========================
+   SALE PAGE
+========================= */
+
+.SalePage {
+  min-height: 100vh;
+  padding: 68px 14px 90px;
+  background: $bg-light;
+}
+
+/* =========================
+   PRODUCTS AREA
+========================= */
+
+.SaleProducts {
+  &-actions {
+    margin-bottom: 18px;
+  }
+
+  &-search-input {
+    width: 100%;
+    height: 38px;
+    padding: 0 14px 0 38px;
+
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    background: $bg-white;
+
+    font-size: 14px;
+    outline: none;
+  }
+
+  &-title {
+    margin-bottom: 18px;
+
+    text-align: center;
+    font-size: 30px;
+    font-weight: 600;
+  }
+
+  &-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(145px, 1fr));
+    gap: 18px 14px;
+  }
+}
+
+/* =========================
+   CART PANEL
+========================= */
+
+.CartPanel {
+  position: fixed;
+  left: 12px;
+  right: 12px;
+  bottom: 64px;
+  z-index: 90;
+
+  max-height: 55vh;
+
+  transform: translateY(calc(100% + 80px));
+  transition: transform 260ms ease;
+
+  display: flex;
+  flex-direction: column;
+
+  padding: 14px;
+
+  background: $bg-white;
+  border-radius: 16px 16px 0 0;
+  box-shadow: 0 -4px 18px rgba(0, 0, 0, 0.18);
+
+  &.open {
+    transform: translateY(0);
+  }
+
+  &-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    margin-bottom: 12px;
+  }
+
+  &-title {
+    font-size: 18px;
+    font-weight: 800;
+  }
+
+  &-count {
+    font-size: 13px;
+    color: $text-secondary;
+  }
+
+  &-items {
+    overflow-y: auto;
+
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+
+    padding-right: 4px;
+  }
+
+  &-footer {
+    margin-top: 14px;
+    padding-top: 12px;
+
+    border-top: 1px solid #eee;
+  }
+
+  &-total {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    margin-bottom: 12px;
+
+    span {
+      color: $text-secondary;
+      font-weight: 700;
+    }
+
+    strong {
+      font-size: 22px;
+      font-weight: 900;
+    }
+  }
+
+  &-validate,
+  &-cancel {
+    width: 100%;
+    height: 46px;
+
+    border: none;
+    border-radius: 8px;
+
+    font-weight: 800;
+  }
+
+  &-validate {
+    margin-bottom: 8px;
+
+    background: $primary;
+    color: $bg-white;
+  }
+
+  &-cancel {
+    background: $bg-light;
+    color: $gray-secondary;
+  }
+}
+
+/* =========================
+   CART ITEM
+========================= */
+
+.CartItem {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 8px 12px;
+
+  padding: 10px 12px;
+
+  background: $bg-light;
+  border-radius: 10px;
+
+  &-info {
+    min-width: 0;
+  }
+
+  &-name {
+    font-size: 14px;
+    font-weight: 800;
+    line-height: 1.2;
+  }
+
+  &-unit {
+    display: block;
+    margin-top: 2px;
+
+    font-size: 12px;
+    color: $text-secondary;
+  }
+
+  &-controls {
+    grid-column: 1 / 2;
+
+    display: flex;
+    align-items: center;
+    gap: 8px;
+
+    button {
+      width: 40px;
+      height: 40px;
+
+      border: none;
+      border-radius: 8px;
+
+      background: $background;
+
+      font-size: 20px;
+      font-weight: 900;
+    }
+
+    span {
+      min-width: 28px;
+
+      text-align: center;
+      font-size: 16px;
+      font-weight: 900;
+    }
+  }
+
+  &-total {
+    grid-column: 2 / 3;
+    grid-row: 2 / 3;
+
+    align-self: center;
+
+    font-size: 16px;
+    font-weight: 900;
+    white-space: nowrap;
+  }
+
+  &-remove {
+    grid-column: 2 / 3;
+    grid-row: 1 / 2;
+
+    justify-self: end;
+
+    width: 40px;
+    height: 40px;
+
+    border: none;
+    border-radius: 8px;
+
+    background: rgba(220, 53, 69, 0.1);
+    color: #dc3545;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    font-size: 15px;
+  }
+}
+
+.CartFloatingButton {
+  position: fixed;
+  top: 64px;
+  right: 14px;
+  z-index: 80;
+
+  width: 52px;
+  height: 52px;
+
+  border: none;
+  border-radius: 50%;
+
+  background: $primary;
+  color: $bg-white;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  font-size: 22px;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.25);
+
+  &-count {
+    position: absolute;
+    top: -5px;
+    right: -5px;
+
+    min-width: 22px;
+    height: 22px;
+    padding: 0 6px;
+
+    border-radius: 999px;
+    background: #c0392b;
+    color: white;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    font-size: 12px;
+    font-weight: 800;
+  }
+}
+
+/* =========================
+   TABLETTE = MAIN TARGET
+========================= */
+
+@include tablette {
+  .CartFloatingButton {
+    display: none;
+  }
+  .SalePage {
+    display: grid;
+    grid-template-columns: 1fr 320px;
+    gap: 20px;
+
+    padding: 76px 20px 24px;
+  }
+
+  .SaleProducts {
+    min-width: 0;
+
+    &-title {
+      text-align: left;
+      font-size: 32px;
+    }
+
+    &-search-input {
+      max-width: 420px;
+      height: 42px;
+      font-size: 15px;
+    }
+
+    &-grid {
+      grid-template-columns: repeat(auto-fill, 160px);
+      justify-content: start;
+      gap: 20px;
+    }
+  }
+
+  .CartPanel {
+    position: sticky;
+    top: 55px;
+    left: auto;
+    right: auto;
+    bottom: auto;
+
+    height: calc(96vh - 112px);
+    max-height: none;
+
+    transform: none;
+
+    border-radius: 16px;
+  }
+}
+
+/* =========================
+   DESKTOP
+========================= */
+
+@include desktop {
+  .CartFloatingButton {
+    display: none;
+  }
+  .SalePage {
+    grid-template-columns: 1fr 360px;
+    gap: 28px;
+
+    padding: 32px 40px;
+  }
+
+  .SaleProducts {
+    &-actions {
+      margin-bottom: 22px;
+    }
+
+    &-search-input {
+      width: 420px;
+      height: 44px;
+      font-size: 16px;
+    }
+
+    &-title {
+      font-size: 34px;
+    }
+
+    &-grid {
+      grid-template-columns: repeat(3, 170px);
+      gap: 28px 36px;
+    }
+  }
+
+  .CartPanel {
+    top: 88px;
+
+    height: calc(100vh - 120px);
+  }
+}

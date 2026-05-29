@@ -1,0 +1,427 @@
+@use "../abstracts/variables" as *;
+@use "../abstracts/mixins" as *;
+
+.Dashboard {
+  min-height: 100vh;
+  padding: 68px 14px 90px;
+
+  background: $bg-light;
+
+  &-hero {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+
+    margin-bottom: 22px;
+  }
+
+  &-eyebrow {
+    color: $text-secondary;
+
+    font-size: 13px;
+    font-weight: 800;
+  }
+
+  &-title {
+    color: $gray-secondary;
+
+    font-size: 30px;
+    font-weight: 900;
+  }
+
+  &-subtitle {
+    color: $text-secondary;
+    font-size: 14px;
+  }
+
+  &-cta {
+    height: 48px;
+    padding: 0 18px;
+
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+
+    border-radius: 10px;
+
+    background: $primary;
+    color: $bg-white;
+
+    font-weight: 900;
+    text-decoration: none;
+  }
+
+  &-grid {
+    display: grid;
+    gap: 16px;
+  }
+}
+
+.DashboardStats {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 12px;
+
+  margin-bottom: 18px;
+}
+
+.DashboardStat {
+  padding: 16px;
+
+  background: $bg-white;
+  border-radius: 14px;
+
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.06);
+
+  &--primary {
+    grid-column: 1 / -1;
+
+    .DashboardStat-value {
+      color: $primary;
+
+      font-size: 30px;
+    }
+  }
+
+  &--warning {
+    .DashboardStat-value {
+      color: #d68910;
+    }
+  }
+
+  &--danger {
+    .DashboardStat-value {
+      color: #c0392b;
+    }
+  }
+
+  &-label {
+    display: block;
+
+    margin-bottom: 8px;
+
+    color: $text-secondary;
+
+    font-size: 12px;
+    font-weight: 800;
+  }
+
+  &-value {
+    display: block;
+
+    color: $gray-secondary;
+
+    font-size: 24px;
+    font-weight: 900;
+  }
+
+  &-help {
+    display: block;
+
+    margin-top: 8px;
+
+    color: $text-secondary;
+
+    font-size: 11px;
+  }
+}
+
+.DashboardCard {
+  padding: 16px;
+
+  background: $bg-white;
+  border-radius: 16px;
+
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.06);
+
+  &-header {
+    margin-bottom: 14px;
+
+    h2 {
+      color: $gray-secondary;
+
+      font-size: 18px;
+      font-weight: 900;
+    }
+
+    p {
+      margin-top: 4px;
+
+      color: $text-secondary;
+
+      font-size: 13px;
+    }
+  }
+
+  &--chart {
+    min-height: 280px;
+  }
+
+  canvas {
+    max-height: 260px;
+  }
+}
+
+.DashboardCard,
+.DashboardStat {
+  min-width: 0;
+}
+
+.DashboardCard canvas {
+  width: 100% !important;
+}
+
+.ChartTabs {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+
+  &-button {
+    height: 34px;
+    padding: 0 14px;
+
+    border: none;
+    border-radius: 999px;
+
+    background: $bg-light;
+    color: $gray-secondary;
+
+    font-size: 13px;
+    font-weight: 800;
+
+    transition: 180ms ease;
+
+    &.active {
+      background: $primary;
+      color: $bg-white;
+    }
+  }
+}
+
+.DashboardCard-header--chart {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.RecentSales,
+.TopProducts {
+  &-list {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+}
+
+.RecentSales-item,
+.TopProducts-item {
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  gap: 10px;
+  align-items: center;
+
+  padding: 12px;
+
+  background: $bg-light;
+  border-radius: 10px;
+}
+
+.RecentSales-time,
+.TopProducts-rank {
+  color: $text-secondary;
+
+  font-size: 12px;
+  font-weight: 800;
+}
+
+.RecentSales-total,
+.TopProducts-revenue {
+  color: $gray-secondary;
+
+  font-weight: 900;
+  white-space: nowrap;
+}
+
+.RecentSales-method {
+  grid-column: 2 / -1;
+
+  color: $text-secondary;
+
+  font-size: 12px;
+}
+
+.TopProducts-info {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+
+  strong {
+    font-size: 14px;
+    font-weight: 900;
+  }
+
+  small {
+    color: $text-secondary;
+
+    font-size: 12px;
+  }
+}
+
+.DashboardActions {
+  display: grid;
+  gap: 10px;
+
+  &-link {
+    height: 46px;
+    padding: 0 14px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    border: none;
+    border-radius: 10px;
+
+    background: $background;
+    color: $gray-secondary;
+
+    font-weight: 900;
+    text-decoration: none;
+  }
+}
+
+.StockAlerts-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.StockAlert {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  padding: 12px;
+
+  background: $bg-light;
+  border-radius: 10px;
+
+  &-info {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+
+    strong {
+      font-size: 14px;
+      font-weight: 900;
+    }
+
+    small {
+      color: $text-secondary;
+
+      font-size: 12px;
+    }
+  }
+
+  &-badge {
+    padding: 6px 10px;
+
+    border-radius: 999px;
+
+    background: #fff3cd;
+    color: #b26a00;
+
+    font-size: 11px;
+    font-weight: 900;
+
+    &--out {
+      background: #fdeaea;
+      color: #c0392b;
+    }
+  }
+}
+
+/* =========================
+   TABLETTE
+========================= */
+
+@include tablette {
+  .Dashboard {
+    padding: 76px 20px 24px;
+
+    &-hero {
+      flex-direction: row;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    &-cta {
+      width: auto;
+      min-width: 180px;
+    }
+
+    &-grid {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      align-items: start;
+    }
+  }
+
+  .DashboardStats {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
+  .DashboardStat {
+    &--primary {
+      grid-column: 1 / -1;
+    }
+  }
+
+  .DashboardCard {
+    &--chart {
+      grid-column: 1 / -1;
+    }
+  }
+
+  .DashboardCard-header--chart {
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+  }
+}
+
+/* =========================
+   DESKTOP
+========================= */
+
+@include desktop {
+  .Dashboard {
+    padding: 32px 40px;
+
+    &-grid {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 22px;
+    }
+  }
+
+  .DashboardStats {
+    grid-template-columns: repeat(6, minmax(0, 1fr));
+
+    gap: 18px;
+    margin-bottom: 22px;
+  }
+
+  .DashboardStat {
+    &--primary {
+      grid-column: span 2;
+    }
+  }
+
+  .DashboardCard {
+    padding: 20px;
+
+    &--chart {
+      grid-column: 1 / -1;
+      grid-row: auto;
+    }
+  }
+}

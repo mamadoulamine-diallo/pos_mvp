@@ -1,0 +1,22 @@
+@use "../abstracts/mixins" as *;
+
+.Categories {
+  flex: 1;
+  display: flex;
+  gap: 6px;
+  overflow-x: auto;
+  padding: 4px 0;
+
+  scrollbar-width: none;
+
+  &::-webkit-scrollbar {
+    display: none;
+  }
+
+  @include desktop {
+    flex-wrap: wrap;
+    gap: 10px;
+    overflow: visible;
+    margin-bottom: 34px;
+  }
+}

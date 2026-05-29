@@ -1,0 +1,68 @@
+@use "../abstracts/variables" as *;
+@use "../abstracts/mixins" as *;
+
+.Checkout {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+
+  &-total {
+    text-align: center;
+
+    span {
+      display: block;
+      margin-bottom: 6px;
+    }
+
+    strong {
+      font-size: 32px;
+      font-weight: 900;
+    }
+  }
+
+  &-methods {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  &-method {
+    height: 48px;
+
+    border: none;
+    border-radius: 8px;
+
+    background: #f3f3f3;
+    font-weight: 700;
+
+    &.active {
+      background: $primary;
+      color: white;
+    }
+  }
+
+  &-confirm {
+    height: 52px;
+
+    border: none;
+    border-radius: 8px;
+
+    background: $primary;
+    color: white;
+
+    font-weight: 800;
+    font-size: 16px;
+  }
+
+  &-cancel {
+    height: 46px;
+
+    border: none;
+    border-radius: 8px;
+
+    background: $bg-light;
+    color: $gray-secondary;
+
+    font-weight: 800;
+  }
+}

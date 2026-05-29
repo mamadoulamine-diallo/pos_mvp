@@ -1,0 +1,94 @@
+@use "../abstracts/variables" as *;
+@use "../abstracts/mixins" as *;
+
+.Filter {
+  position: relative;
+  flex-shrink: 0;
+
+  &-backdrop {
+    display: none;
+  }
+
+  &-opener {
+    width: 44px;
+    height: 44px;
+    position: relative;
+    z-index: 110;
+
+    border: none;
+    border-radius: 8px;
+    background: $background;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+
+    &-icon {
+      width: 24px;
+      height: 24px;
+    }
+  }
+
+  &-list {
+    display: none;
+    width: 180px;
+    padding: 10px;
+
+    flex-direction: column;
+    gap: 8px;
+
+    background: $bg-white;
+    border-radius: 8px;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
+  }
+
+  &.open {
+    .Filter-backdrop {
+      display: block;
+      position: fixed;
+      inset: 0;
+
+      background: rgba(0, 0, 0, 0.35);
+      z-index: 90;
+    }
+
+    .Filter-list {
+      display: flex;
+
+      position: absolute;
+      right: 0;
+      bottom: 52px;
+      z-index: 120;
+    }
+  }
+
+  @include desktop {
+    &-opener {
+      display: none;
+    }
+
+    &-backdrop {
+      display: none;
+    }
+
+    &-list {
+      display: flex;
+      position: static;
+      flex-direction: column;
+      gap: 14px;
+      box-shadow: none;
+    }
+
+    &.open {
+      .Filter-backdrop {
+        display: none;
+      }
+
+      .Filter-list {
+        position: static;
+      }
+    }
+  }
+}

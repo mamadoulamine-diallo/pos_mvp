@@ -1,0 +1,140 @@
+@use "../abstracts/variables" as *;
+@use "../abstracts/mixins" as *;
+
+.Products {
+  min-height: 100vh;
+  padding: 68px 14px 90px;
+  background: $bg-light;
+
+  hr {
+    display: none;
+  }
+
+  &-actions {
+    position: fixed;
+    left: 12px;
+    right: 12px;
+    bottom: 58px;
+    z-index: 40;
+
+    &-addProductDesktop {
+      display: none !important;
+    }
+  }
+
+  &-wrapper {
+  position: fixed;
+  left: 8px;
+  right: 8px;
+  bottom: 95px;
+
+  display: flex;
+  gap: 8px;
+
+  z-index: 35;
+
+  &::before {
+    content: "";
+
+    position: absolute;
+    inset: 0;
+
+    border-radius: 10px;
+
+    background: rgba(250, 250, 248, 0.82);
+
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+
+    z-index: -1;
+  }
+}
+
+  &-list {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 18px 14px;
+
+    &-title {
+      grid-column: 1 / -1;
+
+      text-align: center;
+      font-size: 32px;
+      font-weight: 500;
+
+      margin-bottom: 2px;
+    }
+  }
+
+  @include tablette {
+    &-list {
+      grid-template-columns: repeat(3, 1fr);
+    }
+  }
+
+  @include desktop {
+    padding: 32px 40px;
+    &-wrapper {
+    position: static;
+
+    width: 220px;
+    margin-right: 48px;
+
+    display: block;
+    float: left;
+
+    padding: 0;
+    border-radius: 0;
+    background: transparent;
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
+    box-shadow: none;
+  }
+    padding: 32px 40px;
+
+    hr {
+      display: block;
+      margin: 18px 24px 22px;
+
+      border: none;
+      border-top: 1px solid #333;
+    }
+
+    &-actions {
+      position: static;
+
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+
+      margin-bottom: 24px;
+
+      &-addProductDesktop {
+        display: inline-flex !important;
+      }
+    }
+
+    &-wrapper {
+      position: static;
+
+      width: 220px;
+      margin-right: 48px;
+
+      display: block;
+      float: left;
+    }
+
+    &-list {
+      display: grid;
+      grid-template-columns: repeat(4, 170px);
+      justify-content: center;
+
+      gap: 28px 36px;
+
+      &-title {
+        font-size: 34px;
+        margin-bottom: 0;
+      }
+    }
+  }
+}

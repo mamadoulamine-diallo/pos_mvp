@@ -1,0 +1,109 @@
+@use "../abstracts/variables" as *;
+
+.Receipt {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+
+  &-meta {
+    display: flex;
+    justify-content: space-between;
+    gap: 12px;
+
+    padding: 12px;
+
+    background: $bg-light;
+    border-radius: 10px;
+
+    font-size: 13px;
+    font-weight: 700;
+    color: $text-secondary;
+  }
+
+  &-items {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+
+    max-height: 220px;
+    overflow-y: auto;
+  }
+
+  &-item {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    gap: 4px 10px;
+
+    padding: 10px 12px;
+
+    background: $bg-light;
+    border-radius: 10px;
+  }
+
+  &-itemName {
+    font-weight: 800;
+    color: $gray-secondary;
+  }
+
+  &-itemQty {
+    font-size: 12px;
+    color: $text-secondary;
+  }
+
+  &-itemTotal {
+    grid-row: 1 / span 2;
+    grid-column: 2;
+
+    align-self: center;
+
+    font-weight: 900;
+    white-space: nowrap;
+  }
+
+  &-total,
+  &-payment {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    padding: 12px;
+
+    background: $bg-light;
+    border-radius: 10px;
+
+    span {
+      color: $text-secondary;
+      font-weight: 700;
+    }
+
+    strong {
+      font-size: 18px;
+      font-weight: 900;
+    }
+  }
+
+  &-actions {
+    display: flex;
+    gap: 12px;
+
+    button {
+      flex: 1;
+      height: 46px;
+
+      border: none;
+      border-radius: 8px;
+
+      font-weight: 800;
+    }
+  }
+
+  &-print {
+    background: $bg-light;
+    color: $gray-secondary;
+  }
+
+  &-newSale {
+    background: $primary;
+    color: $bg-white;
+  }
+}

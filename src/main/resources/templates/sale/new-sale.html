@@ -1,29 +1,234 @@
 <!doctype html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html lang="fr" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Nouvelle vente</title>
+
+    <link rel="stylesheet" th:href="@{/assets/styles/style.css}">
+    <link
+            rel="stylesheet"
+            href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.1/css/all.min.css"
+    />
 </head>
+
 <body>
 
-<h1>Nouvelle vente</h1>
+<header class="Header">
+    <nav class="Header-nav MainNav">
+        <a th:href="@{/}" class="Header-nav-link">
+            <img th:src="@{/assets/styles/icons/Accueil.svg}" class="Header-nav-icon" alt="Accueil">
+        </a>
 
-<section>
-    <article th:each="product : ${products}"
-             th:attr="data-id=${product.id}">
-        <h2 th:text="${product.name}">Produit</h2>
+        <a th:href="@{/products}" class="Header-nav-link">
+            <img th:src="@{/assets/styles/icons/productLink.svg}" class="Header-nav-icon" alt="Produits">
+        </a>
 
-        <p>
-            Catégorie :
-            <span th:text="${product.categoryName}">Catégorie</span>
-        </p>
+        <a th:href="@{/sales/new}" class="Header-nav-link Header-nav-link--active">
+            <img th:src="@{/assets/styles/icons/venteLink.svg}" class="Header-nav-icon" alt="Vente">
+        </a>
 
-        <p>
-            Prix :
-            <span th:text="${product.activePrice}">0</span> FCFA
-        </p>
-    </article>
-</section>
+        <button class="Header-nav-link mobile" type="button">Ajouter</button>
+    </nav>
+
+    <div class="Header-right NavTools">
+        <div class="Header-actions">
+            <button class="Header-action CalculatorTrigger" type="button">
+                <img th:src="@{/assets/styles/icons/calculator.svg}" class="Header-action-icon" alt="Calculatrice">
+            </button>
+
+            <button class="Header-action" type="button">
+                <img th:src="@{/assets/styles/icons/notif.svg}" class="Header-action-icon" alt="Notifications">
+            </button>
+        </div>
+
+        <div class="Header-user">
+            <span class="Header-user-name">Lamine</span>
+            <span class="Header-user-time">14:30</span>
+        </div>
+    </div>
+</header>
+
+<main class="SalePage">
+    <section class="SaleProducts">
+        <div class="SaleProducts-actions">
+            <form class="SaleProducts-search Search">
+                <input
+                        class="SaleProducts-search-input"
+                        type="text"
+                        placeholder="Rechercher un produit..."
+                />
+            </form>
+        </div>
+
+        <h1 class="SaleProducts-title">Nouvelle vente</h1>
+
+        <div class="SaleProducts-grid">
+            <article
+                    th:each="product : ${products}"
+                    class="ProductCard"
+                    th:attr="data-id=${product.id}"
+            >
+                <div class="ProductCard-media">
+                    <img
+                            th:src="@{'/assets/styles/img/' + ${product.imageUrl}}"
+                            class="ProductCard-media-img"
+                            alt=""
+                    />
+
+                    <span
+                            class="ProductCard-media-name"
+                            th:text="${product.name}"
+                    >
+            Produit
+          </span>
+                </div>
+
+                <div class="ProductCard-footer">
+          <span
+                  class="ProductCard-footer-price"
+                  th:text="${#numbers.formatDecimal(product.activePrice, 0, 'POINT', 0, 'COMMA')} + ' F'"
+          >
+            0 F
+          </span>
+
+                    <button class="ProductCard-footer-action" type="button">
+                        <i class="fa-solid fa-cart-arrow-down"></i>
+                    </button>
+                </div>
+            </article>
+        </div>
+    </section>
+
+    <button class="CartFloatingButton" type="button">
+        <i class="fa-solid fa-cart-shopping"></i>
+        <span class="CartFloatingButton-count">0</span>
+    </button>
+
+    <aside class="CartPanel">
+        <header class="CartPanel-header">
+            <h2 class="CartPanel-title">Panier</h2>
+            <span class="CartPanel-count">0 article</span>
+        </header>
+
+        <div class="CartPanel-items"></div>
+
+        <footer class="CartPanel-footer">
+            <div class="CartPanel-total">
+                <span>Total</span>
+                <strong>0 F</strong>
+            </div>
+
+            <button class="CartPanel-validate" type="button">Valider</button>
+            <button class="CartPanel-cancel" type="button">Annuler</button>
+        </footer>
+    </aside>
+</main>
+
+<!-- Checkout overlay -->
+<div class="Overlay CheckoutOverlay">
+    <div class="Overlay-backdrop"></div>
+
+    <div class="Overlay-panel">
+        <div class="Overlay-header">
+            <h2 class="Overlay-title">Finaliser la vente</h2>
+            <button class="Overlay-close" type="button">×</button>
+        </div>
+
+        <div class="Checkout">
+            <div class="Checkout-total">
+                <span>Total à payer</span>
+                <strong class="Checkout-total-value">0 F</strong>
+            </div>
+
+            <div class="Checkout-methods">
+                <button class="Checkout-method active" data-method="cash" type="button">Espèces</button>
+                <button class="Checkout-method" data-method="mobile" type="button">Mobile Money</button>
+                <button class="Checkout-method" data-method="card" type="button">Carte</button>
+            </div>
+
+            <button class="Checkout-confirm" type="button">Confirmer la vente</button>
+            <button class="Checkout-cancel" type="button">Annuler</button>
+        </div>
+    </div>
+</div>
+
+<!-- Receipt overlay -->
+<div class="Overlay ReceiptOverlay">
+    <div class="Overlay-backdrop"></div>
+
+    <div class="Overlay-panel">
+        <div class="Overlay-header">
+            <h2 class="Overlay-title">Vente enregistrée ✅</h2>
+            <button class="Overlay-close" type="button">×</button>
+        </div>
+
+        <div class="Receipt">
+            <div class="Receipt-meta">
+                <span class="Receipt-number">Reçu #0001</span>
+                <span class="Receipt-date">Date</span>
+            </div>
+
+            <div class="Receipt-items"></div>
+
+            <div class="Receipt-total">
+                <span>Total payé</span>
+                <strong class="Receipt-total-value">0 F</strong>
+            </div>
+
+            <div class="Receipt-payment">
+                <span>Mode de paiement</span>
+                <strong class="Receipt-payment-value">Espèces</strong>
+            </div>
+
+            <div class="Receipt-actions">
+                <button class="Receipt-print" type="button">Imprimer</button>
+                <button class="Receipt-newSale" type="button">Nouvelle vente</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Calculator -->
+<div class="CalculatorSheet" aria-hidden="true">
+    <div class="CalculatorSheet-backdrop"></div>
+
+    <div class="CalculatorSheet-panel">
+        <div class="CalculatorSheet-handle"></div>
+
+        <div class="CalculatorSheet-header">
+            <h2 class="CalculatorSheet-title">Calculatrice</h2>
+            <button class="CalculatorSheet-close" type="button">×</button>
+        </div>
+
+        <div class="CalculatorSheet-display">0</div>
+
+        <div class="CalculatorSheet-grid">
+            <button type="button">7</button>
+            <button type="button">8</button>
+            <button type="button">9</button>
+            <button type="button">÷</button>
+
+            <button type="button">4</button>
+            <button type="button">5</button>
+            <button type="button">6</button>
+            <button type="button">×</button>
+
+            <button type="button">1</button>
+            <button type="button">2</button>
+            <button type="button">3</button>
+            <button type="button">-</button>
+
+            <button type="button">0</button>
+            <button type="button">C</button>
+            <button type="button">=</button>
+            <button type="button">+</button>
+        </div>
+    </div>
+</div>
+
+<script th:src="@{/assets/js/components/calculator.js}"></script>
+<script type="module" th:src="@{/assets/js/sale.js}"></script>
 
 </body>
 </html>
