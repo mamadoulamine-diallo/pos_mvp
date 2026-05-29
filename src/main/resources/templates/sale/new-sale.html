@@ -1,0 +1,29 @@
+<!doctype html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Nouvelle vente</title>
+</head>
+<body>
+
+<h1>Nouvelle vente</h1>
+
+<section>
+    <article th:each="product : ${products}"
+             th:attr="data-id=${product.id}">
+        <h2 th:text="${product.name}">Produit</h2>
+
+        <p>
+            Catégorie :
+            <span th:text="${product.categoryName}">Catégorie</span>
+        </p>
+
+        <p>
+            Prix :
+            <span th:text="${product.activePrice}">0</span> FCFA
+        </p>
+    </article>
+</section>
+
+</body>
+</html>
