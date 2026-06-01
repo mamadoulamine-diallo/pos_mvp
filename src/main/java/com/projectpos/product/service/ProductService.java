@@ -33,7 +33,8 @@ public class ProductService {
                         product.getName(),
                         product.getImageUrl(),
                         priceService.getActivePrice(product.getId()),
-                        product.getCategory().getName()
+                        product.getCategory().getName(),
+                        product.getStockQuantity()
                 ))
                 .toList();
     }

@@ -84,6 +84,13 @@
           </span>
                 </div>
 
+                <div
+                        class="ProductCard-stock"
+                        th:classappend="${product.stockQuantity == 0} ? ' ProductCard-stock--out' : (${product.stockQuantity <= 5} ? ' ProductCard-stock--low' : '')"
+                        th:text="'Stock : ' + ${product.stockQuantity}">
+                    Stock : 12
+                </div>
+
                 <div class="ProductCard-footer">
           <span
                   class="ProductCard-footer-price"

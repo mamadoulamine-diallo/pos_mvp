@@ -7,6 +7,7 @@ public record ProductSaleCardDto(
         String name,
         String imageUrl,
         BigDecimal activePrice,
-        String categoryName
+        String categoryName,
+        Integer stockQuantity
 ) {
 }
