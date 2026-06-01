@@ -6,6 +6,8 @@ public record DashboardSummary(
         BigDecimal revenue,
         Long salesCount,
         Long itemsSold,
-        BigDecimal averageBasket
+        BigDecimal averageBasket,
+        String revenueFormatted,
+        String averageBasketFormatted
 ) {
 }

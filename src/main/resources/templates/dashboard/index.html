@@ -66,7 +66,7 @@
   <section class="DashboardStats">
     <article class="DashboardStat DashboardStat--primary">
       <span class="DashboardStat-label">CA du jour</span>
-      <strong class="DashboardStat-value DashboardRevenue" th:text="${summary.revenue} + ' F'">0 F</strong>
+      <strong class="DashboardStat-value DashboardRevenue" th:text="${summary.revenueFormatted}">0 F</strong>
       <small class="DashboardStat-help">Ventes validées</small>
     </article>
 
@@ -84,7 +84,7 @@
 
     <article class="DashboardStat">
       <span class="DashboardStat-label">Panier moyen</span>
-      <strong class="DashboardStat-value DashboardAverage" th:text="${summary.averageBasket} + ' F'">0 F</strong>
+      <strong class="DashboardStat-value DashboardAverage" th:text="${summary.averageBasketFormatted}">0 F</strong>
       <small class="DashboardStat-help">Par vente</small>
     </article>
 
@@ -150,7 +150,7 @@
             <small th:text="${product.quantitySold} + ' unités vendues'">0 unités vendues</small>
           </div>
 
-          <span class="TopProducts-revenue" th:text="${product.revenue} + ' F'">0 F</span>
+          <span class="TopProducts-revenue" th:text="${#numbers.formatInteger(product.revenue, 0, 'WHITESPACE')} + ' F'">0 F</span>
         </article>
       </div>
     </article>
@@ -166,7 +166,7 @@
       <div class="RecentSales-list">
         <article class="RecentSales-item" th:each="sale : ${recentSales}">
           <span class="RecentSales-time" th:text="${#temporals.format(sale.saleDate, 'HH:mm')}">14:30</span>
-          <strong class="RecentSales-total" th:text="${sale.total} + ' F'">0 F</strong>
+          <strong class="RecentSales-total" th:text="${#numbers.formatDecimal(sale.total, 0, 'WHITESPACE', 0, 'COMMA')} + ' F'">0 F</strong>
           <span class="RecentSales-method" th:text="'Vente #' + ${sale.saleId}">Vente #1</span>
         </article>
       </div>

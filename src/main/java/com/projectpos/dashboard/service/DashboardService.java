@@ -2,6 +2,7 @@ package com.projectpos.dashboard.service;
 
 import com.projectpos.dashboard.dto.*;
 import com.projectpos.dashboard.repository.DashboardRepository;
+import com.projectpos.shared.utils.FormatUtils;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
@@ -36,7 +37,9 @@ public class DashboardService {
                 revenue,
                 salesCount,
                 itemsSold,
-                averageBasket
+                averageBasket,
+                FormatUtils.formatCurrency(revenue),
+                FormatUtils.formatCurrency(averageBasket)
         );
     }
 
