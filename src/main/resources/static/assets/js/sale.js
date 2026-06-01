@@ -225,7 +225,11 @@ document.addEventListener("DOMContentLoaded", () => {
     });
 
     if (!response.ok) {
-      throw new Error("Erreur lors de l'enregistrement de la vente");
+      const error = await response.json();
+
+      throw new Error(
+          error.error || "Erreur lors de l'enregistrement de la vente"
+      );
     }
 
     return response.json();
@@ -303,7 +307,7 @@ document.addEventListener("DOMContentLoaded", () => {
       showToast("Vente enregistrée ✅");
     } catch (error) {
       console.error(error);
-      showToast("Erreur lors de la vente");
+      showToast(error.message);
     } finally {
       checkoutConfirm.disabled = false;
       checkoutConfirm.textContent = "Confirmer la vente";

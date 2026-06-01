@@ -11,6 +11,9 @@ import jakarta.validation.Valid;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.ResponseStatus;
 
 import java.util.Map;
 
@@ -48,6 +51,17 @@ public class SaleController {
         return Map.of(
                 "saleId", sale.getId(),
                 "status", sale.getStatus().name()
+        );
+    }
+
+    @ExceptionHandler(IllegalArgumentException.class)
+    @ResponseBody
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public Map<String, Object> handleIllegalArgument(
+            IllegalArgumentException exception
+    ) {
+        return Map.of(
+                "error", exception.getMessage()
         );
     }
 }
