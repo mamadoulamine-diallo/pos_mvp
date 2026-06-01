@@ -1,6 +1,7 @@
 package com.projectpos.dashboard.service;
 
 import com.projectpos.dashboard.dto.DashboardSummary;
+import com.projectpos.dashboard.dto.RevenuePointDto;
 import com.projectpos.dashboard.dto.TopProductDto;
 import com.projectpos.dashboard.repository.DashboardRepository;
 import org.springframework.stereotype.Service;
@@ -45,6 +46,16 @@ public class DashboardService {
         return repository.findTopProducts()
                 .stream()
                 .limit(5)
+                .toList();
+    }
+
+    public List<RevenuePointDto> getRevenueByDay() {
+        return repository.findRevenueByDayRaw()
+                .stream()
+                .map(row -> new RevenuePointDto(
+                        row[0].toString(),
+                        ((Number) row[1]).doubleValue()
+                ))
                 .toList();
     }
 }

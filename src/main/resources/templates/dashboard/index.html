@@ -1,31 +1,308 @@
-<p>
-  CA :
-  <span th:text="${summary.revenue}">0</span>
-</p>
+<!doctype html>
+<html lang="fr" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dashboard</title>
 
-<p>
-  Ventes :
-  <span th:text="${summary.salesCount}">0</span>
-</p>
+  <link rel="stylesheet" th:href="@{/assets/styles/style.css}">
+  <link
+          rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.1/css/all.min.css"
+  />
+</head>
 
-<p>
-  Articles vendus :
-  <span th:text="${summary.itemsSold}">0</span>
-</p>
+<body>
+<!-- ******************Header******************** -->
 
-<p>
-  Panier moyen :
-  <span th:text="${summary.averageBasket}">0</span>
-</p>
+<header class="Header">
+  <nav class="Header-nav MainNav">
+    <a th:href="@{/}" class="Header-nav-link Header-nav-link--active">
+      <img
+              th:src="@{/assets/styles/icons/Accueil.svg}"
+              class="Header-nav-icon"
+              alt="Accueil"
+      />
+    </a>
 
-<h2>Top produits</h2>
+    <a th:href="@{/products}" class="Header-nav-link">
+      <img
+              th:src="@{/assets/styles/icons/productLink.svg}"
+              class="Header-nav-icon"
+              alt="Produits"
+      />
+    </a>
 
-<ul>
-  <li th:each="product : ${topProducts}">
-    <strong th:text="${product.productName}">Produit</strong>
-    -
-    <span th:text="${product.quantitySold}">0</span> unités
-    -
-    <span th:text="${product.revenue}">0</span> FCFA
-  </li>
-</ul>
+    <a th:href="@{/sales/new}" class="Header-nav-link">
+      <img
+              th:src="@{/assets/styles/icons/cart.svg}"
+              class="Header-nav-icon"
+              alt="Panier"
+      />
+    </a>
+
+    <button class="Header-nav-link mobile">
+      AddProduct(img)
+    </button>
+  </nav>
+
+  <div class="Header-right NavTools">
+    <div class="Header-actions">
+      <button class="Header-action CalculatorTrigger" type="button">
+        <img
+                th:src="@{/assets/styles/icons/calculator.svg}"
+                class="Header-action-icon"
+                alt="Calculatrice"
+        />
+      </button>
+
+      <button class="Header-action">
+        <img
+                th:src="@{/assets/styles/icons/notification.svg}"
+                class="Header-action-icon"
+                alt="Notifications"
+        />
+      </button>
+    </div>
+
+    <div class="Header-user">
+      <span class="Header-user-name">Lamine</span>
+      <span class="Header-user-time">14:30</span>
+    </div>
+  </div>
+</header>
+
+<main class="Dashboard">
+  <section class="Dashboard-hero">
+    <div>
+      <p class="Dashboard-eyebrow">Tableau de bord</p>
+      <h1 class="Dashboard-title">Bonjour Lamine</h1>
+      <p class="Dashboard-subtitle">
+        Voici l’activité de votre commerce aujourd’hui.
+      </p>
+    </div>
+
+    <a th:href="@{/sales/new}" class="Dashboard-cta">
+      Nouvelle vente
+    </a>
+  </section>
+
+  <section class="DashboardStats">
+    <article class="DashboardStat DashboardStat--primary">
+      <span class="DashboardStat-label">CA du jour</span>
+
+      <strong
+              class="DashboardStat-value DashboardRevenue"
+              th:text="${summary.revenue} + ' F'"
+      >
+        0 F
+      </strong>
+
+      <small class="DashboardStat-help">Ventes validées</small>
+    </article>
+
+    <article class="DashboardStat">
+      <span class="DashboardStat-label">Ventes</span>
+
+      <strong
+              class="DashboardStat-value DashboardSales"
+              th:text="${summary.salesCount}"
+      >
+        0
+      </strong>
+
+      <small class="DashboardStat-help">Transactions</small>
+    </article>
+
+    <article class="DashboardStat">
+      <span class="DashboardStat-label">Articles vendus</span>
+
+      <strong
+              class="DashboardStat-value DashboardItems"
+              th:text="${summary.itemsSold}"
+      >
+        0
+      </strong>
+
+      <small class="DashboardStat-help">Quantité totale</small>
+    </article>
+
+    <article class="DashboardStat">
+      <span class="DashboardStat-label">Panier moyen</span>
+
+      <strong
+              class="DashboardStat-value DashboardAverage"
+              th:text="${summary.averageBasket} + ' F'"
+      >
+        0 F
+      </strong>
+
+      <small class="DashboardStat-help">Par vente</small>
+    </article>
+
+    <article class="DashboardStat DashboardStat--warning">
+      <span class="DashboardStat-label">Stock faible</span>
+
+      <strong class="DashboardStat-value DashboardLowStock">
+        0
+      </strong>
+
+      <small class="DashboardStat-help">
+        Produits à surveiller
+      </small>
+    </article>
+
+    <article class="DashboardStat DashboardStat--danger">
+      <span class="DashboardStat-label">Ruptures</span>
+
+      <strong class="DashboardStat-value DashboardOutStock">
+        0
+      </strong>
+
+      <small class="DashboardStat-help">
+        Produits indisponibles
+      </small>
+    </article>
+  </section>
+
+  <section class="Dashboard-grid">
+    <article class="DashboardCard DashboardCard--chart">
+      <header class="DashboardCard-header DashboardCard-header--chart">
+        <div>
+          <h2>Évolution des ventes</h2>
+          <p>Analyse du chiffre d’affaires</p>
+        </div>
+
+        <div class="ChartTabs">
+          <button
+                  class="ChartTabs-button active"
+                  data-view="hour"
+                  type="button"
+          >
+            Heure
+          </button>
+
+          <button
+                  class="ChartTabs-button"
+                  data-view="month"
+                  type="button"
+          >
+            Mois
+          </button>
+
+          <button
+                  class="ChartTabs-button"
+                  data-view="year"
+                  type="button"
+          >
+            Année
+          </button>
+        </div>
+      </header>
+
+      <canvas id="RevenueChart"></canvas>
+    </article>
+
+    <article class="DashboardCard">
+      <header class="DashboardCard-header">
+        <div>
+          <h2>Ventes récentes</h2>
+          <p>Dernières transactions</p>
+        </div>
+      </header>
+
+      <div class="RecentSales-list"></div>
+    </article>
+
+    <article class="DashboardCard">
+      <header class="DashboardCard-header">
+        <div>
+          <h2>Top produits</h2>
+          <p>Produits les plus vendus</p>
+        </div>
+      </header>
+
+      <div class="TopProducts-list"></div>
+    </article>
+
+    <article class="DashboardCard">
+      <header class="DashboardCard-header">
+        <div>
+          <h2>Alertes stock</h2>
+          <p>Produits nécessitant une attention</p>
+        </div>
+      </header>
+
+      <div class="StockAlerts-list"></div>
+    </article>
+
+    <article class="DashboardCard DashboardCard--actions">
+      <header class="DashboardCard-header">
+        <div>
+          <h2>Actions rapides</h2>
+          <p>Accès direct</p>
+        </div>
+      </header>
+
+      <div class="DashboardActions">
+        <a href="sale.html" class="DashboardActions-link">
+          Nouvelle vente
+        </a>
+
+        <a href="product.html" class="DashboardActions-link">
+          Produits
+        </a>
+
+        <button
+                class="DashboardActions-link CalculatorTrigger"
+                type="button"
+        >
+          Calculatrice
+        </button>
+      </div>
+    </article>
+  </section>
+</main>
+
+<div class="CalculatorSheet" aria-hidden="true">
+  <div class="CalculatorSheet-backdrop"></div>
+
+  <div class="CalculatorSheet-panel">
+    <div class="CalculatorSheet-handle"></div>
+
+    <div class="CalculatorSheet-header">
+      <h2 class="CalculatorSheet-title">Calculatrice</h2>
+      <button class="CalculatorSheet-close" type="button">×</button>
+    </div>
+
+    <div class="CalculatorSheet-display">0</div>
+
+    <div class="CalculatorSheet-grid">
+      <button type="button">7</button>
+      <button type="button">8</button>
+      <button type="button">9</button>
+      <button type="button">÷</button>
+
+      <button type="button">4</button>
+      <button type="button">5</button>
+      <button type="button">6</button>
+      <button type="button">×</button>
+
+      <button type="button">1</button>
+      <button type="button">2</button>
+      <button type="button">3</button>
+      <button type="button">-</button>
+
+      <button type="button">0</button>
+      <button type="button">C</button>
+      <button type="button">=</button>
+      <button type="button">+</button>
+    </div>
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script src="assets/js/components/calculator.js"></script>
+<script type="module" src="assets/js/dashboard.js"></script>
+</body>
+</html>

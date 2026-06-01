@@ -18,6 +18,7 @@ public class DashboardController {
     public String dashboard(Model model) {
         model.addAttribute("summary", service.getSummary());
         model.addAttribute("topProducts", service.getTopProducts());
+        model.addAttribute("revenueByHour", service.getRevenueByDay());
 
         return "dashboard/index";
     }

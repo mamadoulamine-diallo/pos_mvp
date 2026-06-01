@@ -5,6 +5,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import com.projectpos.dashboard.dto.TopProductDto;
 import java.util.List;
+import com.projectpos.dashboard.dto.RevenuePointDto;
 
 import java.math.BigDecimal;
 
@@ -43,4 +44,16 @@ public interface DashboardRepository extends JpaRepository<Sale, Integer> {
     ORDER BY SUM(si.quantity) DESC
 """)
     List<TopProductDto> findTopProducts();
+
+    @Query(value = """
+    SELECT 
+        DATE_FORMAT(s.sale_date, '%Y-%m-%d') AS label,
+        SUM(si.quantity * si.unit_price) AS revenue
+    FROM sale_item si
+    JOIN sale s ON s.id_sale = si.id_sale
+    WHERE s.status = 'VALIDEE'
+    GROUP BY DATE_FORMAT(s.sale_date, '%Y-%m-%d')
+    ORDER BY DATE_FORMAT(s.sale_date, '%Y-%m-%d')
+""", nativeQuery = true)
+    List<Object[]> findRevenueByDayRaw();
 }

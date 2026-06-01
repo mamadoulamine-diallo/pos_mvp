@@ -5,6 +5,6 @@ import java.math.BigDecimal;
 public record TopProductDto(
         String productName,
         Long quantitySold,
-        Long revenue
+        BigDecimal revenue
 ) {
 }
