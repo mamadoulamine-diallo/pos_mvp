@@ -1,9 +1,6 @@
 package com.projectpos.dashboard.service;
 
-import com.projectpos.dashboard.dto.DashboardSummary;
-import com.projectpos.dashboard.dto.RecentSaleDto;
-import com.projectpos.dashboard.dto.RevenuePointDto;
-import com.projectpos.dashboard.dto.TopProductDto;
+import com.projectpos.dashboard.dto.*;
 import com.projectpos.dashboard.repository.DashboardRepository;
 import org.springframework.stereotype.Service;
 
@@ -85,5 +82,23 @@ public class DashboardService {
                         ((Number) row[1]).doubleValue()
                 ))
                 .toList();
+    }
+
+    public List<StockAlertDto> getStockAlerts() {
+        return repository.findStockAlerts();
+    }
+
+    public long getLowStockCount() {
+        return repository.findStockAlerts()
+                .stream()
+                .filter(alert -> alert.stockQuantity() > 0)
+                .count();
+    }
+
+    public long getOutOfStockCount() {
+        return repository.findStockAlerts()
+                .stream()
+                .filter(alert -> alert.stockQuantity() == 0)
+                .count();
     }
 }

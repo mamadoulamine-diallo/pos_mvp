@@ -1,6 +1,7 @@
 package com.projectpos.dashboard.repository;
 
 import com.projectpos.dashboard.dto.RecentSaleDto;
+import com.projectpos.dashboard.dto.StockAlertDto;
 import com.projectpos.sale.entity.Sale;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -95,4 +96,21 @@ public interface DashboardRepository extends JpaRepository<Sale, Integer> {
     ORDER BY DATE_FORMAT(s.sale_date, '%Y-%m')
 """, nativeQuery = true)
     List<Object[]> findRevenueByMonthRaw();
+
+    @Query("""
+    SELECT new com.projectpos.dashboard.dto.StockAlertDto(
+        p.id,
+        p.name,
+        p.stockQuantity,
+        CASE
+            WHEN p.stockQuantity = 0 THEN 'RUPTURE'
+            ELSE 'FAIBLE'
+        END
+    )
+    FROM Product p
+    WHERE p.active = true
+    AND p.stockQuantity <= 5
+    ORDER BY p.stockQuantity ASC
+""")
+    List<StockAlertDto> findStockAlerts();
 }

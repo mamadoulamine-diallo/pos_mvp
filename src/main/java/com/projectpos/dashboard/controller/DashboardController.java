@@ -22,6 +22,9 @@ public class DashboardController {
         model.addAttribute("recentSales", service.getRecentSales());
         model.addAttribute("revenueByYear", service.getRevenueByYear());
         model.addAttribute("revenueByMonth", service.getRevenueByMonth());
+        model.addAttribute("stockAlerts", service.getStockAlerts());
+        model.addAttribute("lowStockCount", service.getLowStockCount());
+        model.addAttribute("outOfStockCount", service.getOutOfStockCount());
 
         return "dashboard/index";
     }

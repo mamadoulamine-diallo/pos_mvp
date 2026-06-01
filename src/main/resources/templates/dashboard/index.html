@@ -53,10 +53,14 @@
     <div>
       <p class="Dashboard-eyebrow">Tableau de bord</p>
       <h1 class="Dashboard-title">Bonjour Lamine</h1>
-      <p class="Dashboard-subtitle">Voici l’activité de votre commerce aujourd’hui.</p>
+      <p class="Dashboard-subtitle">
+        Voici l’activité de votre commerce aujourd’hui.
+      </p>
     </div>
 
-    <a th:href="@{/sales/new}" class="Dashboard-cta">Nouvelle vente</a>
+    <a th:href="@{/sales/new}" class="Dashboard-cta">
+      Nouvelle vente
+    </a>
   </section>
 
   <section class="DashboardStats">
@@ -86,13 +90,23 @@
 
     <article class="DashboardStat DashboardStat--warning">
       <span class="DashboardStat-label">Stock faible</span>
-      <strong class="DashboardStat-value DashboardLowStock">0</strong>
+      <strong
+              class="DashboardStat-value DashboardLowStock"
+              th:text="${lowStockCount}"
+      >
+        0
+      </strong>
       <small class="DashboardStat-help">Produits à surveiller</small>
     </article>
 
     <article class="DashboardStat DashboardStat--danger">
       <span class="DashboardStat-label">Ruptures</span>
-      <strong class="DashboardStat-value DashboardOutStock">0</strong>
+      <strong
+              class="DashboardStat-value DashboardOutStock"
+              th:text="${outOfStockCount}"
+      >
+        0
+      </strong>
       <small class="DashboardStat-help">Produits indisponibles</small>
     </article>
   </section>
@@ -106,21 +120,9 @@
           <p>Analyse du chiffre d’affaires</p>
         </div>
         <div class="ChartTabs">
-          <button
-                  class="ChartTabs-button active"
-                  data-view="day"
-                  type="button"
-          >
-            Jour
-          </button>
-
-          <button class="ChartTabs-button" data-view="month" type="button">
-            Mois
-          </button>
-
-          <button class="ChartTabs-button" data-view="year" type="button">
-            Année
-          </button>
+          <button class="ChartTabs-button active" data-view="day" type="button">Jour</button>
+          <button class="ChartTabs-button" data-view="month" type="button">Mois</button>
+          <button class="ChartTabs-button" data-view="year" type="button">Année</button>
         </div>
       </header>
 
@@ -140,35 +142,15 @@
       </header>
 
       <div class="TopProducts-list">
-        <article
-                class="TopProducts-item"
-                th:each="product, stat : ${topProducts}"
-        >
-    <span
-            class="TopProducts-rank"
-            th:text="'#' + ${stat.index + 1}"
-    >
-      #1
-    </span>
+        <article class="TopProducts-item" th:each="product, stat : ${topProducts}">
+          <span class="TopProducts-rank" th:text="'#' + ${stat.index + 1}">#1</span>
 
           <div class="TopProducts-info">
-            <strong th:text="${product.productName}">
-              Produit
-            </strong>
-
-            <small
-                    th:text="${product.quantitySold} + ' unités vendues'"
-            >
-              0 unités vendues
-            </small>
+            <strong th:text="${product.productName}">Produit</strong>
+            <small th:text="${product.quantitySold} + ' unités vendues'">0 unités vendues</small>
           </div>
 
-          <span
-                  class="TopProducts-revenue"
-                  th:text="${product.revenue} + ' F'"
-          >
-      0 F
-    </span>
+          <span class="TopProducts-revenue" th:text="${product.revenue} + ' F'">0 F</span>
         </article>
       </div>
     </article>
@@ -182,32 +164,13 @@
       </header>
 
       <div class="RecentSales-list">
-        <article
-                class="RecentSales-item"
-                th:each="sale : ${recentSales}"
-        >
-    <span
-            class="RecentSales-time"
-            th:text="${#temporals.format(sale.saleDate, 'HH:mm')}"
-    >
-      14:30
-    </span>
-
-          <strong
-                  class="RecentSales-total"
-                  th:text="${sale.total} + ' F'"
-          >
-            0 F
-          </strong>
-
-          <span
-                  class="RecentSales-method"
-                  th:text="'Vente #' + ${sale.saleId}"
-          >
-      Vente #1
-    </span>
+        <article class="RecentSales-item" th:each="sale : ${recentSales}">
+          <span class="RecentSales-time" th:text="${#temporals.format(sale.saleDate, 'HH:mm')}">14:30</span>
+          <strong class="RecentSales-total" th:text="${sale.total} + ' F'">0 F</strong>
+          <span class="RecentSales-method" th:text="'Vente #' + ${sale.saleId}">Vente #1</span>
         </article>
       </div>
+    </article>
 
     <article class="DashboardCard">
       <header class="DashboardCard-header">
@@ -218,7 +181,32 @@
       </header>
 
       <div class="StockAlerts-list">
-        <p>Module à brancher plus tard.</p>
+        <article
+                class="StockAlert"
+                th:each="alert : ${stockAlerts}"
+        >
+          <div class="StockAlert-info">
+            <strong th:text="${alert.productName}">
+              Produit
+            </strong>
+
+            <small
+                    th:text="${alert.stockQuantity == 0}
+          ? 'Produit indisponible'
+          : ${alert.stockQuantity} + ' restants'"
+            >
+              3 restants
+            </small>
+          </div>
+
+          <span
+                  class="StockAlert-badge"
+                  th:classappend="${alert.stockQuantity == 0} ? ' StockAlert-badge--out' : ''"
+                  th:text="${alert.stockQuantity == 0} ? 'Rupture' : 'Faible'"
+          >
+      Faible
+    </span>
+        </article>
       </div>
     </article>
 
@@ -280,12 +268,12 @@
   </div>
 </div>
 
-
 <script th:inline="javascript">
   window.revenueByDay = /*[[${revenueByDay}]]*/ [];
   window.revenueByMonth = /*[[${revenueByMonth}]]*/ [];
   window.revenueByYear = /*[[${revenueByYear}]]*/ [];
 </script>
+
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script th:src="@{/assets/js/components/calculator.js}"></script>
 <script th:src="@{/assets/js/dashboard.js}"></script>
