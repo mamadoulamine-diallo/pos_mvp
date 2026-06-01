@@ -17,3 +17,15 @@
   Panier moyen :
   <span th:text="${summary.averageBasket}">0</span>
 </p>
+
+<h2>Top produits</h2>
+
+<ul>
+  <li th:each="product : ${topProducts}">
+    <strong th:text="${product.productName}">Produit</strong>
+    -
+    <span th:text="${product.quantitySold}">0</span> unités
+    -
+    <span th:text="${product.revenue}">0</span> FCFA
+  </li>
+</ul>

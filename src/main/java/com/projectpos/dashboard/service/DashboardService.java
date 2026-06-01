@@ -1,11 +1,13 @@
 package com.projectpos.dashboard.service;
 
 import com.projectpos.dashboard.dto.DashboardSummary;
+import com.projectpos.dashboard.dto.TopProductDto;
 import com.projectpos.dashboard.repository.DashboardRepository;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
+import java.util.List;
 
 @Service
 public class DashboardService {
@@ -37,5 +39,12 @@ public class DashboardService {
                 itemsSold,
                 averageBasket
         );
+    }
+
+    public List<TopProductDto> getTopProducts() {
+        return repository.findTopProducts()
+                .stream()
+                .limit(5)
+                .toList();
     }
 }

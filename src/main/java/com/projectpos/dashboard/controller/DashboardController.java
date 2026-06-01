@@ -16,11 +16,8 @@ public class DashboardController {
 
     @GetMapping("/")
     public String dashboard(Model model) {
-
-        model.addAttribute(
-                "summary",
-                service.getSummary()
-        );
+        model.addAttribute("summary", service.getSummary());
+        model.addAttribute("topProducts", service.getTopProducts());
 
         return "dashboard/index";
     }
