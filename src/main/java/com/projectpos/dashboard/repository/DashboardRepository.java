@@ -6,6 +6,8 @@ import com.projectpos.sale.entity.Sale;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import com.projectpos.dashboard.dto.TopProductDto;
+
+import java.time.LocalDateTime;
 import java.util.List;
 import com.projectpos.dashboard.dto.RevenuePointDto;
 
@@ -14,25 +16,28 @@ import java.math.BigDecimal;
 public interface DashboardRepository extends JpaRepository<Sale, Integer> {
 
     @Query("""
-        SELECT COALESCE(SUM(si.quantity * si.unitPrice), 0)
-        FROM SaleItem si
-        WHERE si.sale.status = 'VALIDEE'
-    """)
-    BigDecimal getRevenue();
+    SELECT COALESCE(SUM(si.quantity * si.unitPrice), 0)
+    FROM SaleItem si
+    WHERE si.sale.status = 'VALIDEE'
+    AND si.sale.saleDate >= :startDate
+""")
+    BigDecimal getRevenue(LocalDateTime startDate);
 
     @Query("""
-        SELECT COUNT(s)
-        FROM Sale s
-        WHERE s.status = 'VALIDEE'
-    """)
-    Long getSalesCount();
+    SELECT COUNT(s)
+    FROM Sale s
+    WHERE s.status = 'VALIDEE'
+    AND s.saleDate >= :startDate
+""")
+    Long getSalesCount(LocalDateTime startDate);
 
     @Query("""
-        SELECT COALESCE(SUM(si.quantity), 0)
-        FROM SaleItem si
-        WHERE si.sale.status = 'VALIDEE'
-    """)
-    Long getItemsSold();
+    SELECT COALESCE(SUM(si.quantity), 0)
+    FROM SaleItem si
+    WHERE si.sale.status = 'VALIDEE'
+    AND si.sale.saleDate >= :startDate
+""")
+    Long getItemsSold(LocalDateTime startDate);
 
     @Query("""
     SELECT new com.projectpos.dashboard.dto.TopProductDto(

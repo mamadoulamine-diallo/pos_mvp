@@ -63,6 +63,28 @@
     </a>
   </section>
 
+  <div class="DashboardPeriod">
+    <a th:href="@{/(period='TODAY')}"
+       th:classappend="${selectedPeriod.name() == 'TODAY'} ? ' active' : ''">
+      Aujourd’hui
+    </a>
+
+    <a th:href="@{/(period='LAST_7_DAYS')}"
+       th:classappend="${selectedPeriod.name() == 'LAST_7_DAYS'} ? ' active' : ''">
+      7 jours
+    </a>
+
+    <a th:href="@{/(period='LAST_30_DAYS')}"
+       th:classappend="${selectedPeriod.name() == 'LAST_30_DAYS'} ? ' active' : ''">
+      30 jours
+    </a>
+
+    <a th:href="@{/(period='ALL')}"
+       th:classappend="${selectedPeriod.name() == 'ALL'} ? ' active' : ''">
+      Tout
+    </a>
+  </div>
+
   <section class="DashboardStats">
     <article class="DashboardStat DashboardStat--primary">
       <span class="DashboardStat-label">CA du jour</span>

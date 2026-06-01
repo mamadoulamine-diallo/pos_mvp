@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
@@ -18,10 +19,12 @@ public class DashboardService {
         this.repository = repository;
     }
 
-    public DashboardSummary getSummary() {
-        BigDecimal revenue = repository.getRevenue();
-        Long salesCount = repository.getSalesCount();
-        Long itemsSold = repository.getItemsSold();
+    public DashboardSummary getSummary(DashboardPeriod period) {
+        LocalDateTime startDate = getStartDate(period);
+
+        BigDecimal revenue = repository.getRevenue(startDate);
+        Long salesCount = repository.getSalesCount(startDate);
+        Long itemsSold = repository.getItemsSold(startDate);
 
         BigDecimal averageBasket = BigDecimal.ZERO;
 
@@ -103,5 +106,16 @@ public class DashboardService {
                 .stream()
                 .filter(alert -> alert.stockQuantity() == 0)
                 .count();
+    }
+
+    private LocalDateTime getStartDate(DashboardPeriod period) {
+        LocalDateTime now = LocalDateTime.now();
+
+        return switch (period) {
+            case TODAY -> now.toLocalDate().atStartOfDay();
+            case LAST_7_DAYS -> now.minusDays(7);
+            case LAST_30_DAYS -> now.minusDays(30);
+            case ALL -> LocalDateTime.of(2000, 1, 1, 0, 0);
+        };
     }
 }
