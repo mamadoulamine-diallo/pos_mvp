@@ -46,12 +46,31 @@ public class SaleService {
         sale.setUser(user);
 
         for (SaleItemRequest itemRequest : request.items()) {
-            Product product = productRepository.findById(itemRequest.productId())
-                    .orElseThrow(() -> new IllegalArgumentException("Produit introuvable"));
 
-            BigDecimal activePrice = priceService.getActivePrice(product.getId());
+            Product product = productRepository
+                    .findById(itemRequest.productId())
+                    .orElseThrow(
+                            () -> new IllegalArgumentException("Produit introuvable")
+                    );
+
+            if (product.getStockQuantity() < itemRequest.quantity()) {
+                throw new IllegalArgumentException(
+                        "Stock insuffisant pour " + product.getName()
+                );
+            }
+
+            BigDecimal activePrice =
+                    priceService.getActivePrice(product.getId());
+
+            product.setStockQuantity(
+                    product.getStockQuantity()
+                            - itemRequest.quantity()
+            );
+
+            productRepository.save(product);
 
             SaleItem item = new SaleItem();
+
             item.setSale(sale);
             item.setProduct(product);
             item.setQuantity(itemRequest.quantity());
