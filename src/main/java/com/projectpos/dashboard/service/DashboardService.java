@@ -1,20 +1,41 @@
 package com.projectpos.dashboard.service;
 
 import com.projectpos.dashboard.dto.DashboardSummary;
+import com.projectpos.dashboard.repository.DashboardRepository;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 
 @Service
 public class DashboardService {
 
+    private final DashboardRepository repository;
+
+    public DashboardService(DashboardRepository repository) {
+        this.repository = repository;
+    }
+
     public DashboardSummary getSummary() {
+        BigDecimal revenue = repository.getRevenue();
+        Long salesCount = repository.getSalesCount();
+        Long itemsSold = repository.getItemsSold();
+
+        BigDecimal averageBasket = BigDecimal.ZERO;
+
+        if (salesCount > 0) {
+            averageBasket = revenue.divide(
+                    BigDecimal.valueOf(salesCount),
+                    2,
+                    RoundingMode.HALF_UP
+            );
+        }
 
         return new DashboardSummary(
-                BigDecimal.ZERO,
-                0L,
-                0L,
-                BigDecimal.ZERO
+                revenue,
+                salesCount,
+                itemsSold,
+                averageBasket
         );
     }
 }

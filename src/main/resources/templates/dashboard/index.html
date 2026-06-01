@@ -1,6 +1,19 @@
-<h1>Dashboard</h1>
+<p>
+  CA :
+  <span th:text="${summary.revenue}">0</span>
+</p>
 
-<p th:text="${summary.revenue}"></p>
-<p th:text="${summary.salesCount}"></p>
-<p th:text="${summary.itemsSold}"></p>
-<p th:text="${summary.averageBasket}"></p>
+<p>
+  Ventes :
+  <span th:text="${summary.salesCount}">0</span>
+</p>
+
+<p>
+  Articles vendus :
+  <span th:text="${summary.itemsSold}">0</span>
+</p>
+
+<p>
+  Panier moyen :
+  <span th:text="${summary.averageBasket}">0</span>
+</p>
