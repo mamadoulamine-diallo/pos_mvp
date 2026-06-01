@@ -1,5 +1,6 @@
 package com.projectpos.dashboard.repository;
 
+import com.projectpos.dashboard.dto.RecentSaleDto;
 import com.projectpos.sale.entity.Sale;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -56,4 +57,42 @@ public interface DashboardRepository extends JpaRepository<Sale, Integer> {
     ORDER BY DATE_FORMAT(s.sale_date, '%Y-%m-%d')
 """, nativeQuery = true)
     List<Object[]> findRevenueByDayRaw();
+
+    @Query("""
+    SELECT new com.projectpos.dashboard.dto.RecentSaleDto(
+        s.id,
+        s.saleDate,
+        SUM(si.quantity * si.unitPrice)
+    )
+    FROM Sale s
+    JOIN s.items si
+    WHERE s.status = 'VALIDEE'
+    GROUP BY s.id, s.saleDate
+    ORDER BY s.saleDate DESC
+""")
+    List<RecentSaleDto> findRecentSales();
+
+    @Query(value = """
+    SELECT
+        YEAR(s.sale_date) as label,
+        SUM(si.quantity * si.unit_price) as revenue
+    FROM sale_item si
+    JOIN sale s ON s.id_sale = si.id_sale
+    WHERE s.status = 'VALIDEE'
+    GROUP BY YEAR(s.sale_date)
+    ORDER BY YEAR(s.sale_date)
+""", nativeQuery = true)
+    List<Object[]> findRevenueByYearRaw();
+
+    @Query(value = """
+    SELECT
+        DATE_FORMAT(s.sale_date, '%Y-%m') AS label,
+        SUM(si.quantity * si.unit_price) AS revenue
+    FROM sale_item si
+    JOIN sale s ON s.id_sale = si.id_sale
+    WHERE s.status = 'VALIDEE'
+    GROUP BY DATE_FORMAT(s.sale_date, '%Y-%m')
+    ORDER BY DATE_FORMAT(s.sale_date, '%Y-%m')
+""", nativeQuery = true)
+    List<Object[]> findRevenueByMonthRaw();
 }

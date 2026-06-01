@@ -1,6 +1,7 @@
 package com.projectpos.dashboard.service;
 
 import com.projectpos.dashboard.dto.DashboardSummary;
+import com.projectpos.dashboard.dto.RecentSaleDto;
 import com.projectpos.dashboard.dto.RevenuePointDto;
 import com.projectpos.dashboard.dto.TopProductDto;
 import com.projectpos.dashboard.repository.DashboardRepository;
@@ -51,6 +52,33 @@ public class DashboardService {
 
     public List<RevenuePointDto> getRevenueByDay() {
         return repository.findRevenueByDayRaw()
+                .stream()
+                .map(row -> new RevenuePointDto(
+                        row[0].toString(),
+                        ((Number) row[1]).doubleValue()
+                ))
+                .toList();
+    }
+
+    public List<RecentSaleDto> getRecentSales() {
+        return repository.findRecentSales()
+                .stream()
+                .limit(5)
+                .toList();
+    }
+
+    public List<RevenuePointDto> getRevenueByYear() {
+        return repository.findRevenueByYearRaw()
+                .stream()
+                .map(row -> new RevenuePointDto(
+                        row[0].toString(),
+                        ((Number) row[1]).doubleValue()
+                ))
+                .toList();
+    }
+
+    public List<RevenuePointDto> getRevenueByMonth() {
+        return repository.findRevenueByMonthRaw()
                 .stream()
                 .map(row -> new RevenuePointDto(
                         row[0].toString(),
