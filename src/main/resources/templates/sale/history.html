@@ -1,0 +1,79 @@
+<!doctype html>
+<html lang="fr" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Historique des ventes</title>
+
+  <link rel="stylesheet" th:href="@{/assets/styles/style.css}">
+</head>
+<body>
+
+
+
+
+      <div class="SalesHistory">
+
+        <div class="SalesHistory-header">
+
+          <a th:href="@{/}" class="BackButton">
+            ← Dashboard
+          </a>
+
+          <h1>Historique des ventes</h1>
+
+          <p>Toutes les ventes enregistrées dans le système.</p>
+
+        </div>
+
+        <div class="SalesHistory-list">
+
+          <article
+                  class="SaleCard"
+                  th:each="sale : ${sales}"
+          >
+
+            <div class="SaleCard-top">
+
+              <div>
+                <h3>
+                  Vente #
+                  <span th:text="${sale.saleId}"></span>
+                </h3>
+
+                <p th:text="${#temporals.format(
+                                  sale.saleDate,
+                                  'dd/MM/yyyy HH:mm'
+                              )}">
+                </p>
+              </div>
+
+              <span
+                      class="SaleCard-role"
+                      th:text="${sale.userRole}">
+                      </span>
+
+            </div>
+
+            <div class="SaleCard-bottom">
+
+                      <span>
+                          <strong th:text="${sale.itemCount}"></strong>
+                          articles
+                      </span>
+
+              <strong
+                      class="SaleCard-total"
+                      th:text="${sale.total} + ' F'">
+              </strong>
+
+            </div>
+
+          </article>
+
+        </div>
+
+      </div>
+
+</body>
+</html>

@@ -31,14 +31,29 @@ public class SaleController {
     }
 
     @GetMapping("/sales")
-    public String listSales(Model model) {
-        model.addAttribute("sales", service.findAll());
-        return "sale/list";
+    public String salesHistory(HttpSession session, Model model) {
+        AppUser currentUser = (AppUser) session.getAttribute("currentUser");
+
+        if (currentUser == null) {
+            return "redirect:/login";
+        }
+
+        model.addAttribute("sales", service.getSaleHistory());
+
+        return "sale/history";
     }
 
     @GetMapping("/sales/new")
-    public String newSale(Model model) {
+    public String newSale(HttpSession session, Model model) {
+        AppUser currentUser = (AppUser) session.getAttribute("currentUser");
+
+        if (currentUser == null) {
+            return "redirect:/login";
+        }
+
+        model.addAttribute("currentUser", currentUser);
         model.addAttribute("products", productService.findAllForSale());
+
         return "sale/new-sale";
     }
 

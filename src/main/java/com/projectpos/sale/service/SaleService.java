@@ -2,6 +2,7 @@ package com.projectpos.sale.service;
 
 import com.projectpos.product.repository.ProductRepository;
 import com.projectpos.product.service.ProductPriceService;
+import com.projectpos.sale.dto.SaleHistoryDto;
 import com.projectpos.sale.entity.Sale;
 import com.projectpos.sale.repository.SaleRepository;
 import org.springframework.stereotype.Service;
@@ -72,5 +73,9 @@ public class SaleService {
         }
 
         return repository.save(sale);
+    }
+
+    public List<SaleHistoryDto> getSaleHistory() {
+        return repository.findSaleHistory();
     }
 }
