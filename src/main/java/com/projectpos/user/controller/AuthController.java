@@ -21,18 +21,10 @@ public class AuthController {
     }
 
     @PostMapping("/login")
-    public String login(
-            @RequestParam String pinCode,
-            HttpSession session
-    ) {
+    public String login(@RequestParam String pinCode, HttpSession session) {
+        AppUser user = service.authenticate(pinCode);
 
-        AppUser user =
-                service.authenticate(pinCode);
-
-        session.setAttribute(
-                "currentUser",
-                user
-        );
+        session.setAttribute("currentUser", user);
 
         return "redirect:/";
     }
