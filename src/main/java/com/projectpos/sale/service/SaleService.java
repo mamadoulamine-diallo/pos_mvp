@@ -37,13 +37,10 @@ public class SaleService {
     }
 
     @Transactional
-    public Sale createSale(CreateSaleRequest request) {
+    public Sale createSale(CreateSaleRequest request, AppUser currentUser) {
         Sale sale = new Sale();
         sale.setStatus(SaleStatus.VALIDEE);
-
-        AppUser user = new AppUser();
-        user.setId(1); // temporaire, en attendant l'auth PIN
-        sale.setUser(user);
+        sale.setUser(currentUser);
 
         for (SaleItemRequest itemRequest : request.items()) {
 

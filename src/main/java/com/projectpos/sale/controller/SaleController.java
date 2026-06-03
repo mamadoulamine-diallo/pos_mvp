@@ -2,6 +2,8 @@ package com.projectpos.sale.controller;
 
 import com.projectpos.product.service.ProductService;
 import com.projectpos.sale.service.SaleService;
+import com.projectpos.user.entity.AppUser;
+import jakarta.servlet.http.HttpSession;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -45,8 +47,18 @@ public class SaleController {
 
     @PostMapping("/sales")
     @ResponseBody
-    public Map<String, Object> createSale(@Valid @RequestBody CreateSaleRequest request) {
-        Sale sale = service.createSale(request);
+    public Map<String, Object> createSale(
+            @Valid @RequestBody CreateSaleRequest request,
+            HttpSession session
+    ) {
+        AppUser currentUser =
+                (AppUser) session.getAttribute("currentUser");
+
+        if (currentUser == null) {
+            throw new IllegalArgumentException("Utilisateur non connecté");
+        }
+
+        Sale sale = service.createSale(request, currentUser);
 
         return Map.of(
                 "saleId", sale.getId(),
