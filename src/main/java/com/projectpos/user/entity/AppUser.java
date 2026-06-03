@@ -19,7 +19,12 @@ public class AppUser {
     @Column(nullable = false)
     private UserRole role;
 
-    @Column(name = "pin_code", nullable = false, length = 10)
+    @Column(
+            name = "pin_code",
+            nullable = false,
+            length = 10,
+            unique = true
+    )
     private String pinCode;
 
     @Column(unique = true)
