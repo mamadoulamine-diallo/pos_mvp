@@ -46,15 +46,28 @@ public class DashboardService {
         );
     }
 
-    public List<TopProductDto> getTopProducts() {
-        return repository.findTopProducts()
+    public List<TopProductDto> getTopProducts(DashboardPeriod period) {
+        LocalDateTime startDate = getStartDate(period);
+
+        return repository.findTopProducts(startDate)
                 .stream()
                 .limit(5)
                 .toList();
     }
 
-    public List<RevenuePointDto> getRevenueByDay() {
-        return repository.findRevenueByDayRaw()
+    public List<RecentSaleDto> getRecentSales(DashboardPeriod period) {
+        LocalDateTime startDate = getStartDate(period);
+
+        return repository.findRecentSales(startDate)
+                .stream()
+                .limit(5)
+                .toList();
+    }
+
+    public List<RevenuePointDto> getRevenueByDay(DashboardPeriod period) {
+        LocalDateTime startDate = getStartDate(period);
+
+        return repository.findRevenueByDayRaw(startDate)
                 .stream()
                 .map(row -> new RevenuePointDto(
                         row[0].toString(),
@@ -63,15 +76,10 @@ public class DashboardService {
                 .toList();
     }
 
-    public List<RecentSaleDto> getRecentSales() {
-        return repository.findRecentSales()
-                .stream()
-                .limit(5)
-                .toList();
-    }
+    public List<RevenuePointDto> getRevenueByMonth(DashboardPeriod period) {
+        LocalDateTime startDate = getStartDate(period);
 
-    public List<RevenuePointDto> getRevenueByYear() {
-        return repository.findRevenueByYearRaw()
+        return repository.findRevenueByMonthRaw(startDate)
                 .stream()
                 .map(row -> new RevenuePointDto(
                         row[0].toString(),
@@ -80,8 +88,10 @@ public class DashboardService {
                 .toList();
     }
 
-    public List<RevenuePointDto> getRevenueByMonth() {
-        return repository.findRevenueByMonthRaw()
+    public List<RevenuePointDto> getRevenueByYear(DashboardPeriod period) {
+        LocalDateTime startDate = getStartDate(period);
+
+        return repository.findRevenueByYearRaw(startDate)
                 .stream()
                 .map(row -> new RevenuePointDto(
                         row[0].toString(),

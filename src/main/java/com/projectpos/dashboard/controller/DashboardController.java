@@ -20,14 +20,18 @@ public class DashboardController {
     public String dashboard(
             @RequestParam(defaultValue = "TODAY") DashboardPeriod period,
             Model model
-    ){
+    ) {
+
         model.addAttribute("summary", service.getSummary(period));
         model.addAttribute("selectedPeriod", period);
-        model.addAttribute("topProducts", service.getTopProducts());
-        model.addAttribute("revenueByDay", service.getRevenueByDay());
-        model.addAttribute("recentSales", service.getRecentSales());
-        model.addAttribute("revenueByYear", service.getRevenueByYear());
-        model.addAttribute("revenueByMonth", service.getRevenueByMonth());
+
+        model.addAttribute("topProducts", service.getTopProducts(period));
+        model.addAttribute("recentSales", service.getRecentSales(period));
+
+        model.addAttribute("revenueByDay", service.getRevenueByDay(period));
+        model.addAttribute("revenueByMonth", service.getRevenueByMonth(period));
+        model.addAttribute("revenueByYear", service.getRevenueByYear(period));
+
         model.addAttribute("stockAlerts", service.getStockAlerts());
         model.addAttribute("lowStockCount", service.getLowStockCount());
         model.addAttribute("outOfStockCount", service.getOutOfStockCount());
