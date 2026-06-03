@@ -51,18 +51,13 @@ public class SaleService {
                     );
 
             if (product.getStockQuantity() < itemRequest.quantity()) {
-                throw new IllegalArgumentException(
-                        "Stock insuffisant pour " + product.getName()
+                throw new IllegalArgumentException("Stock insuffisant pour " + product.getName()
                 );
             }
 
-            BigDecimal activePrice =
-                    priceService.getActivePrice(product.getId());
+            BigDecimal activePrice = priceService.getActivePrice(product.getId());
 
-            product.setStockQuantity(
-                    product.getStockQuantity()
-                            - itemRequest.quantity()
-            );
+            product.setStockQuantity(product.getStockQuantity() - itemRequest.quantity());
 
             productRepository.save(product);
 

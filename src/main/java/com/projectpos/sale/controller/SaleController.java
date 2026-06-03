@@ -25,10 +25,7 @@ public class SaleController {
     private final SaleService service;
     private final ProductService productService;
 
-    public SaleController(
-            SaleService service,
-            ProductService productService
-    ) {
+    public SaleController(SaleService service, ProductService productService) {
         this.service = service;
         this.productService = productService;
     }
@@ -47,12 +44,8 @@ public class SaleController {
 
     @PostMapping("/sales")
     @ResponseBody
-    public Map<String, Object> createSale(
-            @Valid @RequestBody CreateSaleRequest request,
-            HttpSession session
-    ) {
-        AppUser currentUser =
-                (AppUser) session.getAttribute("currentUser");
+    public Map<String, Object> createSale(@Valid @RequestBody CreateSaleRequest request, HttpSession session) {
+        AppUser currentUser = (AppUser) session.getAttribute("currentUser");
 
         if (currentUser == null) {
             throw new IllegalArgumentException("Utilisateur non connecté");
@@ -69,11 +62,7 @@ public class SaleController {
     @ExceptionHandler(IllegalArgumentException.class)
     @ResponseBody
     @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public Map<String, Object> handleIllegalArgument(
-            IllegalArgumentException exception
-    ) {
-        return Map.of(
-                "error", exception.getMessage()
-        );
+    public Map<String, Object> handleIllegalArgument(IllegalArgumentException exception) {
+        return Map.of("error", exception.getMessage());
     }
 }
