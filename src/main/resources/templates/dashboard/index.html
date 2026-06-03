@@ -41,7 +41,9 @@
     </div>
 
     <div class="Header-user">
-      <span class="Header-user-name">Lamine</span>
+      <span th:text="${currentUser.role}">
+    GERANT
+</span>
       <span class="Header-user-time">14:30</span>
     </div>
   </div>

@@ -1,26 +1,67 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="fr" xmlns:th="http://www.thymeleaf.org">
 <head>
   <meta charset="UTF-8">
-  <title>Connexion</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Connexion POS</title>
+
+  <link rel="stylesheet" th:href="@{/assets/styles/style.css}">
 </head>
-<body>
 
-<h1>Connexion POS</h1>
+<body class="AuthPage">
+<main class="PinLogin">
+  <section class="PinLogin-card">
+    <div class="PinLogin-brand">
+      <span class="PinLogin-logo">🛍️</span>
+      <span>Project<span>POS</span></span>
+    </div>
 
-<form method="post" action="/login">
+    <h1 class="PinLogin-title">Connexion</h1>
 
-  <input
-          type="password"
-          name="pinCode"
-          placeholder="PIN"
-  >
+    <p class="PinLogin-subtitle">
+      Entrez votre code PIN pour accéder à la caisse.
+    </p>
 
-  <a th:href="@{/logout}" class="Header-action">
-    Déconnexion
-  </a>
+    <form class="PinLogin-form" method="post" th:action="@{/login}">
+      <input
+              class="PinLogin-input"
+              type="password"
+              name="pinCode"
+              maxlength="10"
+              readonly
+              required
+      >
 
-</form>
+      <div class="PinLogin-display">
+        <span></span>
+        <span></span>
+        <span></span>
+        <span></span>
+      </div>
 
+      <div class="PinKeyboard">
+        <button type="button" data-value="1">1</button>
+        <button type="button" data-value="2">2</button>
+        <button type="button" data-value="3">3</button>
+
+        <button type="button" data-value="4">4</button>
+        <button type="button" data-value="5">5</button>
+        <button type="button" data-value="6">6</button>
+
+        <button type="button" data-value="7">7</button>
+        <button type="button" data-value="8">8</button>
+        <button type="button" data-value="9">9</button>
+
+        <button type="button" data-action="delete">⌫</button>
+        <button type="button" data-value="0">0</button>
+        <button type="submit" class="PinKeyboard-submit">OK</button>
+      </div>
+
+      <p class="PinLogin-secure">🛡️ Sécurisé et confidentiel</p>
+    </form>
+  </section>
+</main>
+
+<script th:src="@{/assets/js/auth-pin.js}"></script>
 </body>
 </html>
