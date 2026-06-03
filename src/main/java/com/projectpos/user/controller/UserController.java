@@ -13,13 +13,5 @@ public class UserController {
         this.userService = userService;
     }
 
-    @GetMapping("/test-user")
-    @ResponseBody
-    public String test() {
 
-        AppUser user =
-                userService.authenticate("1234");
-
-        return user.getRole().name();
-    }
 }

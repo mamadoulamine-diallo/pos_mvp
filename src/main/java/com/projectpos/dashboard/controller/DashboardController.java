@@ -2,6 +2,8 @@ package com.projectpos.dashboard.controller;
 
 import com.projectpos.dashboard.dto.DashboardPeriod;
 import com.projectpos.dashboard.service.DashboardService;
+import com.projectpos.user.entity.AppUser;
+import jakarta.servlet.http.HttpSession;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -19,9 +21,16 @@ public class DashboardController {
     @GetMapping("/")
     public String dashboard(
             @RequestParam(defaultValue = "TODAY") DashboardPeriod period,
+            HttpSession session,
             Model model
     ) {
+        AppUser user = (AppUser) session.getAttribute("currentUser");
 
+        if (user == null) {
+            return "redirect:/login";
+        }
+
+        model.addAttribute("currentUser", user);
         model.addAttribute("summary", service.getSummary(period));
         model.addAttribute("selectedPeriod", period);
 

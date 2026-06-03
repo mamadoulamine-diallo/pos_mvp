@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="fr" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <title>Connexion</title>
+</head>
+<body>
+
+<h1>Connexion POS</h1>
+
+<form method="post" action="/login">
+
+  <input
+          type="password"
+          name="pinCode"
+          placeholder="PIN"
+  >
+
+  <a th:href="@{/logout}" class="Header-action">
+    Déconnexion
+  </a>
+
+</form>
+
+</body>
+</html>

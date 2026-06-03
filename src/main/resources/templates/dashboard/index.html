@@ -63,6 +63,10 @@
     </a>
   </section>
 
+  <a th:href="@{/logout}" class="Header-action">
+    Déconnexion
+  </a>
+
   <div class="DashboardPeriod">
     <a th:href="@{/(period='TODAY')}"
        th:classappend="${selectedPeriod.name() == 'TODAY'} ? ' active' : ''">
