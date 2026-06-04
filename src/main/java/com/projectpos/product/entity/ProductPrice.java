@@ -22,8 +22,13 @@ public class ProductPrice {
     @JoinColumn(name = "id_product", nullable = false)
     private Product product;
 
-    @Column(nullable = false, precision = 10, scale = 2)
-    private BigDecimal price;
+    @Column(name = "sale_price", nullable = false,
+            precision = 10, scale = 2)
+    private BigDecimal salePrice;
+
+    @Column(name = "purchase_price",
+            precision = 10, scale = 2)
+    private BigDecimal purchasePrice;
 
     @Column(name = "date_debut", nullable = false)
     private LocalDateTime startDate;

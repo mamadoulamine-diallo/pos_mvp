@@ -1,5 +1,8 @@
 package com.projectpos.product.service;
 
+import com.projectpos.category.entity.Category;
+import com.projectpos.category.repository.CategoryRepository;
+import com.projectpos.product.dto.CreateProductRequest;
 import com.projectpos.product.dto.ProductSaleCardDto;
 import com.projectpos.product.entity.Product;
 import com.projectpos.product.repository.ProductRepository;
@@ -12,13 +15,16 @@ public class ProductService {
 
     private final ProductRepository repository;
     private final ProductPriceService priceService;
+    private final CategoryRepository categoryRepository;
 
     public ProductService(
             ProductRepository repository,
-            ProductPriceService priceService
+            ProductPriceService priceService,
+            CategoryRepository categoryRepository
     ) {
         this.repository = repository;
         this.priceService = priceService;
+        this.categoryRepository = categoryRepository;
     }
 
     public List<Product> findAll() {
@@ -37,5 +43,28 @@ public class ProductService {
                         product.getStockQuantity()
                 ))
                 .toList();
+    }
+
+    public Product createProduct(CreateProductRequest request) {
+        Category category = categoryRepository.findById(request.categoryId())
+                .orElseThrow(() -> new IllegalArgumentException("Catégorie introuvable"));
+
+        Product product = new Product();
+
+        product.setName(request.name());
+        product.setImageUrl(request.imageUrl());
+        product.setCategory(category);
+        product.setStockQuantity(request.stockQuantity());
+        product.setActive(true);
+
+        Product savedProduct = repository.save(product);
+
+        priceService.createInitialPrice(
+                savedProduct,
+                request.salePrice(),
+                request.purchasePrice()
+        );
+
+        return savedProduct;
     }
 }
