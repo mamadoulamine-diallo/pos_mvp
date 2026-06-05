@@ -1,22 +1,300 @@
 <!doctype html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html lang="fr" xmlns:th="http://www.thymeleaf.org">
 <head>
-    <meta charset="UTF-8">
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Produits</title>
+
+    <link rel="stylesheet" th:href="@{/assets/styles/style.css}" />
+
+    <link
+            rel="stylesheet"
+            href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.1/css/all.min.css"
+    />
 </head>
+
 <body>
+<header class="Header">
+    <nav class="Header-nav MainNav">
+        <a th:href="@{/}" class="Header-nav-link">
+            <img th:src="@{/assets/styles/icons/Accueil.svg}" class="Header-nav-icon" alt="Accueil" />
+        </a>
 
-<h1>Produits</h1>
+        <a th:href="@{/products}" class="Header-nav-link Header-nav-link--active">
+            <img th:src="@{/assets/styles/icons/productLink.svg}" class="Header-nav-icon" alt="Produits" />
+        </a>
 
-<ul>
-    <li th:each="product : ${products}">
-        <strong th:text="${product.name}">Nom produit</strong>
-        -
-        <span th:text="${product.category.name}">Catégorie</span>
-        -
-        <span th:text="${priceService.getActivePrice(product.id)}">0</span> FCFA
-    </li>
-</ul>
+        <a th:href="@{/sales/new}" class="Header-nav-link">
+            <img th:src="@{/assets/styles/icons/venteLink.svg}" class="Header-nav-icon" alt="Vente" />
+        </a>
 
+        <button class="Header-nav-link Header-nav-addProduct Products-actions-addProductMobile" type="button">
+            +
+        </button>
+    </nav>
+
+    <div class="Header-right NavTools">
+        <div class="Header-actions">
+            <button class="Header-action CalculatorTrigger" type="button">
+                <img th:src="@{/assets/styles/icons/calculator.svg}" class="Header-action-icon" alt="Calculatrice" />
+            </button>
+
+            <button class="Header-action" type="button">
+                <img th:src="@{/assets/styles/icons/notif.svg}" class="Header-action-icon" alt="Notifications" />
+            </button>
+        </div>
+
+        <div class="Header-user">
+            <span class="Header-user-name" th:text="${currentUser.role}">GERANT</span>
+            <span class="Header-user-time">14:30</span>
+        </div>
+
+        <a th:href="@{/logout}" class="Header-logout" title="Déconnexion">
+            <i class="fa-solid fa-right-from-bracket"></i>
+        </a>
+    </div>
+</header>
+
+<main class="Products">
+    <div class="Products-actions ProductAction">
+        <form action="" class="ProductAction-search Search">
+            <input class="Products-actions-search-input" type="text" placeholder="Rechercher un produit..." />
+        </form>
+
+        <button class="Products-actions-addProductDesktop CTA" type="button">
+            Ajouter un produit
+        </button>
+    </div>
+
+    <hr />
+
+    <div class="Products-wrapper">
+        <menu class="Products-categories Categories">
+            <button class="Categories-button active Button" type="button">Tous</button>
+
+            <button
+                    class="Categories-button Button"
+                    type="button"
+                    th:each="category : ${categories}"
+                    th:text="${category.name}"
+            >
+                Catégorie
+            </button>
+        </menu>
+
+        <div class="Products-filter Filter">
+            <button class="Filter-opener" type="button">
+                <img
+                        class="Filter-opener-icon"
+                        th:src="@{/assets/styles/icons/filter.svg}"
+                        alt="Filter products"
+                />
+            </button>
+
+            <div class="Filter-backdrop"></div>
+
+            <menu class="Filter-list">
+                <button class="Filter-list-item Button active" type="button">Tous</button>
+                <button class="Filter-list-item Button" type="button">Stock faible</button>
+                <button class="Filter-list-item Button" type="button">Rupture</button>
+                <button class="Filter-list-item Button" type="button">Inactifs</button>
+            </menu>
+        </div>
+    </div>
+
+    <section class="Products-list">
+        <h1 class="Products-list-title">Produits</h1>
+
+        <article
+                class="Products-list-item ProductCard"
+                th:each="product : ${products}"
+                th:classappend="${product.stockQuantity <= 5} ? ' promo' : ''"
+                th:attr="
+        data-id=${product.id},
+        data-name=${product.name},
+        data-stock=${product.stockQuantity},
+        data-price=${priceService.getActivePrice(product.id)},
+        data-status=${product.active},
+        data-image=${product.imageUrl}
+      "
+        >
+            <div class="ProductCard-media">
+                <img
+                        th:src="@{'/assets/styles/img/' + ${product.imageUrl}}"
+                        class="ProductCard-media-img"
+                        alt=""
+                />
+
+                <span class="ProductCard-media-name" th:text="${product.name}">
+          Produit
+        </span>
+            </div>
+
+            <div
+                    class="ProductCard-stock"
+                    th:classappend="${product.stockQuantity == 0}
+          ? ' ProductCard-stock--out'
+          : (${product.stockQuantity <= 5}
+            ? ' ProductCard-stock--low'
+            : '')"
+                    th:text="'Stock : ' + ${product.stockQuantity}"
+            >
+                Stock : 12
+            </div>
+
+            <div class="ProductCard-footer">
+        <span
+                class="ProductCard-footer-price"
+                th:text="${priceService.getActivePrice(product.id)} + ' F'"
+        >
+          0 F
+        </span>
+
+                <button class="ProductCard-footer-action" type="button">
+                    <i class="fa-solid fa-cart-arrow-down"></i>
+                </button>
+            </div>
+        </article>
+    </section>
+</main>
+
+<div class="CalculatorSheet" aria-hidden="true">
+    <div class="CalculatorSheet-backdrop"></div>
+
+    <div class="CalculatorSheet-panel">
+        <div class="CalculatorSheet-handle"></div>
+
+        <div class="CalculatorSheet-header">
+            <h2 class="CalculatorSheet-title">Calculatrice</h2>
+            <button class="CalculatorSheet-close" type="button">×</button>
+        </div>
+
+        <div class="CalculatorSheet-display">0</div>
+
+        <div class="CalculatorSheet-grid">
+            <button type="button">7</button>
+            <button type="button">8</button>
+            <button type="button">9</button>
+            <button type="button">÷</button>
+
+            <button type="button">4</button>
+            <button type="button">5</button>
+            <button type="button">6</button>
+            <button type="button">×</button>
+
+            <button type="button">1</button>
+            <button type="button">2</button>
+            <button type="button">3</button>
+            <button type="button">-</button>
+
+            <button type="button">0</button>
+            <button type="button">C</button>
+            <button type="button">=</button>
+            <button type="button">+</button>
+        </div>
+    </div>
+</div>
+
+<div class="Overlay AddProductOverlay">
+    <div class="Overlay-backdrop"></div>
+
+    <div class="Overlay-panel">
+        <div class="Overlay-header">
+            <h2 class="Overlay-title">+ Nouveau produit</h2>
+            <button class="Overlay-close" type="button">×</button>
+        </div>
+
+        <form class="AddProductForm">
+            <label class="AddProductForm-field">
+                <span>Image produit</span>
+                <input name="imageUrl" type="text" placeholder="riz.webp" />
+            </label>
+
+            <label class="AddProductForm-field">
+                <span>Nom *</span>
+                <input name="name" type="text" required />
+            </label>
+
+            <label class="AddProductForm-field">
+                <span>Catégorie *</span>
+
+                <select name="categoryId" required>
+                    <option value="">Choisir une catégorie</option>
+                    <option
+                            th:each="category : ${categories}"
+                            th:value="${category.id}"
+                            th:text="${category.name}"
+                    >
+                        Catégorie
+                    </option>
+                </select>
+            </label>
+
+            <label class="AddProductForm-field">
+                <span>Prix vente *</span>
+                <input name="salePrice" type="number" min="0" required />
+            </label>
+
+            <label class="AddProductForm-field">
+                <span>Prix achat</span>
+                <input name="purchasePrice" type="number" min="0" required />
+            </label>
+
+            <label class="AddProductForm-field">
+                <span>Stock initial</span>
+                <input name="stockQuantity" type="number" min="0" required />
+            </label>
+
+            <div class="AddProductForm-actions">
+                <button type="button" class="AddProductForm-cancel">Annuler</button>
+                <button type="submit">Créer</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<div class="Overlay ProductPreviewOverlay">
+    <div class="Overlay-backdrop"></div>
+
+    <div class="Overlay-panel">
+        <div class="Overlay-header">
+            <div class="ProductPreview-header">
+                <img class="ProductPreview-image" th:src="@{/assets/styles/img/beure.webp}" alt="" />
+                <h2 class="ProductPreview-name">Produit</h2>
+            </div>
+
+            <button class="Overlay-close" type="button">×</button>
+        </div>
+
+        <div class="ProductPreview-content">
+            <p>
+                <strong>Stock :</strong>
+                <span class="ProductPreview-stock">0</span>
+            </p>
+
+            <p>
+                <strong>Prix :</strong>
+                <span class="ProductPreview-price">0 F</span>
+            </p>
+
+            <p>
+                <strong>Statut :</strong>
+                <span class="ProductPreview-status">Actif</span>
+            </p>
+        </div>
+
+        <div class="ProductPreview-actions">
+            <button type="button">+ Stock</button>
+            <button type="button">Modifier</button>
+        </div>
+
+        <button class="ProductPreview-link" type="button">Voir la fiche →</button>
+    </div>
+</div>
+
+<script th:src="@{/assets/js/components/calculator.js}"></script>
+<script th:src="@{/assets/js/components/filters.js}"></script>
+<script th:src="@{/assets/js/components/overlays.js}"></script>
+<script th:src="@{/assets/js/product.js}"></script>
 </body>
 </html>

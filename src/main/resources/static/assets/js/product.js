@@ -25,6 +25,16 @@ if (isProductsPage && productPreviewOverlay) {
 cartButtons.forEach((button) => {
   button.addEventListener("click", (event) => {
     event.stopPropagation();
-    window.location.href = "sale.html";
+    window.location.href = "/sales/new";
+  });
+});
+
+const addProductButtons = document.querySelectorAll(
+    ".Products-actions-addProductDesktop, .Products-actions-addProductMobile"
+);
+
+addProductButtons.forEach((button) => {
+  button.addEventListener("click", () => {
+    addProductOverlay?.classList.add("open");
   });
 });

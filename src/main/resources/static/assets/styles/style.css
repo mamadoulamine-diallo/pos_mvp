@@ -2203,6 +2203,45 @@ button {
   transform: translateY(-1px);
 }
 
+.Header-nav-addProduct {
+  font-size: 26px;
+  font-weight: 900;
+  color: #ffffff;
+  background: #74a23c;
+  border-radius: 6px;
+}
+
+.Products-actions-addProductMobile {
+  display: flex;
+}
+
+.Header-logout {
+  width: 38px;
+  height: 38px;
+
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  border-radius: 12px;
+
+  background: #f3f5ef;
+  color: #343a40;
+
+  text-decoration: none;
+  font-size: 16px;
+}
+
+.Header-logout:hover {
+  color: #74a23c;
+}
+
+@media (min-width: 1024px) {
+  .Products-actions-addProductMobile {
+    display: none;
+  }
+}
+
 @media (min-width: 768px) {
   .SalesHistory {
     padding: 90px 24px 32px;
