@@ -5,6 +5,7 @@ const productPreviewOverlay = document.querySelector(".ProductPreviewOverlay");
 const productCards = document.querySelectorAll(".ProductCard");
 
 const cartButtons = document.querySelectorAll(".ProductCard-footer-action");
+const addProductForm = document.querySelector(".AddProductForm");
 
 if (addProductButton && addProductOverlay) {
   addProductButton.addEventListener("click", () => {
@@ -37,4 +38,38 @@ addProductButtons.forEach((button) => {
   button.addEventListener("click", () => {
     addProductOverlay?.classList.add("open");
   });
+});
+
+addProductForm?.addEventListener("submit", async (event) => {
+  event.preventDefault();
+
+  const formData = new FormData(addProductForm);
+
+  const payload = {
+    name: formData.get("name"),
+    imageUrl: formData.get("imageUrl"),
+    categoryId: Number(formData.get("categoryId")),
+    stockQuantity: Number(formData.get("stockQuantity")),
+    salePrice: Number(formData.get("salePrice")),
+    purchasePrice: Number(formData.get("purchasePrice")),
+  };
+
+  try {
+    const response = await fetch("/products", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(payload),
+    });
+
+    if (!response.ok) {
+      throw new Error("Erreur lors de la création du produit");
+    }
+
+    window.location.reload();
+  } catch (error) {
+    console.error(error);
+    alert(error.message);
+  }
 });
