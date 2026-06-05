@@ -7,6 +7,12 @@ const productCards = document.querySelectorAll(".ProductCard");
 const cartButtons = document.querySelectorAll(".ProductCard-footer-action");
 const addProductForm = document.querySelector(".AddProductForm");
 
+const previewImage = document.querySelector(".ProductPreview-image");
+const previewName = document.querySelector(".ProductPreview-name");
+const previewStock = document.querySelector(".ProductPreview-stock");
+const previewPrice = document.querySelector(".ProductPreview-price");
+const previewStatus = document.querySelector(".ProductPreview-status");
+
 if (addProductButton && addProductOverlay) {
   addProductButton.addEventListener("click", () => {
     addProductOverlay.classList.add("open");
@@ -72,4 +78,33 @@ addProductForm?.addEventListener("submit", async (event) => {
     console.error(error);
     alert(error.message);
   }
+});
+
+productCards.forEach((card) => {
+  card.addEventListener("click", () => {
+    if (!productPreviewOverlay) return;
+
+    const name = card.dataset.name;
+    const stock = card.dataset.stock;
+    const price = card.dataset.price;
+    const status = card.dataset.status === "true" ? "Actif" : "Inactif";
+    const image = card.dataset.image;
+
+    if (previewName) previewName.textContent = name;
+    if (previewStock) previewStock.textContent = stock;
+    if (previewPrice) previewPrice.textContent = `${Number(price).toLocaleString("fr-FR")} F`;
+    if (previewStatus) previewStatus.textContent = status;
+
+    if (previewImage) {
+      previewImage.src = image
+          ? `/assets/styles/img/${image}`
+          : "/assets/styles/img/default-product.webp";
+
+      previewImage.onerror = () => {
+        previewImage.src = "/assets/styles/img/default-product.webp";
+      };
+    }
+
+    productPreviewOverlay.classList.add("open");
+  });
 });

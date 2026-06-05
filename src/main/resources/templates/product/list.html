@@ -120,9 +120,10 @@
         >
             <div class="ProductCard-media">
                 <img
-                        th:src="@{'/assets/styles/img/' + ${product.imageUrl}}"
+                        th:src="@{/assets/styles/img/{image}(image=${product.imageUrl})}"
                         class="ProductCard-media-img"
                         alt=""
+                        onerror="this.onerror=null; this.src='/assets/styles/img/default-product.webp';"
                 />
 
                 <span class="ProductCard-media-name" th:text="${product.name}">
