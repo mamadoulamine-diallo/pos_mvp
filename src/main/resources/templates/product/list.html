@@ -285,12 +285,64 @@
         </div>
 
         <div class="ProductPreview-actions">
-            <button type="button">+ Stock</button>
+            <button class="ProductPreview-addStock" type="button">+ Stock</button>
             <button type="button">Modifier</button>
         </div>
 
         <button class="ProductPreview-link" type="button">Voir la fiche →</button>
     </div>
+</div>
+
+<div class="Overlay AddStockOverlay">
+
+    <div class="Overlay-backdrop"></div>
+
+    <div class="Overlay-panel">
+
+        <div class="Overlay-header">
+
+            <h2 class="Overlay-title">
+                Ajouter du stock
+            </h2>
+
+            <button class="Overlay-close">
+                ×
+            </button>
+
+        </div>
+
+        <form class="AddStockForm">
+
+            <input
+                    type="hidden"
+                    name="productId"
+            >
+
+            <label class="AddProductForm-field">
+
+                <span>Quantité</span>
+
+                <input
+                        type="number"
+                        name="quantity"
+                        min="1"
+                        required
+                >
+
+            </label>
+
+            <div class="AddProductForm-actions">
+
+                <button type="submit">
+                    Ajouter
+                </button>
+
+            </div>
+
+        </form>
+
+    </div>
+
 </div>
 
 <script th:src="@{/assets/js/components/calculator.js}"></script>

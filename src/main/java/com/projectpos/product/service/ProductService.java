@@ -67,4 +67,18 @@ public class ProductService {
 
         return savedProduct;
     }
+
+    public void addStock(Integer productId, Integer quantity) {
+
+        Product product = repository.findById(productId)
+                .orElseThrow(
+                        () -> new IllegalArgumentException(
+                                "Produit introuvable"
+                        )
+                );
+
+        product.setStockQuantity(product.getStockQuantity() + quantity);
+
+        repository.save(product);
+    }
 }

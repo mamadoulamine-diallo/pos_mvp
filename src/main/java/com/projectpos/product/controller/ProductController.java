@@ -1,6 +1,7 @@
 package com.projectpos.product.controller;
 
 import com.projectpos.category.service.CategoryService;
+import com.projectpos.product.dto.AddStockRequest;
 import com.projectpos.product.dto.CreateProductRequest;
 import com.projectpos.product.entity.Product;
 import com.projectpos.product.service.ProductPriceService;
@@ -55,5 +56,14 @@ public class ProductController {
                 "productId", product.getId(),
                 "name", product.getName()
         );
+    }
+
+    @PostMapping("/products/stock")
+    @ResponseBody
+    public Map<String, Object> addStock(@Valid @RequestBody AddStockRequest request) {
+
+        service.addStock(request.productId(), request.quantity());
+
+        return Map.of("success", true);
     }
 }
