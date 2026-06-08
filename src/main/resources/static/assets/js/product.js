@@ -19,9 +19,11 @@ const previewPrice = document.querySelector(".ProductPreview-price");
 const previewStatus = document.querySelector(".ProductPreview-status");
 
 const addStockButton = document.querySelector(".ProductPreview-addStock");
-const stockProductIdInput = document.querySelector(
-    '.AddStockForm input[name="productId"]'
-);
+const stockProductIdInput = document.querySelector('.AddStockForm input[name="productId"]');
+
+const editProductOverlay = document.querySelector(".EditProductOverlay");
+const editProductButton = document.querySelector(".ProductPreview-edit");
+const editProductForm = document.querySelector(".EditProductForm");
 
 let currentProductId = null;
 
@@ -41,6 +43,7 @@ function getProductFromCard(card) {
     price: card.dataset.price,
     status: card.dataset.status === "true" ? "Actif" : "Inactif",
     image: card.dataset.image,
+    categoryId: card.dataset.categoryId
   };
 }
 
@@ -158,6 +161,57 @@ addStockForm?.addEventListener("submit", async (event) => {
 
     if (!response.ok) {
       throw new Error("Erreur lors de l'ajout du stock");
+    }
+
+    window.location.reload();
+  } catch (error) {
+    console.error(error);
+    alert(error.message);
+  }
+});
+
+editProductButton?.addEventListener("click", () => {
+  if (!currentProductId || !editProductForm) return;
+
+  editProductForm.productId.value = currentProductId;
+  editProductForm.name.value = previewName.textContent.trim();
+  editProductForm.imageUrl.value =
+      previewImage?.src.split("/").pop() || "";
+  editProductForm.categoryId.value =
+      document
+          .querySelector(`.ProductCard[data-id="${currentProductId}"]`)
+          ?.dataset.categoryId || "";
+  editProductForm.active.value =
+      previewStatus.textContent.trim() === "Actif" ? "true" : "false";
+
+  closeOverlay(productPreviewOverlay);
+  openOverlay(editProductOverlay);
+});
+
+editProductForm?.addEventListener("submit", async (event) => {
+  event.preventDefault();
+
+  const formData = new FormData(editProductForm);
+  const productId = formData.get("productId");
+
+  const payload = {
+    name: formData.get("name"),
+    imageUrl: formData.get("imageUrl"),
+    categoryId: Number(formData.get("categoryId")),
+    active: formData.get("active") === "true",
+  };
+
+  try {
+    const response = await fetch(`/products/${productId}`, {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(payload),
+    });
+
+    if (!response.ok) {
+      throw new Error("Erreur lors de la modification du produit");
     }
 
     window.location.reload();

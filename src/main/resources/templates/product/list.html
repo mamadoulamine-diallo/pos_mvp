@@ -115,7 +115,8 @@
         data-stock=${product.stockQuantity},
         data-price=${priceService.getActivePrice(product.id)},
         data-status=${product.active},
-        data-image=${product.imageUrl}
+        data-image=${product.imageUrl},
+        data-category-id=${product.category.id}
       "
         >
             <div class="ProductCard-media">
@@ -286,10 +287,62 @@
 
         <div class="ProductPreview-actions">
             <button class="ProductPreview-addStock" type="button">+ Stock</button>
-            <button type="button">Modifier</button>
+            <button class="ProductPreview-edit" type="button">
+                Modifier
+            </button>
         </div>
 
         <button class="ProductPreview-link" type="button">Voir la fiche →</button>
+    </div>
+</div>
+
+<div class="Overlay EditProductOverlay">
+    <div class="Overlay-backdrop"></div>
+
+    <div class="Overlay-panel">
+        <div class="Overlay-header">
+            <h2 class="Overlay-title">Modifier le produit</h2>
+            <button class="Overlay-close" type="button">×</button>
+        </div>
+
+        <form class="EditProductForm">
+            <input type="hidden" name="productId">
+
+            <label class="AddProductForm-field">
+                <span>Nom *</span>
+                <input name="name" type="text" required>
+            </label>
+
+            <label class="AddProductForm-field">
+                <span>Image</span>
+                <input name="imageUrl" type="text">
+            </label>
+
+            <label class="AddProductForm-field">
+                <span>Catégorie *</span>
+                <select name="categoryId" required>
+                    <option
+                            th:each="category : ${categories}"
+                            th:value="${category.id}"
+                            th:text="${category.name}"
+                    >
+                        Catégorie
+                    </option>
+                </select>
+            </label>
+
+            <label class="AddProductForm-field">
+                <span>Statut</span>
+                <select name="active" required>
+                    <option value="true">Actif</option>
+                    <option value="false">Inactif</option>
+                </select>
+            </label>
+
+            <div class="AddProductForm-actions">
+                <button type="submit">Enregistrer</button>
+            </div>
+        </form>
     </div>
 </div>
 
