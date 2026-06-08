@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Service
 public class ProductPriceService {
@@ -69,5 +70,9 @@ public class ProductPriceService {
         newPrice.setEndDate(null);
 
         repository.save(newPrice);
+    }
+
+    public List<ProductPrice> getPriceHistory(Integer productId) {
+        return repository.findByProductIdOrderByStartDateDesc(productId);
     }
 }

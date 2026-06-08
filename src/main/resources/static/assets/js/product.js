@@ -29,6 +29,8 @@ const changePriceOverlay = document.querySelector(".ChangePriceOverlay");
 const changePriceButton = document.querySelector(".ProductPreview-changePrice");
 const changePriceForm = document.querySelector(".ChangePriceForm");
 
+const productDetailsLink = document.querySelector(".ProductPreview-link");
+
 
 let currentProductId = null;
 
@@ -60,6 +62,9 @@ function updatePreview(product) {
     previewPrice.textContent = `${Number(product.price).toLocaleString(
         "fr-FR"
     )} F`;
+    if (productDetailsLink) {
+      productDetailsLink.href = `/products/${product.id}`;
+    }
   }
 
   if (previewStatus) previewStatus.textContent = product.status;

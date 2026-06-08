@@ -94,4 +94,21 @@ public class ProductController {
                 true
         );
     }
+
+    @GetMapping("/products/{id}")
+    public String productDetails(@PathVariable Integer id, HttpSession session, Model model) {
+
+        AppUser currentUser = (AppUser) session.getAttribute("currentUser");
+
+        if (currentUser == null) {
+            return "redirect:/login";
+        }
+
+        model.addAttribute("currentUser", currentUser);
+        model.addAttribute("product", service.findById(id));
+        model.addAttribute("activePrice", priceService.getActivePrice(id));
+        model.addAttribute("priceHistory", priceService.getPriceHistory(id));
+
+        return "product/details";
+    }
 }

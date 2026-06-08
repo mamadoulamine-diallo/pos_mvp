@@ -97,4 +97,9 @@ public class ProductService {
 
         return repository.save(product);
     }
+
+    public Product findById(Integer id) {
+        return repository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("Produit introuvable"));
+    }
 }

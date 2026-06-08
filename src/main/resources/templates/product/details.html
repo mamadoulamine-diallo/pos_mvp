@@ -1,0 +1,82 @@
+<!doctype html>
+<html lang="fr" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title th:text="${product.name}">Produit</title>
+
+  <link rel="stylesheet" th:href="@{/assets/styles/style.css}">
+</head>
+
+<body>
+<main class="ProductDetails">
+  <a th:href="@{/products}" class="BackButton">← Produits</a>
+
+  <section class="ProductDetails-card">
+    <img
+            th:src="@{/assets/styles/img/{image}(image=${product.imageUrl})}"
+            onerror="this.onerror=null; this.src='/assets/styles/img/default-product.webp';"
+            class="ProductDetails-image"
+            alt=""
+    >
+
+    <div class="ProductDetails-info">
+      <p class="ProductDetails-eyebrow" th:text="${product.category.name}">
+        Catégorie
+      </p>
+
+      <h1 th:text="${product.name}">Nom produit</h1>
+
+      <div class="ProductDetails-stats">
+        <article>
+          <span>Prix actif</span>
+          <strong th:text="${activePrice} + ' F'">0 F</strong>
+        </article>
+
+        <article>
+          <span>Stock</span>
+          <strong th:text="${product.stockQuantity}">0</strong>
+        </article>
+
+        <article>
+          <span>Statut</span>
+          <strong th:text="${product.active ? 'Actif' : 'Inactif'}">
+            Actif
+          </strong>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <section class="ProductDetails-history">
+    <h2>Historique des prix</h2>
+
+    <div class="ProductPriceHistory">
+      <article
+              class="ProductPriceHistory-item"
+              th:each="price : ${priceHistory}"
+      >
+        <div>
+          <strong th:text="${price.salePrice} + ' F'">0 F</strong>
+          <small th:text="'Achat : ' + ${price.purchasePrice} + ' F'">
+            Achat : 0 F
+          </small>
+        </div>
+
+        <span
+                th:text="${#temporals.format(price.startDate, 'dd/MM/yyyy HH:mm')}"
+        >
+          Date début
+        </span>
+
+        <span
+                th:text="${price.endDate == null ? 'Actif' : #temporals.format(price.endDate, 'dd/MM/yyyy HH:mm')}"
+        >
+          Actif
+        </span>
+      </article>
+    </div>
+  </section>
+</main>
+</body>
+</html>
