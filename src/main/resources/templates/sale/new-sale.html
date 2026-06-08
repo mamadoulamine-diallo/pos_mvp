@@ -30,11 +30,35 @@
 
         <h1 class="SaleProducts-title">Nouvelle vente</h1>
 
+        <menu class="Products-categories Categories">
+            <button
+                    class="Categories-button active Button"
+                    type="button"
+                    data-category-id="all"
+            >
+                Tous
+            </button>
+
+            <button
+                    class="Categories-button Button"
+                    type="button"
+                    th:each="category : ${categories}"
+                    th:attr="data-category-id=${category.id}"
+                    th:text="${category.name}"
+            >
+                Catégorie
+            </button>
+        </menu>
+
         <div class="SaleProducts-grid">
             <article
                     th:each="product : ${products}"
                     class="ProductCard"
-                    th:attr="data-id=${product.id}"
+                    th:attr="
+            data-id=${product.id},
+            data-name=${product.name},
+            data-category-id=${product.categoryId}
+        "
             >
                 <div class="ProductCard-media">
                     <img

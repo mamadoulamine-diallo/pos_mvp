@@ -31,6 +31,10 @@ document.addEventListener("DOMContentLoaded", () => {
   const receiptClose = document.querySelector(".ReceiptOverlay .Overlay-close");
   const receiptBackdrop = document.querySelector(".ReceiptOverlay .Overlay-backdrop");
 
+
+  const saleSearchInput = document.querySelector(".SaleProducts-search-input");
+  const saleCategoryButtons = document.querySelectorAll(".Categories-button");
+
   const cart = createCart({
     onChange: renderCart,
     onToast: showToast,
@@ -331,4 +335,38 @@ document.addEventListener("DOMContentLoaded", () => {
   receiptBackdrop?.addEventListener("click", closeReceipt);
 
   renderCart();
+
+  let selectedSaleCategory = "all";
+  let saleSearchQuery = "";
+
+  function applySaleProductFilters() {
+    saleProductCards.forEach((card) => {
+      const name = (card.dataset.name || "").toLowerCase();
+      const categoryId = card.dataset.categoryId;
+
+      const matchesSearch =
+          !saleSearchQuery || name.includes(saleSearchQuery);
+
+      const matchesCategory =
+          selectedSaleCategory === "all" || categoryId === selectedSaleCategory;
+
+      card.style.display =
+          matchesSearch && matchesCategory ? "" : "none";
+    });
+  }
+
+  saleSearchInput?.addEventListener("input", () => {
+    saleSearchQuery = saleSearchInput.value.trim().toLowerCase();
+    applySaleProductFilters();
+  });
+
+  saleCategoryButtons.forEach((button) => {
+    button.addEventListener("click", () => {
+      saleCategoryButtons.forEach((btn) => btn.classList.remove("active"));
+      button.classList.add("active");
+
+      selectedSaleCategory = button.dataset.categoryId || "all";
+      applySaleProductFilters();
+    });
+  });
 });

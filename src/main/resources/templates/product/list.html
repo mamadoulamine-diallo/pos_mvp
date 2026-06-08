@@ -31,14 +31,16 @@
 
     <div class="Products-wrapper">
         <menu class="Products-categories Categories">
-            <button class="Categories-button active Button" type="button">Tous</button>
+            <button class="Categories-button active Button" type="button" data-category-id="all">
+                Tous
+            </button>
 
             <button
                     class="Categories-button Button"
                     type="button"
                     th:each="category : ${categories}"
-                    th:text="${category.name}"
-            >
+                    th:attr="data-category-id=${category.id}"
+                    th:text="${category.name}">
                 Catégorie
             </button>
         </menu>
@@ -55,10 +57,21 @@
             <div class="Filter-backdrop"></div>
 
             <menu class="Filter-list">
-                <button class="Filter-list-item Button active" type="button">Tous</button>
-                <button class="Filter-list-item Button" type="button">Stock faible</button>
-                <button class="Filter-list-item Button" type="button">Rupture</button>
-                <button class="Filter-list-item Button" type="button">Inactifs</button>
+                <button class="Filter-list-item Button active" type="button" data-filter="all">
+                    Tous
+                </button>
+
+                <button class="Filter-list-item Button" type="button" data-filter="low-stock">
+                    Stock faible
+                </button>
+
+                <button class="Filter-list-item Button" type="button" data-filter="out-stock">
+                    Rupture
+                </button>
+
+                <button class="Filter-list-item Button" type="button" data-filter="inactive">
+                    Inactifs
+                </button>
             </menu>
         </div>
     </div>

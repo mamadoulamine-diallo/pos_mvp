@@ -1,5 +1,6 @@
 package com.projectpos.sale.controller;
 
+import com.projectpos.category.service.CategoryService;
 import com.projectpos.product.service.ProductService;
 import com.projectpos.sale.service.SaleService;
 import com.projectpos.user.entity.AppUser;
@@ -24,10 +25,16 @@ public class SaleController {
 
     private final SaleService service;
     private final ProductService productService;
+    private final CategoryService categoryService;
 
-    public SaleController(SaleService service, ProductService productService) {
+    public SaleController(
+            SaleService service,
+            ProductService productService,
+            CategoryService categoryService
+    ) {
         this.service = service;
         this.productService = productService;
+        this.categoryService = categoryService;
     }
 
     @GetMapping("/sales")
@@ -53,6 +60,7 @@ public class SaleController {
 
         model.addAttribute("currentUser", currentUser);
         model.addAttribute("products", productService.findAllForSale());
+        model.addAttribute("categories", categoryService.findAll());
 
         return "sale/new-sale";
     }

@@ -41,6 +41,7 @@ public class ProductService {
                         product.getImageUrl(),
                         priceService.getActivePrice(product.getId()),
                         product.getCategory().getName(),
+                        product.getCategory().getId(),
                         product.getStockQuantity()
                 ))
                 .toList();
