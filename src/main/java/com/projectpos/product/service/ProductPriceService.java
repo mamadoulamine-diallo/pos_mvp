@@ -38,4 +38,36 @@ public class ProductPriceService {
 
         return repository.save(productPrice);
     }
+
+    public void changePrice(
+            Integer productId,
+            BigDecimal salePrice,
+            BigDecimal purchasePrice
+    ) {
+
+        ProductPrice currentPrice =
+                repository.findByProductIdAndEndDateIsNull(productId)
+                        .orElseThrow(
+                                () -> new IllegalArgumentException(
+                                        "Prix actif introuvable"
+                                )
+                        );
+
+        currentPrice.setEndDate(LocalDateTime.now());
+
+        repository.save(currentPrice);
+
+        ProductPrice newPrice = new ProductPrice();
+
+        newPrice.setProduct(currentPrice.getProduct());
+
+        newPrice.setSalePrice(salePrice);
+        newPrice.setPurchasePrice(purchasePrice);
+
+        newPrice.setStartDate(LocalDateTime.now());
+
+        newPrice.setEndDate(null);
+
+        repository.save(newPrice);
+    }
 }

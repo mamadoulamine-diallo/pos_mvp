@@ -25,6 +25,11 @@ const editProductOverlay = document.querySelector(".EditProductOverlay");
 const editProductButton = document.querySelector(".ProductPreview-edit");
 const editProductForm = document.querySelector(".EditProductForm");
 
+const changePriceOverlay = document.querySelector(".ChangePriceOverlay");
+const changePriceButton = document.querySelector(".ProductPreview-changePrice");
+const changePriceForm = document.querySelector(".ChangePriceForm");
+
+
 let currentProductId = null;
 
 function openOverlay(overlay) {
@@ -220,3 +225,41 @@ editProductForm?.addEventListener("submit", async (event) => {
     alert(error.message);
   }
 });
+
+changePriceButton?.addEventListener("click", () => {
+
+      changePriceForm.productId.value = currentProductId;
+      closeOverlay(productPreviewOverlay);
+      openOverlay(changePriceOverlay);
+    }
+);
+
+changePriceForm?.addEventListener("submit", async (event) => {
+
+      event.preventDefault();
+
+      const formData = new FormData(changePriceForm);
+
+      const payload = {productId: Number(formData.get("productId")),
+
+        salePrice: Number(formData.get("salePrice")),
+        purchasePrice: Number(formData.get("purchasePrice")),
+      };
+
+      const response =
+          await fetch("/products/price",
+              {
+                method: "POST",
+                headers: {
+                  "Content-Type":
+                      "application/json",
+                },
+                body: JSON.stringify(payload),
+              }
+          );
+
+      if (response.ok) {
+        window.location.reload();
+      }
+    }
+);

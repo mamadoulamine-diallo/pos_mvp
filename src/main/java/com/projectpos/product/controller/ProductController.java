@@ -2,6 +2,7 @@ package com.projectpos.product.controller;
 
 import com.projectpos.category.service.CategoryService;
 import com.projectpos.product.dto.AddStockRequest;
+import com.projectpos.product.dto.ChangePriceRequest;
 import com.projectpos.product.dto.CreateProductRequest;
 import com.projectpos.product.dto.UpdateProductRequest;
 import com.projectpos.product.entity.Product;
@@ -75,6 +76,22 @@ public class ProductController {
         return Map.of(
                 "productId", product.getId(),
                 "name", product.getName()
+        );
+    }
+
+    @PostMapping("/products/price")
+    @ResponseBody
+    public Map<String, Object> changePrice(@Valid @RequestBody ChangePriceRequest request) {
+
+        priceService.changePrice(
+                request.productId(),
+                request.salePrice(),
+                request.purchasePrice()
+        );
+
+        return Map.of(
+                "success",
+                true
         );
     }
 }

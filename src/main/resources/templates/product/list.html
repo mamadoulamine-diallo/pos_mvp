@@ -290,6 +290,11 @@
             <button class="ProductPreview-edit" type="button">
                 Modifier
             </button>
+            <button
+                    class="ProductPreview-changePrice"
+                    type="button">
+                Modifier prix
+            </button>
         </div>
 
         <button class="ProductPreview-link" type="button">Voir la fiche →</button>
@@ -344,6 +349,70 @@
             </div>
         </form>
     </div>
+</div>
+
+<div class="Overlay ChangePriceOverlay">
+
+    <div class="Overlay-backdrop"></div>
+
+    <div class="Overlay-panel">
+
+        <div class="Overlay-header">
+
+            <h2 class="Overlay-title">
+                Modifier le prix
+            </h2>
+
+            <button
+                    class="Overlay-close"
+                    type="button">
+                ×
+            </button>
+
+        </div>
+
+        <form class="ChangePriceForm">
+
+            <input
+                    type="hidden"
+                    name="productId">
+
+            <label class="AddProductForm-field">
+
+                <span>Prix vente</span>
+
+                <input
+                        type="number"
+                        step="0.01"
+                        name="salePrice"
+                        required>
+
+            </label>
+
+            <label class="AddProductForm-field">
+
+                <span>Prix achat</span>
+
+                <input
+                        type="number"
+                        step="0.01"
+                        name="purchasePrice"
+                        required>
+
+            </label>
+
+            <div class="AddProductForm-actions">
+
+                <button type="submit">
+                    Enregistrer
+                </button>
+
+            </div>
+
+        </form>
+
+    </div>
+
 </div>
 
 <div class="Overlay AddStockOverlay">
