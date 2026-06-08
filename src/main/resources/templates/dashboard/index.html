@@ -14,40 +14,7 @@
 
 <body>
 
-<header class="Header">
-  <nav class="Header-nav MainNav">
-    <a th:href="@{/}" class="Header-nav-link Header-nav-link--active">
-      <img th:src="@{/assets/styles/icons/Accueil.svg}" class="Header-nav-icon" alt="Accueil" />
-    </a>
-
-    <a th:href="@{/products}" class="Header-nav-link">
-      <img th:src="@{/assets/styles/icons/productLink.svg}" class="Header-nav-icon" alt="Produits" />
-    </a>
-
-    <a th:href="@{/sales/new}" class="Header-nav-link">
-      <img th:src="@{/assets/styles/icons/cart.svg}" class="Header-nav-icon" alt="Panier" />
-    </a>
-  </nav>
-
-  <div class="Header-right NavTools">
-    <div class="Header-actions">
-      <button class="Header-action CalculatorTrigger" type="button">
-        <img th:src="@{/assets/styles/icons/calculator.svg}" class="Header-action-icon" alt="Calculatrice" />
-      </button>
-
-      <button class="Header-action" type="button">
-        <img th:src="@{/assets/styles/icons/notification.svg}" class="Header-action-icon" alt="Notifications" />
-      </button>
-    </div>
-
-    <div class="Header-user">
-      <span th:text="${currentUser.role}">
-    GERANT
-</span>
-      <span class="Header-user-time">14:30</span>
-    </div>
-  </div>
-</header>
+<div th:replace="~{fragments/header :: header('dashboard')}"></div>
 
 <main class="Dashboard">
 
@@ -64,10 +31,6 @@
       Nouvelle vente
     </a>
   </section>
-
-  <a th:href="@{/logout}" class="Header-action">
-    Déconnexion
-  </a>
 
   <div class="DashboardPeriod">
     <a th:href="@{/(period='TODAY')}"

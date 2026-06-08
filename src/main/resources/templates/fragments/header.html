@@ -1,0 +1,69 @@
+<!doctype html>
+<html lang="fr" xmlns:th="http://www.thymeleaf.org">
+<body>
+
+<header class="Header" th:fragment="header(activePage)">
+  <nav class="Header-nav MainNav">
+    <a
+            th:href="@{/}"
+            class="Header-nav-link"
+            th:classappend="${activePage == 'dashboard'} ? ' Header-nav-link--active' : ''"
+    >
+      <img th:src="@{/assets/styles/icons/Accueil.svg}" class="Header-nav-icon" alt="Accueil">
+    </a>
+
+    <a
+            th:href="@{/products}"
+            class="Header-nav-link"
+            th:classappend="${activePage == 'products'} ? ' Header-nav-link--active' : ''"
+    >
+      <img th:src="@{/assets/styles/icons/productLink.svg}" class="Header-nav-icon" alt="Produits">
+    </a>
+
+    <a
+            th:href="@{/sales/new}"
+            class="Header-nav-link"
+            th:classappend="${activePage == 'sales'} ? ' Header-nav-link--active' : ''"
+    >
+      <img th:src="@{/assets/styles/icons/venteLink.svg}" class="Header-nav-icon" alt="Vente">
+    </a>
+
+    <button
+            th:if="${activePage == 'products'}"
+            class="Header-nav-link Header-nav-addProduct Products-actions-addProductMobile"
+            type="button"
+    >
+      +
+    </button>
+  </nav>
+
+  <div class="Header-right NavTools">
+    <div class="Header-actions">
+      <button class="Header-action CalculatorTrigger" type="button">
+        <img th:src="@{/assets/styles/icons/calculator.svg}" class="Header-action-icon" alt="Calculatrice">
+      </button>
+
+      <button class="Header-action" type="button">
+        <img th:src="@{/assets/styles/icons/notif.svg}" class="Header-action-icon" alt="Notifications">
+      </button>
+    </div>
+
+    <div class="Header-user">
+      <span
+              class="Header-user-name"
+              th:text="${currentUser != null ? currentUser.role : 'Utilisateur'}"
+      >
+        GERANT
+      </span>
+
+      <span class="Header-user-time">14:30</span>
+    </div>
+
+    <a th:href="@{/logout}" class="Header-logout" title="Déconnexion">
+      <i class="fa-solid fa-right-from-bracket"></i>
+    </a>
+  </div>
+</header>
+
+</body>
+</html>
