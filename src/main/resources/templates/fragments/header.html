@@ -43,9 +43,63 @@
         <img th:src="@{/assets/styles/icons/calculator.svg}" class="Header-action-icon" alt="Calculatrice">
       </button>
 
-      <button class="Header-action" type="button">
-        <img th:src="@{/assets/styles/icons/notif.svg}" class="Header-action-icon" alt="Notifications">
-      </button>
+      <div class="HeaderNotification">
+        <button class="Header-action HeaderNotification-trigger" type="button">
+          <img
+                  th:src="@{/assets/styles/icons/notif.svg}"
+                  class="Header-action-icon"
+                  alt="Notifications"
+          />
+
+          <span
+                  class="HeaderNotification-badge"
+                  th:if="${globalNotificationCount > 0}"
+                  th:text="${globalNotificationCount}"
+          >
+      0
+    </span>
+        </button>
+
+        <div class="HeaderNotification-panel">
+          <header class="HeaderNotification-header">
+            <strong>Notifications</strong>
+            <span th:text="${globalNotificationCount} + ' alerte(s)'">0 alerte</span>
+          </header>
+
+          <div class="HeaderNotification-list">
+            <article
+                    class="HeaderNotification-item"
+                    th:each="alert : ${globalStockAlerts}"
+            >
+              <div>
+                <strong th:text="${alert.productName}">Produit</strong>
+                <small
+                        th:text="${alert.stockQuantity == 0}
+              ? 'Rupture de stock'
+              : 'Stock faible : ' + ${alert.stockQuantity}"
+                >
+                  Stock faible
+                </small>
+              </div>
+
+              <span
+                      class="HeaderNotification-status"
+                      th:classappend="${alert.stockQuantity == 0} ? ' HeaderNotification-status--danger' : ''"
+                      th:text="${alert.stockQuantity == 0} ? 'Rupture' : 'Faible'"
+              >
+          Faible
+        </span>
+            </article>
+
+            <p
+                    class="HeaderNotification-empty"
+                    th:if="${globalNotificationCount == 0}"
+            >
+              Aucune alerte stock.
+            </p>
+          </div>
+        </div>
+      </div>
     </div>
 
     <div class="Header-user">
