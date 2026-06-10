@@ -1,4 +1,5 @@
-import { createCategory } from "./category-api.js";
+import { createCategory, updateCategory } from "./category-api.js";
+
 
 export function initCategoryForms() {
     const addCategoryOverlay = document.querySelector(".AddCategoryOverlay");
@@ -6,6 +7,11 @@ export function initCategoryForms() {
         ".Products-actions-addCategoryDesktop"
     );
     const addCategoryForm = document.querySelector(".AddCategoryForm");
+    const editCategoryOverlay = document.querySelector(".EditCategoryOverlay");
+    const editCategoryButtons = document.querySelectorAll(
+        ".Products-actions-editCategoryDesktop"
+    );
+    const editCategoryForm = document.querySelector(".EditCategoryForm");
 
     function openOverlay(overlay) {
         overlay?.classList.add("open");
@@ -28,6 +34,41 @@ export function initCategoryForms() {
 
         try {
             await createCategory(payload);
+            window.location.reload();
+        } catch (error) {
+            console.error(error);
+            alert(error.message);
+        }
+    });
+
+    editCategoryButtons.forEach((button) => {
+        button.addEventListener("click", () => {
+            editCategoryOverlay?.classList.add("open");
+        });
+    });
+
+    editCategoryForm?.categoryId?.addEventListener("change", () => {
+        const selectedOption =
+            editCategoryForm.categoryId.options[editCategoryForm.categoryId.selectedIndex];
+
+        editCategoryForm.name.value = selectedOption.textContent.trim();
+        editCategoryForm.active.value =
+            selectedOption.dataset.active === "true" ? "true" : "false";
+    });
+
+    editCategoryForm?.addEventListener("submit", async (event) => {
+        event.preventDefault();
+
+        const formData = new FormData(editCategoryForm);
+        const categoryId = formData.get("categoryId");
+
+        const payload = {
+            name: formData.get("name"),
+            active: formData.get("active") === "true",
+        };
+
+        try {
+            await updateCategory(categoryId, payload);
             window.location.reload();
         } catch (error) {
             console.error(error);

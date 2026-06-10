@@ -31,6 +31,9 @@
     <button class="Products-actions-addCategoryDesktop CTA" type="button">
         Ajouter une catégorie
     </button>
+    <button class="Products-actions-editCategoryDesktop CTA" type="button">
+        Modifier catégorie
+    </button>
 
     <div class="Products-wrapper">
         <menu class="Products-categories Categories">
@@ -463,6 +466,49 @@
 
             <div class="AddProductForm-actions">
                 <button type="submit">Créer</button>
+            </div>
+        </form>
+    </div>
+</div>
+<div class="Overlay EditCategoryOverlay">
+    <div class="Overlay-backdrop"></div>
+
+    <div class="Overlay-panel">
+        <div class="Overlay-header">
+            <h2 class="Overlay-title">Modifier une catégorie</h2>
+            <button class="Overlay-close" type="button">×</button>
+        </div>
+
+        <form class="EditCategoryForm">
+            <label class="AddProductForm-field">
+                <span>Catégorie</span>
+                <select name="categoryId" required>
+                    <option
+                            th:each="category : ${categories}"
+                            th:value="${category.id}"
+                            th:text="${category.name}"
+                            th:attr="data-active=${category.active}"
+                    >
+                        Catégorie
+                    </option>
+                </select>
+            </label>
+
+            <label class="AddProductForm-field">
+                <span>Nouveau nom</span>
+                <input name="name" type="text" required>
+            </label>
+
+            <label class="AddProductForm-field">
+                <span>Statut</span>
+                <select name="active" required>
+                    <option value="true">Actif</option>
+                    <option value="false">Inactif</option>
+                </select>
+            </label>
+
+            <div class="AddProductForm-actions">
+                <button type="submit">Enregistrer</button>
             </div>
         </form>
     </div>
