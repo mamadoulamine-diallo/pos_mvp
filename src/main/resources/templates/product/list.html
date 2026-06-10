@@ -28,6 +28,9 @@
     </div>
 
     <hr />
+    <button class="Products-actions-addCategoryDesktop CTA" type="button">
+        Ajouter une catégorie
+    </button>
 
     <div class="Products-wrapper">
         <menu class="Products-categories Categories">
@@ -441,6 +444,28 @@
 
     </div>
 
+</div>
+
+<div class="Overlay AddCategoryOverlay">
+    <div class="Overlay-backdrop"></div>
+
+    <div class="Overlay-panel">
+        <div class="Overlay-header">
+            <h2 class="Overlay-title">+ Nouvelle catégorie</h2>
+            <button class="Overlay-close" type="button">×</button>
+        </div>
+
+        <form class="AddCategoryForm">
+            <label class="AddProductForm-field">
+                <span>Nom catégorie *</span>
+                <input name="name" type="text" required>
+            </label>
+
+            <div class="AddProductForm-actions">
+                <button type="submit">Créer</button>
+            </div>
+        </form>
+    </div>
 </div>
 
 <script th:src="@{/assets/js/components/calculator.js}"></script>

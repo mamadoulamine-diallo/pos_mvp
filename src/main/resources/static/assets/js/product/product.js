@@ -2,6 +2,7 @@ import { initNotifications } from "../components/notifications.js";
 import { initProductPreview } from "./product-preview.js";
 import { initProductForms } from "./product-forms.js";
 import { initProductFilters } from "./product-filters.js";
+import { initCategoryForms } from "../category/category-forms.js";
 
 document.addEventListener("DOMContentLoaded", () => {
   let currentProductId = null;
@@ -18,6 +19,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
   initProductFilters();
   initNotifications();
+  initCategoryForms();
 
   const cartButtons = document.querySelectorAll(".ProductCard-footer-action");
 
