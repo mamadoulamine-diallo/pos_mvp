@@ -4,26 +4,11 @@ import { initSaleFilters } from "./sale-filters.js";
 import { initSaleCartUi } from "./sale-cart-ui.js";
 import { initCheckout } from "./checkout.js";
 import { initReceipt } from "./receipt.js";
+import { showToast } from "../components/toast.js";
 
 document.addEventListener("DOMContentLoaded", () => {
     function formatPrice(price) {
         return `${price.toLocaleString("fr-FR")} F`;
-    }
-
-    function showToast(message) {
-        const toast = document.createElement("div");
-
-        toast.className = "Toast";
-        toast.textContent = message;
-
-        document.body.appendChild(toast);
-
-        setTimeout(() => toast.classList.add("show"), 10);
-
-        setTimeout(() => {
-            toast.classList.remove("show");
-            setTimeout(() => toast.remove(), 300);
-        }, 2000);
     }
 
     let renderCartRef = null;

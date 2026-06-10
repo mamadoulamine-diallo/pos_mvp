@@ -3,6 +3,7 @@ import { initProductPreview } from "./product-preview.js";
 import { initProductForms } from "./product-forms.js";
 import { initProductFilters } from "./product-filters.js";
 import { initCategoryForms } from "../category/category-forms.js";
+import { showToast } from "../components/toast.js";
 
 document.addEventListener("DOMContentLoaded", () => {
   let currentProductId = null;
@@ -15,6 +16,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
   initProductForms({
     getCurrentProductId: () => currentProductId,
+    showToast,
   });
 
   initProductFilters();

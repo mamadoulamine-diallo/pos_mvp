@@ -5,7 +5,7 @@ import {
     changePrice,
 } from "./product-api.js";
 
-export function initProductForms({ getCurrentProductId }) {
+export function initProductForms({ getCurrentProductId, showToast }) {
     const addProductOverlay = document.querySelector(".AddProductOverlay");
     const productPreviewOverlay = document.querySelector(".ProductPreviewOverlay");
     const addStockOverlay = document.querySelector(".AddStockOverlay");
@@ -37,6 +37,12 @@ export function initProductForms({ getCurrentProductId }) {
         overlay?.classList.remove("open");
     }
 
+    function reloadAfterToast() {
+        setTimeout(() => {
+            window.location.reload();
+        }, 650);
+    }
+
     addProductButtons.forEach((button) => {
         button.addEventListener("click", () => {
             openOverlay(addProductOverlay);
@@ -59,10 +65,11 @@ export function initProductForms({ getCurrentProductId }) {
 
         try {
             await createProduct(payload);
-            window.location.reload();
+            showToast("Produit créé avec succès");
+            reloadAfterToast();
         } catch (error) {
             console.error(error);
-            alert(error.message);
+            showToast(error.message, "error");
         }
     });
 
@@ -89,10 +96,11 @@ export function initProductForms({ getCurrentProductId }) {
 
         try {
             await addStock(payload);
-            window.location.reload();
+            showToast("Stock ajouté avec succès");
+            reloadAfterToast();
         } catch (error) {
             console.error(error);
-            alert(error.message);
+            showToast(error.message, "error");
         }
     });
 
@@ -129,10 +137,11 @@ export function initProductForms({ getCurrentProductId }) {
 
         try {
             await updateProduct(productId, payload);
-            window.location.reload();
+            showToast("Produit modifié avec succès");
+            reloadAfterToast();
         } catch (error) {
             console.error(error);
-            alert(error.message);
+            showToast(error.message, "error");
         }
     });
 
@@ -160,10 +169,11 @@ export function initProductForms({ getCurrentProductId }) {
 
         try {
             await changePrice(payload);
-            window.location.reload();
+            showToast("Prix modifié avec succès");
+            reloadAfterToast();
         } catch (error) {
             console.error(error);
-            alert(error.message);
+            showToast(error.message, "error");
         }
     });
 }

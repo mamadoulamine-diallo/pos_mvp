@@ -861,6 +861,17 @@ button {
   -webkit-transform: translate(-50%, 0);
           transform: translate(-50%, 0);
 }
+.Toast--success {
+  background: #74a23c;
+}
+
+.Toast--error {
+  background: #c0392b;
+}
+
+.Toast--warning {
+  background: #d68910;
+}
 
 .CartFloatingButton.bounce {
   -webkit-animation: cartBounce 300ms ease;
