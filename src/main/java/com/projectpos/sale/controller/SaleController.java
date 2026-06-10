@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
+import org.springframework.web.bind.annotation.PathVariable;
 
 import java.util.Map;
 
@@ -80,6 +81,23 @@ public class SaleController {
                 "saleId", sale.getId(),
                 "status", sale.getStatus().name()
         );
+    }
+
+    @GetMapping("/sales/{id}")
+    public String saleDetails(
+            @PathVariable Integer id,
+            HttpSession session,
+            Model model
+    ) {
+        AppUser currentUser = (AppUser) session.getAttribute("currentUser");
+
+        if (currentUser == null) {
+            return "redirect:/login";
+        }
+
+        model.addAttribute("sale", service.getSaleDetailDto(id));
+
+        return "sale/details";
     }
 
     @ExceptionHandler(IllegalArgumentException.class)

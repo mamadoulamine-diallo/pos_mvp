@@ -2189,6 +2189,126 @@ button {
   font-size: 22px;
   font-weight: 900;
 }
+.SaleCard-link {
+  margin-top: 14px;
+
+  display: inline-flex;
+
+  color: #74a23c;
+  font-weight: 900;
+  text-decoration: none;
+}
+
+.SaleDetails {
+  min-height: 100vh;
+  padding: 28px 18px 80px;
+  background: #f3f5ef;
+}
+
+.SaleDetails-card,
+.SaleDetails-items {
+  margin-top: 18px;
+  padding: 22px;
+  background: #ffffff;
+  border-radius: 24px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
+}
+
+.SaleDetails-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  margin-bottom: 20px;
+}
+
+.SaleDetails-eyebrow {
+  color: #74a23c;
+  font-size: 13px;
+  font-weight: 900;
+  text-transform: uppercase;
+}
+
+.SaleDetails-header h1 {
+  color: #343a40;
+  font-size: 34px;
+  font-weight: 900;
+}
+
+.SaleDetails-status {
+  padding: 8px 12px;
+  border-radius: 999px;
+  background: #f3f5ef;
+  color: #74a23c;
+  font-size: 12px;
+  font-weight: 900;
+}
+
+.SaleDetails-meta {
+  display: grid;
+  gap: 12px;
+}
+
+.SaleDetails-meta article {
+  padding: 16px;
+  background: #f3f5ef;
+  border-radius: 16px;
+}
+
+.SaleDetails-meta span {
+  display: block;
+  margin-bottom: 6px;
+  color: #777;
+  font-size: 13px;
+  font-weight: 700;
+}
+
+.SaleDetails-meta strong {
+  color: #343a40;
+  font-size: 18px;
+  font-weight: 900;
+}
+
+.SaleDetails-items h2 {
+  margin-bottom: 16px;
+  color: #343a40;
+  font-size: 24px;
+  font-weight: 900;
+}
+
+.SaleDetails-item {
+  padding: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  background: #f8f9f7;
+  border-radius: 14px;
+}
+
+.SaleDetails-item + .SaleDetails-item {
+  margin-top: 10px;
+}
+
+.SaleDetails-item strong {
+  color: #343a40;
+  font-weight: 900;
+}
+
+.SaleDetails-item span {
+  color: #777;
+  font-size: 13px;
+}
+
+@media (min-width: 768px) {
+  .SaleDetails {
+    padding: 36px 40px;
+  }
+
+  .SaleDetails-meta {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
 
 .BackButton {
   width: fit-content;

@@ -1,0 +1,135 @@
+<!doctype html>
+<html lang="fr" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Détail vente</title>
+
+  <link rel="stylesheet" th:href="@{/assets/styles/style.css}">
+</head>
+
+<body>
+
+<main class="SaleDetails">
+
+  <a th:href="@{/sales}" class="BackButton">
+    ← Historique
+  </a>
+
+  <section class="SaleDetails-card">
+
+    <div class="SaleDetails-header">
+
+      <div>
+        <p class="SaleDetails-eyebrow">Vente</p>
+
+        <h1>
+          Reçu #
+          <span th:text="${sale.saleId}">
+                        0001
+                    </span>
+        </h1>
+      </div>
+
+      <span
+              class="SaleDetails-status"
+              th:text="${sale.status}"
+      >
+                VALIDEE
+            </span>
+
+    </div>
+
+    <div class="SaleDetails-meta">
+
+      <article>
+        <span>Date</span>
+
+        <strong
+                th:text="${#temporals.format(sale.saleDate, 'dd/MM/yyyy HH:mm')}"
+        >
+          Date
+        </strong>
+      </article>
+
+      <article>
+        <span>Utilisateur</span>
+
+        <strong
+                th:text="${sale.userRole}"
+        >
+          GERANT
+        </strong>
+      </article>
+
+      <article>
+        <span>Articles vendus</span>
+
+        <strong
+                th:text="${sale.itemCount}"
+        >
+          0
+        </strong>
+      </article>
+
+      <article>
+        <span>Total vente</span>
+
+        <strong
+                th:text="${sale.total} + ' F'"
+        >
+          0 F
+        </strong>
+      </article>
+
+    </div>
+
+  </section>
+
+  <section class="SaleDetails-items">
+
+    <h2>Articles vendus</h2>
+
+    <article
+            class="SaleDetails-item"
+            th:each="item : ${sale.items}"
+    >
+
+      <div>
+
+        <strong
+                th:text="${item.productName}"
+        >
+          Produit
+        </strong>
+
+        <span>
+                    <span th:text="${item.quantity}">
+                        1
+                    </span>
+
+                    ×
+
+                    <span th:text="${item.unitPrice}">
+                        0
+                    </span>
+
+                    F
+                </span>
+
+      </div>
+
+      <strong
+              th:text="${item.lineTotal} + ' F'"
+      >
+        0 F
+      </strong>
+
+    </article>
+
+  </section>
+
+</main>
+
+</body>
+</html>

@@ -65,6 +65,12 @@
                       class="SaleCard-total"
                       th:text="${sale.total} + ' F'">
               </strong>
+              <a
+                      th:href="@{/sales/{id}(id=${sale.saleId})}"
+                      class="SaleCard-link"
+              >
+                Voir détail →
+              </a>
 
             </div>
 

@@ -2,6 +2,7 @@ package com.projectpos.sale.service;
 
 import com.projectpos.product.repository.ProductRepository;
 import com.projectpos.product.service.ProductPriceService;
+import com.projectpos.sale.dto.SaleDetailItemDto;
 import com.projectpos.sale.dto.SaleHistoryDto;
 import com.projectpos.sale.entity.Sale;
 import com.projectpos.sale.repository.SaleRepository;
@@ -15,6 +16,7 @@ import com.projectpos.user.entity.AppUser;
 import jakarta.transaction.Transactional;
 import java.math.BigDecimal;
 import java.util.List;
+import com.projectpos.sale.dto.SaleDetailDto;
 
 @Service
 public class SaleService {
@@ -77,5 +79,47 @@ public class SaleService {
 
     public List<SaleHistoryDto> getSaleHistory() {
         return repository.findSaleHistory();
+    }
+
+    public Sale getSaleDetails(Integer id) {
+        return repository.findByIdWithItems(id)
+                .orElseThrow(() -> new IllegalArgumentException("Vente introuvable"));
+    }
+
+    public SaleDetailDto getSaleDetailDto(Integer id) {
+        Sale sale = getSaleDetails(id);
+
+        List<SaleDetailItemDto> items = sale.getItems()
+                .stream()
+                .map(item -> {
+                    BigDecimal lineTotal = item.getUnitPrice()
+                            .multiply(BigDecimal.valueOf(item.getQuantity()));
+
+                    return new SaleDetailItemDto(
+                            item.getProduct().getName(),
+                            item.getQuantity(),
+                            item.getUnitPrice(),
+                            lineTotal
+                    );
+                })
+                .toList();
+
+        BigDecimal total = items.stream()
+                .map(SaleDetailItemDto::lineTotal)
+                .reduce(BigDecimal.ZERO, BigDecimal::add);
+
+        Long itemCount = items.stream()
+                .mapToLong(SaleDetailItemDto::quantity)
+                .sum();
+
+        return new SaleDetailDto(
+                sale.getId(),
+                sale.getSaleDate(),
+                sale.getStatus(),
+                sale.getUser().getRole(),
+                itemCount,
+                total,
+                items
+        );
     }
 }

@@ -6,6 +6,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface SaleRepository extends JpaRepository<Sale, Integer> {
 
@@ -26,4 +27,14 @@ public interface SaleRepository extends JpaRepository<Sale, Integer> {
     ORDER BY s.saleDate DESC
 """)
     List<SaleHistoryDto> findSaleHistory();
+
+    @Query("""
+    SELECT DISTINCT s
+    FROM Sale s
+    JOIN FETCH s.items si
+    JOIN FETCH si.product
+    JOIN FETCH s.user
+    WHERE s.id = :id
+""")
+    Optional<Sale> findByIdWithItems(Integer id);
 }
