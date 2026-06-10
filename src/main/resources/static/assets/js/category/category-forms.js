@@ -1,4 +1,5 @@
 import { createCategory, updateCategory } from "./category-api.js";
+import { showToast } from "../components/toast.js";
 
 
 export function initCategoryForms() {
@@ -34,10 +35,11 @@ export function initCategoryForms() {
 
         try {
             await createCategory(payload);
-            window.location.reload();
+            showToast("Catégorie créée avec succès");
+            setTimeout(() => window.location.reload(), 600);
         } catch (error) {
             console.error(error);
-            alert(error.message);
+            showToast(error.message, "error");
         }
     });
 
@@ -69,10 +71,11 @@ export function initCategoryForms() {
 
         try {
             await updateCategory(categoryId, payload);
-            window.location.reload();
+            showToast("Catégorie modifiée avec succès");
+            setTimeout(() => window.location.reload(), 600);
         } catch (error) {
             console.error(error);
-            alert(error.message);
+            showToast(error.message, "error");
         }
     });
 }
