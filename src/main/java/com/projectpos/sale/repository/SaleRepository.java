@@ -11,30 +11,32 @@ import java.util.Optional;
 public interface SaleRepository extends JpaRepository<Sale, Integer> {
 
     @Query("""
-    SELECT new com.projectpos.sale.dto.SaleHistoryDto(
-        s.id,
-        s.saleDate,
-        s.user.role,
-        SUM(si.quantity),
-        SUM(si.quantity * si.unitPrice)
-    )
-    FROM Sale s
-    JOIN s.items si
-    GROUP BY
-        s.id,
-        s.saleDate,
-        s.user.role
-    ORDER BY s.saleDate DESC
-""")
+        SELECT new com.projectpos.sale.dto.SaleHistoryDto(
+            s.id,
+            s.saleDate,
+            s.user.fullName,
+            s.user.role,
+            SUM(si.quantity),
+            SUM(si.quantity * si.unitPrice)
+        )
+        FROM Sale s
+        JOIN s.items si
+        GROUP BY
+            s.id,
+            s.saleDate,
+            s.user.fullName,
+            s.user.role
+        ORDER BY s.saleDate DESC
+    """)
     List<SaleHistoryDto> findSaleHistory();
 
     @Query("""
-    SELECT DISTINCT s
-    FROM Sale s
-    JOIN FETCH s.items si
-    JOIN FETCH si.product
-    JOIN FETCH s.user
-    WHERE s.id = :id
-""")
+        SELECT DISTINCT s
+        FROM Sale s
+        JOIN FETCH s.items si
+        JOIN FETCH si.product
+        JOIN FETCH s.user
+        WHERE s.id = :id
+    """)
     Optional<Sale> findByIdWithItems(Integer id);
 }

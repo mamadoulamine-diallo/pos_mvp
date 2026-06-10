@@ -55,11 +55,13 @@
       <article>
         <span>Utilisateur</span>
 
-        <strong
-                th:text="${sale.userRole}"
-        >
-          GERANT
+        <strong th:text="${sale.userName}">
+          Lamine Diallo
         </strong>
+
+        <small th:text="${sale.userRole}">
+          GERANT
+        </small>
       </article>
 
       <article>

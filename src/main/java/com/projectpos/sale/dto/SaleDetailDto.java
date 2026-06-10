@@ -9,6 +9,7 @@ import java.util.List;
 
 public record SaleDetailDto(
         Integer saleId,
+        String userName,
         LocalDateTime saleDate,
         SaleStatus status,
         UserRole userRole,

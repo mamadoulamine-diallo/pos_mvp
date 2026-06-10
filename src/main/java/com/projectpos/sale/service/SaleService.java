@@ -114,6 +114,7 @@ public class SaleService {
 
         return new SaleDetailDto(
                 sale.getId(),
+                sale.getUser().getFullName(),
                 sale.getSaleDate(),
                 sale.getStatus(),
                 sale.getUser().getRole(),

@@ -8,6 +8,7 @@ import java.time.LocalDateTime;
 public record SaleHistoryDto(
         Integer saleId,
         LocalDateTime saleDate,
+        String userName,
         UserRole userRole,
         Long itemCount,
         BigDecimal total

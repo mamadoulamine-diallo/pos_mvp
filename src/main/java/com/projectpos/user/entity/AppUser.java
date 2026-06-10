@@ -15,6 +15,9 @@ public class AppUser {
     @Column(name = "id_user")
     private Integer id;
 
+    @Column(name = "full_name", nullable = false, length = 150)
+    private String fullName;
+
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     private UserRole role;
