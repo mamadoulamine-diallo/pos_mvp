@@ -28,6 +28,14 @@
       <img th:src="@{/assets/styles/icons/venteLink.svg}" class="Header-nav-icon" alt="Vente">
     </a>
 
+    <a
+            th:href="@{/users}"
+            class="Header-nav-link"
+            th:classappend="${activePage == 'users'} ? ' active' : ''"
+    >
+      Utilisateurs
+    </a>
+
     <button
             th:if="${activePage == 'products'}"
             class="Header-nav-link Header-nav-addProduct Products-actions-addProductMobile"

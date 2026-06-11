@@ -2768,3 +2768,41 @@ button {
   }
 }/*# sourceMappingURL=style.css.map */
 
+.Users {
+  padding: 90px 20px;
+}
+
+.Users-actions {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  margin-bottom: 24px;
+}
+
+.Users-list {
+  display: grid;
+  gap: 16px;
+}
+
+.UserCard {
+  padding: 18px;
+
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  border-radius: 18px;
+
+  background: #fff;
+}
+
+.UserCard-content h2 {
+  margin-bottom: 6px;
+}
+
+.UserCard-actions {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}

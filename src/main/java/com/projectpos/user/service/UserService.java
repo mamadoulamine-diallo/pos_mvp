@@ -33,6 +33,13 @@ public class UserService {
     }
 
     public AppUser createUser(CreateUserRequest request) {
+
+        if (repository.existsByPinCode(request.pinCode())) {
+            throw new IllegalArgumentException(
+                    "Ce code PIN est déjà utilisé"
+            );
+        }
+
         AppUser user = new AppUser();
 
         user.setFullName(request.fullName());
@@ -45,6 +52,15 @@ public class UserService {
     }
 
     public AppUser updateUser(Integer id, UpdateUserRequest request) {
+
+        if (repository.existsByPinCodeAndIdNot(
+                request.pinCode(),
+                id
+        )) {
+            throw new IllegalArgumentException(
+                    "Ce code PIN est déjà utilisé");
+        }
+
         AppUser user = repository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("Utilisateur introuvable"));
 

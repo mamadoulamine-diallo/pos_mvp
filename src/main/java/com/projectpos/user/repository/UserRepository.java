@@ -11,4 +11,8 @@ public interface UserRepository
     Optional<AppUser> findByPinCodeAndActiveTrue(
             String pinCode
     );
+
+    boolean existsByPinCode(String pinCode);
+
+    boolean existsByPinCodeAndIdNot(String pinCode, Integer id);
 }

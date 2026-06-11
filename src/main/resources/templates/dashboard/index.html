@@ -21,7 +21,9 @@
   <section class="Dashboard-hero">
     <div>
       <p class="Dashboard-eyebrow">Tableau de bord</p>
-      <h1 class="Dashboard-title">Bonjour Lamine</h1>
+      <h1 th:text="'Bonjour ' + ${currentUser.fullName}">
+        Bonjour utilisateur
+      </h1>
       <p class="Dashboard-subtitle">
         Voici l’activité de votre commerce aujourd’hui.
       </p>
