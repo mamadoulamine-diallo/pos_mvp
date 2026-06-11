@@ -1,0 +1,26 @@
+.BackButton {
+  width: fit-content;
+  margin-bottom: 16px;
+  padding: 10px 14px;
+
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+
+  border-radius: 12px;
+
+  background: #ffffff;
+  color: #343a40;
+
+  text-decoration: none;
+  font-weight: 800;
+
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+
+  transition: transform 200ms ease, box-shadow 200ms ease;
+}
+
+.BackButton:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 8px 18px rgba(0, 0, 0, 0.12);
+}

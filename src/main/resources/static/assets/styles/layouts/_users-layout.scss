@@ -1,0 +1,115 @@
+.Users {
+  min-height: 100vh;
+  padding: 90px 20px;
+  background: #f3f5ef;
+}
+
+.Users-actions {
+  margin-bottom: 24px;
+
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+.Users-actions h1 {
+  color: #343a40;
+  font-size: 32px;
+  font-weight: 900;
+}
+
+.Users-list {
+  display: grid;
+  gap: 16px;
+}
+
+.UserCard {
+  padding: 18px;
+
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 18px;
+
+  border-radius: 18px;
+
+  background: #ffffff;
+  box-shadow: 0 8px 22px rgba(0, 0, 0, 0.06);
+}
+
+.UserCard-content h2 {
+  margin-bottom: 6px;
+
+  color: #343a40;
+  font-size: 20px;
+  font-weight: 900;
+}
+
+.UserCard-content span {
+  display: inline-flex;
+  margin-bottom: 4px;
+
+  color: #74a23c;
+  font-size: 13px;
+  font-weight: 900;
+}
+
+.UserCard-content small {
+  display: block;
+
+  color: #777;
+  font-size: 13px;
+}
+
+.UserCard-actions {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.UserCard-actions span {
+  padding: 6px 10px;
+
+  border-radius: 999px;
+
+  background: #f3f5ef;
+  color: #74a23c;
+
+  font-size: 12px;
+  font-weight: 900;
+}
+
+.UserCard-edit {
+  border: none;
+  border-radius: 12px;
+
+  padding: 10px 14px;
+
+  background: #343a40;
+  color: #ffffff;
+
+  font-weight: 800;
+  cursor: pointer;
+}
+
+@media (max-width: 767px) {
+  .Users {
+    padding: 80px 14px;
+  }
+
+  .Users-actions {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .UserCard {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .UserCard-actions {
+    width: 100%;
+    justify-content: space-between;
+  }
+}

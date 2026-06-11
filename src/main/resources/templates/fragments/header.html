@@ -3,11 +3,14 @@
 <body>
 
 <header class="Header" th:fragment="header(activePage)">
+
   <nav class="Header-nav MainNav">
+
     <a
             th:href="@{/}"
             class="Header-nav-link"
             th:classappend="${activePage == 'dashboard'} ? ' Header-nav-link--active' : ''"
+            title="Accueil"
     >
       <img th:src="@{/assets/styles/icons/Accueil.svg}" class="Header-nav-icon" alt="Accueil">
     </a>
@@ -16,6 +19,7 @@
             th:href="@{/products}"
             class="Header-nav-link"
             th:classappend="${activePage == 'products'} ? ' Header-nav-link--active' : ''"
+            title="Produits"
     >
       <img th:src="@{/assets/styles/icons/productLink.svg}" class="Header-nav-icon" alt="Produits">
     </a>
@@ -24,67 +28,68 @@
             th:href="@{/sales/new}"
             class="Header-nav-link"
             th:classappend="${activePage == 'sales'} ? ' Header-nav-link--active' : ''"
+            title="Ventes"
     >
-      <img th:src="@{/assets/styles/icons/venteLink.svg}" class="Header-nav-icon" alt="Vente">
-    </a>
-
-    <a
-            th:href="@{/users}"
-            class="Header-nav-link"
-            th:classappend="${activePage == 'users'} ? ' active' : ''"
-    >
-      Utilisateurs
+      <img th:src="@{/assets/styles/icons/venteLink.svg}" class="Header-nav-icon" alt="Ventes">
     </a>
 
     <button
             th:if="${activePage == 'products'}"
             class="Header-nav-link Header-nav-addProduct Products-actions-addProductMobile"
             type="button"
+            title="Ajouter un produit"
     >
       +
     </button>
+
   </nav>
 
   <div class="Header-right NavTools">
+
     <div class="Header-actions">
-      <button class="Header-action CalculatorTrigger" type="button">
+
+      <button class="Header-action CalculatorTrigger" type="button" title="Calculatrice">
         <img th:src="@{/assets/styles/icons/calculator.svg}" class="Header-action-icon" alt="Calculatrice">
       </button>
 
       <div class="HeaderNotification">
-        <button class="Header-action HeaderNotification-trigger" type="button">
+
+        <button class="Header-action HeaderNotification-trigger" type="button" title="Notifications">
           <img
                   th:src="@{/assets/styles/icons/notif.svg}"
                   class="Header-action-icon"
                   alt="Notifications"
-          />
+          >
 
           <span
                   class="HeaderNotification-badge"
                   th:if="${globalNotificationCount > 0}"
                   th:text="${globalNotificationCount}"
           >
-      0
-    </span>
+            0
+          </span>
         </button>
 
         <div class="HeaderNotification-panel">
+
           <header class="HeaderNotification-header">
             <strong>Notifications</strong>
             <span th:text="${globalNotificationCount} + ' alerte(s)'">0 alerte</span>
           </header>
 
           <div class="HeaderNotification-list">
+
             <article
                     class="HeaderNotification-item"
                     th:each="alert : ${globalStockAlerts}"
             >
               <div>
                 <strong th:text="${alert.productName}">Produit</strong>
+
                 <small
                         th:text="${alert.stockQuantity == 0}
-              ? 'Rupture de stock'
-              : 'Stock faible : ' + ${alert.stockQuantity}"
+                    ? 'Rupture de stock'
+                    : 'Stock faible : ' + ${alert.stockQuantity}"
                 >
                   Stock faible
                 </small>
@@ -95,8 +100,8 @@
                       th:classappend="${alert.stockQuantity == 0} ? ' HeaderNotification-status--danger' : ''"
                       th:text="${alert.stockQuantity == 0} ? 'Rupture' : 'Faible'"
               >
-          Faible
-        </span>
+                Faible
+              </span>
             </article>
 
             <p
@@ -105,6 +110,7 @@
             >
               Aucune alerte stock.
             </p>
+
           </div>
         </div>
       </div>
@@ -113,7 +119,14 @@
     <div class="Header-user">
       <span
               class="Header-user-name"
-              th:text="${currentUser != null ? currentUser.role : 'Utilisateur'}"
+              th:text="${currentUser != null ? currentUser.fullName : 'Utilisateur'}"
+      >
+        Utilisateur
+      </span>
+
+      <span
+              class="Header-user-role"
+              th:text="${currentUser != null ? currentUser.role : ''}"
       >
         GERANT
       </span>
@@ -121,10 +134,28 @@
       <span class="Header-user-time">14:30</span>
     </div>
 
-    <a th:href="@{/logout}" class="Header-logout" title="Déconnexion">
-      <i class="fa-solid fa-right-from-bracket"></i>
-    </a>
+    <div class="HeaderAccount">
+
+      <button class="HeaderAccount-trigger" type="button" title="Compte">
+        <i class="fa-solid fa-user"></i>
+      </button>
+
+      <div class="HeaderAccount-menu">
+
+        <a th:href="@{/users}" class="HeaderAccount-link">
+          Utilisateurs
+        </a>
+
+        <a th:href="@{/logout}" class="HeaderAccount-link HeaderAccount-link--danger">
+          Déconnexion
+        </a>
+
+      </div>
+
+    </div>
+
   </div>
+
 </header>
 
 </body>

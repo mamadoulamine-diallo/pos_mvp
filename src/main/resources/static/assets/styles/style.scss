@@ -20,3 +20,16 @@
 @use "./components/checkout";
 @use "./components/receipt";
 @use "./layouts/dashboard-layout";
+
+@use "./components/notifications";
+@use "./components/header-account";
+@use "./components/toast";
+
+@use "./layouts/users-layout";
+@use "./layouts/sale-details";
+@use "./layouts/product-details";
+
+@use "./layouts/login-layout";
+@use "./layouts/sales-history";
+
+@use "./components/back-button";

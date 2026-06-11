@@ -1,0 +1,132 @@
+.ProductDetails {
+  min-height: 100vh;
+  padding: 28px 18px 80px;
+  background: #f3f5ef;
+}
+
+.ProductDetails-card {
+  margin-top: 18px;
+  padding: 22px;
+
+  display: grid;
+  gap: 22px;
+
+  background: #ffffff;
+  border-radius: 24px;
+
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
+}
+
+.ProductDetails-image {
+  width: 100%;
+  height: 220px;
+
+  object-fit: contain;
+
+  border-radius: 18px;
+  background: #f8f9f7;
+}
+
+.ProductDetails-eyebrow {
+  margin-bottom: 6px;
+
+  color: #74a23c;
+  font-size: 13px;
+  font-weight: 900;
+  text-transform: uppercase;
+}
+
+.ProductDetails-info h1 {
+  margin-bottom: 20px;
+
+  color: #343a40;
+  font-size: 34px;
+  font-weight: 900;
+}
+
+.ProductDetails-stats {
+  display: grid;
+  gap: 12px;
+}
+
+.ProductDetails-stats article {
+  padding: 16px;
+
+  background: #f3f5ef;
+  border-radius: 16px;
+}
+
+.ProductDetails-stats span {
+  display: block;
+  margin-bottom: 6px;
+
+  color: #777;
+  font-size: 13px;
+  font-weight: 700;
+}
+
+.ProductDetails-stats strong {
+  color: #343a40;
+  font-size: 24px;
+  font-weight: 900;
+}
+
+.ProductDetails-history {
+  margin-top: 24px;
+  padding: 22px;
+
+  background: #ffffff;
+  border-radius: 24px;
+
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
+}
+
+.ProductDetails-history h2 {
+  margin-bottom: 16px;
+
+  color: #343a40;
+  font-size: 24px;
+  font-weight: 900;
+}
+
+.ProductPriceHistory {
+  display: grid;
+  gap: 12px;
+}
+
+.ProductPriceHistory-item {
+  padding: 14px;
+
+  display: grid;
+  gap: 8px;
+
+  background: #f8f9f7;
+  border-radius: 14px;
+}
+
+.ProductPriceHistory-item strong {
+  color: #74a23c;
+  font-size: 18px;
+  font-weight: 900;
+}
+
+.ProductPriceHistory-item small,
+.ProductPriceHistory-item span {
+  color: #777;
+  font-size: 13px;
+}
+
+@media (min-width: 768px) {
+  .ProductDetails {
+    padding: 36px 40px;
+  }
+
+  .ProductDetails-card {
+    grid-template-columns: 320px 1fr;
+    align-items: center;
+  }
+
+  .ProductDetails-stats {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}

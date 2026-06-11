@@ -1,0 +1,131 @@
+.AuthPage {
+  min-height: 100vh;
+  background: #f3f5ef;
+}
+
+.PinLogin {
+  min-height: 100vh;
+  padding: 24px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.PinLogin-card {
+  width: min(100%, 420px);
+  padding: 28px;
+
+  background: #ffffff;
+  border-radius: 28px;
+
+  box-shadow: 0 16px 44px rgba(0, 0, 0, 0.12);
+}
+
+.PinLogin-brand {
+  margin-bottom: 28px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+
+  color: #343a40;
+  font-size: 20px;
+  font-weight: 900;
+}
+
+.PinLogin-brand span span {
+  color: #74a23c;
+}
+
+.PinLogin-logo {
+  font-size: 28px;
+}
+
+.PinLogin-title {
+  margin-bottom: 8px;
+
+  color: #343a40;
+  font-size: 34px;
+  font-weight: 900;
+
+  text-align: center;
+}
+
+.PinLogin-subtitle {
+  margin-bottom: 24px;
+
+  color: #777;
+  font-size: 14px;
+  font-weight: 700;
+
+  text-align: center;
+}
+
+.PinLogin-input {
+  position: absolute;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.PinLogin-display {
+  margin-bottom: 24px;
+
+  display: flex;
+  justify-content: center;
+  gap: 12px;
+}
+
+.PinLogin-display span {
+  width: 16px;
+  height: 16px;
+
+  border-radius: 999px;
+
+  background: #d9ded2;
+}
+
+.PinLogin-display span.active {
+  background: #74a23c;
+}
+
+.PinKeyboard {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 14px;
+}
+
+.PinKeyboard button {
+  height: 58px;
+
+  border: none;
+  border-radius: 18px;
+
+  background: #f3f5ef;
+  color: #343a40;
+
+  font-size: 22px;
+  font-weight: 900;
+
+  cursor: pointer;
+}
+
+.PinKeyboard button:active {
+  transform: scale(0.97);
+}
+
+.PinKeyboard-submit {
+  background: #74a23c !important;
+  color: #ffffff !important;
+}
+
+.PinLogin-secure {
+  margin-top: 22px;
+
+  color: #777;
+  font-size: 13px;
+  font-weight: 700;
+
+  text-align: center;
+}

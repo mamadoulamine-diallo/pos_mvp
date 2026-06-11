@@ -1,0 +1,133 @@
+.HeaderNotification {
+  position: relative;
+}
+
+.HeaderNotification-trigger {
+  position: relative;
+}
+
+.HeaderNotification-badge {
+  position: absolute;
+  top: -6px;
+  right: -6px;
+
+  min-width: 18px;
+  height: 18px;
+  padding: 0 5px;
+
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+
+  border-radius: 999px;
+
+  background: #c0392b;
+  color: #ffffff;
+
+  font-size: 11px;
+  font-weight: 900;
+}
+
+.HeaderNotification-panel {
+  position: absolute;
+  top: 48px;
+  right: 0;
+  z-index: 50;
+
+  width: 320px;
+  max-height: 420px;
+  overflow-y: auto;
+
+  padding: 14px;
+
+  display: none;
+
+  background: #ffffff;
+  border-radius: 18px;
+
+  box-shadow: 0 14px 34px rgba(0, 0, 0, 0.16);
+}
+
+.HeaderNotification.open .HeaderNotification-panel {
+  display: block;
+}
+
+.HeaderNotification-header {
+  margin-bottom: 12px;
+
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.HeaderNotification-header strong {
+  color: #343a40;
+  font-size: 16px;
+  font-weight: 900;
+}
+
+.HeaderNotification-header span {
+  color: #777;
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.HeaderNotification-list {
+  display: grid;
+  gap: 10px;
+}
+
+.HeaderNotification-item {
+  padding: 12px;
+
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+
+  border-radius: 14px;
+
+  background: #f8f9f7;
+}
+
+.HeaderNotification-item strong {
+  display: block;
+  margin-bottom: 4px;
+
+  color: #343a40;
+  font-size: 14px;
+  font-weight: 900;
+}
+
+.HeaderNotification-item small {
+  color: #777;
+  font-size: 12px;
+}
+
+.HeaderNotification-status {
+  padding: 6px 9px;
+
+  border-radius: 999px;
+
+  background: #fff3cd;
+  color: #b26a00;
+
+  font-size: 11px;
+  font-weight: 900;
+}
+
+.HeaderNotification-status--danger {
+  background: #fdeaea;
+  color: #c0392b;
+}
+
+.HeaderNotification-empty {
+  padding: 14px;
+
+  color: #777;
+  font-size: 13px;
+  font-weight: 700;
+
+  text-align: center;
+}
