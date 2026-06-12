@@ -65,39 +65,21 @@ public class DashboardService {
     }
 
     public List<RevenuePointDto> getRevenueByDay(DashboardPeriod period) {
-        LocalDateTime startDate = getStartDate(period);
-
-        return repository.findRevenueByDayRaw(startDate)
-                .stream()
-                .map(row -> new RevenuePointDto(
-                        row[0].toString(),
-                        ((Number) row[1]).doubleValue()
-                ))
-                .toList();
+        return mapRevenue(
+                repository.findRevenueByDayRaw(getStartDate(period))
+        );
     }
 
     public List<RevenuePointDto> getRevenueByMonth(DashboardPeriod period) {
-        LocalDateTime startDate = getStartDate(period);
-
-        return repository.findRevenueByMonthRaw(startDate)
-                .stream()
-                .map(row -> new RevenuePointDto(
-                        row[0].toString(),
-                        ((Number) row[1]).doubleValue()
-                ))
-                .toList();
+        return mapRevenue(
+                repository.findRevenueByMonthRaw(getStartDate(period))
+        );
     }
 
     public List<RevenuePointDto> getRevenueByYear(DashboardPeriod period) {
-        LocalDateTime startDate = getStartDate(period);
-
-        return repository.findRevenueByYearRaw(startDate)
-                .stream()
-                .map(row -> new RevenuePointDto(
-                        row[0].toString(),
-                        ((Number) row[1]).doubleValue()
-                ))
-                .toList();
+        return mapRevenue(
+                repository.findRevenueByYearRaw(getStartDate(period))
+        );
     }
 
     public List<StockAlertDto> getStockAlerts() {
@@ -127,5 +109,14 @@ public class DashboardService {
             case LAST_30_DAYS -> now.minusDays(30);
             case ALL -> LocalDateTime.of(2000, 1, 1, 0, 0);
         };
+    }
+
+    private List<RevenuePointDto> mapRevenue(List<Object[]> rows) {
+        return rows.stream()
+                .map(row -> new RevenuePointDto(
+                        row[0].toString(),
+                        ((Number) row[1]).doubleValue()
+                ))
+                .toList();
     }
 }
