@@ -54,18 +54,6 @@ public interface DashboardRepository extends JpaRepository<Sale, Integer> {
     List<Object[]> findRevenueByPeriodRaw(@Param("startDate") LocalDateTime startDate,
                                           @Param("period") String period);
 
-    default List<Object[]> findRevenueByDayRaw(LocalDateTime startDate) {
-        return findRevenueByPeriodRaw(startDate, "DAY");
-    }
-
-    default List<Object[]> findRevenueByMonthRaw(LocalDateTime startDate) {
-        return findRevenueByPeriodRaw(startDate, "MONTH");
-    }
-
-    default List<Object[]> findRevenueByYearRaw(LocalDateTime startDate) {
-        return findRevenueByPeriodRaw(startDate, "YEAR");
-    }
-
     @Query("""
         SELECT new com.projectpos.dashboard.dto.StockAlertDto(
             p.id,

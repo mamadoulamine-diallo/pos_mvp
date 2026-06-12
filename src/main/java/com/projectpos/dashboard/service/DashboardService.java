@@ -13,6 +13,10 @@ import java.util.List;
 @Service
 public class DashboardService {
 
+    private static final String PERIOD_DAY = "DAY";
+    private static final String PERIOD_MONTH = "MONTH";
+    private static final String PERIOD_YEAR = "YEAR";
+
     private final DashboardRepository repository;
 
     public DashboardService(DashboardRepository repository) {
@@ -47,39 +51,29 @@ public class DashboardService {
     }
 
     public List<TopProductDto> getTopProducts(DashboardPeriod period) {
-        LocalDateTime startDate = getStartDate(period);
-
-        return repository.findTopProducts(startDate)
+        return repository.findTopProducts(getStartDate(period))
                 .stream()
                 .limit(5)
                 .toList();
     }
 
     public List<RecentSaleDto> getRecentSales(DashboardPeriod period) {
-        LocalDateTime startDate = getStartDate(period);
-
-        return repository.findRecentSales(startDate)
+        return repository.findRecentSales(getStartDate(period))
                 .stream()
                 .limit(5)
                 .toList();
     }
 
     public List<RevenuePointDto> getRevenueByDay(DashboardPeriod period) {
-        return mapRevenue(
-                repository.findRevenueByDayRaw(getStartDate(period))
-        );
+        return getRevenueByPeriod(period, PERIOD_DAY);
     }
 
     public List<RevenuePointDto> getRevenueByMonth(DashboardPeriod period) {
-        return mapRevenue(
-                repository.findRevenueByMonthRaw(getStartDate(period))
-        );
+        return getRevenueByPeriod(period, PERIOD_MONTH);
     }
 
     public List<RevenuePointDto> getRevenueByYear(DashboardPeriod period) {
-        return mapRevenue(
-                repository.findRevenueByYearRaw(getStartDate(period))
-        );
+        return getRevenueByPeriod(period, PERIOD_YEAR);
     }
 
     public List<StockAlertDto> getStockAlerts() {
@@ -98,6 +92,15 @@ public class DashboardService {
                 .stream()
                 .filter(alert -> alert.stockQuantity() == 0)
                 .count();
+    }
+
+    private List<RevenuePointDto> getRevenueByPeriod(DashboardPeriod dashboardPeriod, String revenuePeriod) {
+        return mapRevenue(
+                repository.findRevenueByPeriodRaw(
+                        getStartDate(dashboardPeriod),
+                        revenuePeriod
+                )
+        );
     }
 
     private LocalDateTime getStartDate(DashboardPeriod period) {
