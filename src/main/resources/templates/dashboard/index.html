@@ -1,276 +1,331 @@
 <!doctype html>
 <html lang="fr" xmlns:th="http://www.thymeleaf.org">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Dashboard</title>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Dashboard</title>
 
-  <link rel="stylesheet" th:href="@{/assets/styles/style.css}" />
-  <link
-          rel="stylesheet"
-          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.1/css/all.min.css"
-  />
-</head>
+    <link rel="stylesheet" th:href="@{/assets/styles/style.css}" />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.1/css/all.min.css"
+    />
+  </head>
 
-<body>
+  <body>
+    <div th:replace="~{fragments/header :: header('dashboard')}"></div>
 
-<div th:replace="~{fragments/header :: header('dashboard')}"></div>
-
-<main class="Dashboard">
-
-  <section class="Dashboard-hero">
-    <div>
-      <p class="Dashboard-eyebrow">Tableau de bord</p>
-      <h1 th:text="'Bonjour ' + ${currentUser.fullName}">
-        Bonjour utilisateur
-      </h1>
-      <p class="Dashboard-subtitle">
-        Voici l’activité de votre commerce aujourd’hui.
-      </p>
-    </div>
-
-    <a th:href="@{/sales/new}" class="Dashboard-cta">
-      Nouvelle vente
-    </a>
-  </section>
-
-  <div class="DashboardPeriod">
-    <a th:href="@{/(period='TODAY')}"
-       th:classappend="${selectedPeriod.name() == 'TODAY'} ? ' active' : ''">
-      Aujourd’hui
-    </a>
-
-    <a th:href="@{/(period='LAST_7_DAYS')}"
-       th:classappend="${selectedPeriod.name() == 'LAST_7_DAYS'} ? ' active' : ''">
-      7 jours
-    </a>
-
-    <a th:href="@{/(period='LAST_30_DAYS')}"
-       th:classappend="${selectedPeriod.name() == 'LAST_30_DAYS'} ? ' active' : ''">
-      30 jours
-    </a>
-
-    <a th:href="@{/(period='ALL')}"
-       th:classappend="${selectedPeriod.name() == 'ALL'} ? ' active' : ''">
-      Tout
-    </a>
-  </div>
-
-  <section class="DashboardStats">
-    <article class="DashboardStat DashboardStat--primary">
-      <span class="DashboardStat-label">CA du jour</span>
-      <strong class="DashboardStat-value DashboardRevenue" th:text="${summary.revenueFormatted}">0 F</strong>
-      <small class="DashboardStat-help">Ventes validées</small>
-    </article>
-
-    <article class="DashboardStat">
-      <span class="DashboardStat-label">Ventes</span>
-      <strong class="DashboardStat-value DashboardSales" th:text="${summary.salesCount}">0</strong>
-      <small class="DashboardStat-help">Transactions</small>
-    </article>
-
-    <article class="DashboardStat">
-      <span class="DashboardStat-label">Articles vendus</span>
-      <strong class="DashboardStat-value DashboardItems" th:text="${summary.itemsSold}">0</strong>
-      <small class="DashboardStat-help">Quantité totale</small>
-    </article>
-
-    <article class="DashboardStat">
-      <span class="DashboardStat-label">Panier moyen</span>
-      <strong class="DashboardStat-value DashboardAverage" th:text="${summary.averageBasketFormatted}">0 F</strong>
-      <small class="DashboardStat-help">Par vente</small>
-    </article>
-
-    <article class="DashboardStat DashboardStat--warning">
-      <span class="DashboardStat-label">Stock faible</span>
-      <strong
-              class="DashboardStat-value DashboardLowStock"
-              th:text="${lowStockCount}"
-      >
-        0
-      </strong>
-      <small class="DashboardStat-help">Produits à surveiller</small>
-    </article>
-
-    <article class="DashboardStat DashboardStat--danger">
-      <span class="DashboardStat-label">Ruptures</span>
-      <strong
-              class="DashboardStat-value DashboardOutStock"
-              th:text="${outOfStockCount}"
-      >
-        0
-      </strong>
-      <small class="DashboardStat-help">Produits indisponibles</small>
-    </article>
-  </section>
-
-  <section class="Dashboard-grid">
-
-    <article class="DashboardCard DashboardCard--chart">
-      <header class="DashboardCard-header DashboardCard-header--chart">
+    <main class="Dashboard">
+      <section class="Dashboard-hero">
         <div>
-          <h2>Évolution des ventes</h2>
-          <p>Analyse du chiffre d’affaires</p>
+          <p class="Dashboard-eyebrow">Tableau de bord</p>
+          <h1 th:text="'Bonjour ' + ${currentUser.fullName}">
+            Bonjour utilisateur
+          </h1>
+          <p class="Dashboard-subtitle">
+            Voici l’activité de votre commerce aujourd’hui.
+          </p>
         </div>
-        <div class="ChartTabs">
-          <button class="ChartTabs-button active" data-view="day" type="button">Jour</button>
-          <button class="ChartTabs-button" data-view="month" type="button">Mois</button>
-          <button class="ChartTabs-button" data-view="year" type="button">Année</button>
-        </div>
-      </header>
 
-      <canvas id="RevenueChart"></canvas>
+        <a th:href="@{/sales/new}" class="Dashboard-cta"> Nouvelle vente </a>
+      </section>
 
-      <script th:inline="javascript">
-        window.revenueByDay = /*[[${revenueByHour}]]*/ [];
-      </script>
-    </article>
-
-    <article class="DashboardCard">
-      <header class="DashboardCard-header">
-        <div>
-          <h2>Top produits</h2>
-          <p>Produits les plus vendus</p>
-        </div>
-      </header>
-
-      <div class="TopProducts-list">
-        <article class="TopProducts-item" th:each="product, stat : ${topProducts}">
-          <span class="TopProducts-rank" th:text="'#' + ${stat.index + 1}">#1</span>
-
-          <div class="TopProducts-info">
-            <strong th:text="${product.productName}">Produit</strong>
-            <small th:text="${product.quantitySold} + ' unités vendues'">0 unités vendues</small>
-          </div>
-
-          <span class="TopProducts-revenue" th:text="${#numbers.formatInteger(product.revenue, 0, 'WHITESPACE')} + ' F'">0 F</span>
-        </article>
-      </div>
-    </article>
-
-    <article class="DashboardCard">
-      <header class="DashboardCard-header">
-        <div>
-          <h2>Ventes récentes</h2>
-          <p>Dernières transactions</p>
-        </div>
-      </header>
-
-      <div class="RecentSales-list">
-        <article class="RecentSales-item" th:each="sale : ${recentSales}">
-          <span class="RecentSales-time" th:text="${#temporals.format(sale.saleDate, 'HH:mm')}">14:30</span>
-          <strong class="RecentSales-total" th:text="${#numbers.formatDecimal(sale.total, 0, 'WHITESPACE', 0, 'COMMA')} + ' F'">0 F</strong>
-          <span class="RecentSales-method" th:text="'Vente #' + ${sale.saleId}">Vente #1</span>
-        </article>
-      </div>
-    </article>
-
-    <article class="DashboardCard">
-      <header class="DashboardCard-header">
-        <div>
-          <h2>Alertes stock</h2>
-          <p>Produits nécessitant une attention</p>
-        </div>
-      </header>
-
-      <div class="StockAlerts-list">
-        <article
-                class="StockAlert"
-                th:each="alert : ${stockAlerts}"
+      <div class="DashboardPeriod">
+        <a
+          th:href="@{/(period='TODAY')}"
+          th:classappend="${selectedPeriod.name() == 'TODAY'} ? ' active' : ''"
         >
-          <div class="StockAlert-info">
-            <strong th:text="${alert.productName}">
-              Produit
-            </strong>
+          Aujourd’hui
+        </a>
 
-            <small
-                    th:text="${alert.stockQuantity == 0}
-          ? 'Produit indisponible'
-          : ${alert.stockQuantity} + ' restants'"
-            >
-              3 restants
-            </small>
-          </div>
+        <a
+          th:href="@{/(period='LAST_7_DAYS')}"
+          th:classappend="${selectedPeriod.name() == 'LAST_7_DAYS'} ? ' active' : ''"
+        >
+          7 jours
+        </a>
 
-          <span
-                  class="StockAlert-badge"
-                  th:classappend="${alert.stockQuantity == 0} ? ' StockAlert-badge--out' : ''"
-                  th:text="${alert.stockQuantity == 0} ? 'Rupture' : 'Faible'"
-          >
-      Faible
-    </span>
-        </article>
-      </div>
-    </article>
+        <a
+          th:href="@{/(period='LAST_30_DAYS')}"
+          th:classappend="${selectedPeriod.name() == 'LAST_30_DAYS'} ? ' active' : ''"
+        >
+          30 jours
+        </a>
 
-    <article class="DashboardCard DashboardCard--actions">
-      <header class="DashboardCard-header">
-        <div>
-          <h2>Actions rapides</h2>
-          <p>Accès direct</p>
-        </div>
-      </header>
-
-      <div class="DashboardActions">
-        <a th:href="@{/sales/new}" class="DashboardActions-link">Nouvelle vente</a>
-        <a th:href="@{/products}" class="DashboardActions-link">Produits</a>
-
-        <a th:href="@{/sales}" class="DashboardActions-link">
-          Historique ventes
+        <a
+          th:href="@{/(period='ALL')}"
+          th:classappend="${selectedPeriod.name() == 'ALL'} ? ' active' : ''"
+        >
+          Tout
         </a>
       </div>
-    </article>
 
-  </section>
-</main>
+      <section class="DashboardStats">
+        <article class="DashboardStat DashboardStat--primary">
+          <span
+            class="DashboardStat-label"
+            th:text="${selectedPeriod.name() == 'TODAY' ? 'CA du jour' :
+           selectedPeriod.name() == 'LAST_7_DAYS' ? 'CA des 7 derniers jours' :
+           selectedPeriod.name() == 'LAST_30_DAYS' ? 'CA des 30 derniers jours' :
+           'CA total'}"
+          >
+            CA du jour
+          </span>
+          <strong
+            class="DashboardStat-value DashboardRevenue"
+            th:text="${summary.revenueFormatted}"
+            >0 F</strong
+          >
+          <small class="DashboardStat-help">Ventes validées</small>
+        </article>
 
-<div class="CalculatorSheet" aria-hidden="true">
-  <div class="CalculatorSheet-backdrop"></div>
+        <article class="DashboardStat">
+          <span class="DashboardStat-label">Ventes</span>
+          <strong
+            class="DashboardStat-value DashboardSales"
+            th:text="${summary.salesCount}"
+            >0</strong
+          >
+          <small class="DashboardStat-help">Transactions</small>
+        </article>
 
-  <div class="CalculatorSheet-panel">
-    <div class="CalculatorSheet-handle"></div>
+        <article class="DashboardStat">
+          <span class="DashboardStat-label">Articles vendus</span>
+          <strong
+            class="DashboardStat-value DashboardItems"
+            th:text="${summary.itemsSold}"
+            >0</strong
+          >
+          <small class="DashboardStat-help">Quantité totale</small>
+        </article>
 
-    <div class="CalculatorSheet-header">
-      <h2 class="CalculatorSheet-title">Calculatrice</h2>
-      <button class="CalculatorSheet-close" type="button">×</button>
+        <article class="DashboardStat">
+          <span class="DashboardStat-label">Panier moyen</span>
+          <strong
+            class="DashboardStat-value DashboardAverage"
+            th:text="${summary.averageBasketFormatted}"
+            >0 F</strong
+          >
+          <small class="DashboardStat-help">Par vente</small>
+        </article>
+
+        <article class="DashboardStat DashboardStat--warning">
+          <span class="DashboardStat-label">Stock faible</span>
+          <strong
+            class="DashboardStat-value DashboardLowStock"
+            th:text="${lowStockCount}"
+          >
+            0
+          </strong>
+          <small class="DashboardStat-help">Produits à surveiller</small>
+        </article>
+
+        <article class="DashboardStat DashboardStat--danger">
+          <span class="DashboardStat-label">Ruptures</span>
+          <strong
+            class="DashboardStat-value DashboardOutStock"
+            th:text="${outOfStockCount}"
+          >
+            0
+          </strong>
+          <small class="DashboardStat-help">Produits indisponibles</small>
+        </article>
+      </section>
+
+      <section class="Dashboard-grid">
+        <article class="DashboardCard DashboardCard--chart">
+          <header class="DashboardCard-header DashboardCard-header--chart">
+            <div>
+              <h2>Évolution des ventes</h2>
+              <p>Analyse du chiffre d’affaires</p>
+            </div>
+            <div class="ChartTabs">
+              <button
+                class="ChartTabs-button active"
+                data-view="day"
+                type="button"
+              >
+                Jour
+              </button>
+              <button class="ChartTabs-button" data-view="month" type="button">
+                Mois
+              </button>
+              <button class="ChartTabs-button" data-view="year" type="button">
+                Année
+              </button>
+            </div>
+          </header>
+
+          <canvas id="RevenueChart"></canvas>
+
+          <script th:inline="javascript">
+            window.revenueByDay = /*[[${revenueByHour}]]*/ [];
+          </script>
+        </article>
+
+        <article class="DashboardCard">
+          <header class="DashboardCard-header">
+            <div>
+              <h2>Top produits</h2>
+              <p>Produits les plus vendus</p>
+            </div>
+          </header>
+
+          <div class="TopProducts-list">
+            <article
+              class="TopProducts-item"
+              th:each="product, stat : ${topProducts}"
+            >
+              <span class="TopProducts-rank" th:text="'#' + ${stat.index + 1}"
+                >#1</span
+              >
+
+              <div class="TopProducts-info">
+                <strong th:text="${product.productName}">Produit</strong>
+                <small th:text="${product.quantitySold} + ' unités vendues'"
+                  >0 unités vendues</small
+                >
+              </div>
+
+              <span
+                class="TopProducts-revenue"
+                th:text="${#numbers.formatInteger(product.revenue, 0, 'WHITESPACE')} + ' F'"
+                >0 F</span
+              >
+            </article>
+          </div>
+        </article>
+
+        <article class="DashboardCard">
+          <header class="DashboardCard-header">
+            <div>
+              <h2>Ventes récentes</h2>
+              <p>Dernières transactions</p>
+            </div>
+          </header>
+
+          <div class="RecentSales-list">
+            <article class="RecentSales-item" th:each="sale : ${recentSales}">
+              <span
+                class="RecentSales-time"
+                th:text="${#temporals.format(sale.saleDate, 'HH:mm')}"
+                >14:30</span
+              >
+              <strong
+                class="RecentSales-total"
+                th:text="${#numbers.formatDecimal(sale.total, 0, 'WHITESPACE', 0, 'COMMA')} + ' F'"
+                >0 F</strong
+              >
+              <span
+                class="RecentSales-method"
+                th:text="'Vente #' + ${sale.saleId}"
+                >Vente #1</span
+              >
+            </article>
+          </div>
+        </article>
+
+        <article class="DashboardCard">
+          <header class="DashboardCard-header">
+            <div>
+              <h2>Alertes stock</h2>
+              <p>Produits nécessitant une attention</p>
+            </div>
+          </header>
+
+          <div class="StockAlerts-list">
+            <article class="StockAlert" th:each="alert : ${stockAlerts}">
+              <div class="StockAlert-info">
+                <strong th:text="${alert.productName}"> Produit </strong>
+
+                <small
+                  th:text="${alert.stockQuantity == 0}
+          ? 'Produit indisponible'
+          : ${alert.stockQuantity} + ' restants'"
+                >
+                  3 restants
+                </small>
+              </div>
+
+              <span
+                class="StockAlert-badge"
+                th:classappend="${alert.stockQuantity == 0} ? ' StockAlert-badge--out' : ''"
+                th:text="${alert.stockQuantity == 0} ? 'Rupture' : 'Faible'"
+              >
+                Faible
+              </span>
+            </article>
+          </div>
+        </article>
+
+        <article class="DashboardCard DashboardCard--actions">
+          <header class="DashboardCard-header">
+            <div>
+              <h2>Actions rapides</h2>
+              <p>Accès direct</p>
+            </div>
+          </header>
+
+          <div class="DashboardActions">
+            <a th:href="@{/sales/new}" class="DashboardActions-link"
+              >Nouvelle vente</a
+            >
+            <a th:href="@{/products}" class="DashboardActions-link">Produits</a>
+
+            <a th:href="@{/sales}" class="DashboardActions-link">
+              Historique ventes
+            </a>
+          </div>
+        </article>
+      </section>
+    </main>
+
+    <div class="CalculatorSheet" aria-hidden="true">
+      <div class="CalculatorSheet-backdrop"></div>
+
+      <div class="CalculatorSheet-panel">
+        <div class="CalculatorSheet-handle"></div>
+
+        <div class="CalculatorSheet-header">
+          <h2 class="CalculatorSheet-title">Calculatrice</h2>
+          <button class="CalculatorSheet-close" type="button">×</button>
+        </div>
+
+        <div class="CalculatorSheet-display">0</div>
+
+        <div class="CalculatorSheet-grid">
+          <button type="button">7</button>
+          <button type="button">8</button>
+          <button type="button">9</button>
+          <button type="button">÷</button>
+
+          <button type="button">4</button>
+          <button type="button">5</button>
+          <button type="button">6</button>
+          <button type="button">×</button>
+
+          <button type="button">1</button>
+          <button type="button">2</button>
+          <button type="button">3</button>
+          <button type="button">-</button>
+
+          <button type="button">0</button>
+          <button type="button">C</button>
+          <button type="button">=</button>
+          <button type="button">+</button>
+        </div>
+      </div>
     </div>
 
-    <div class="CalculatorSheet-display">0</div>
+    <script th:inline="javascript">
+      window.revenueByDay = /*[[${revenueByDay}]]*/ [];
+      window.revenueByMonth = /*[[${revenueByMonth}]]*/ [];
+      window.revenueByYear = /*[[${revenueByYear}]]*/ [];
+    </script>
 
-    <div class="CalculatorSheet-grid">
-      <button type="button">7</button>
-      <button type="button">8</button>
-      <button type="button">9</button>
-      <button type="button">÷</button>
-
-      <button type="button">4</button>
-      <button type="button">5</button>
-      <button type="button">6</button>
-      <button type="button">×</button>
-
-      <button type="button">1</button>
-      <button type="button">2</button>
-      <button type="button">3</button>
-      <button type="button">-</button>
-
-      <button type="button">0</button>
-      <button type="button">C</button>
-      <button type="button">=</button>
-      <button type="button">+</button>
-    </div>
-  </div>
-</div>
-
-<script th:inline="javascript">
-  window.revenueByDay = /*[[${revenueByDay}]]*/ [];
-  window.revenueByMonth = /*[[${revenueByMonth}]]*/ [];
-  window.revenueByYear = /*[[${revenueByYear}]]*/ [];
-</script>
-
-<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-<script th:src="@{/assets/js/components/calculator.js}"></script>
-<script th:src="@{/assets/js/dashboard.js}"></script>
-<script type="module" th:src="@{/assets/js/components/header.js}"></script>
-
-</body>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script th:src="@{/assets/js/components/calculator.js}"></script>
+    <script th:src="@{/assets/js/dashboard.js}"></script>
+    <script type="module" th:src="@{/assets/js/components/header.js}"></script>
+  </body>
 </html>
