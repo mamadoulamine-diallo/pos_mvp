@@ -52,7 +52,7 @@
 
   &-list {
     display: grid;
-    grid-template-columns: repeat(2, 1fr);
+    grid-template-columns: repeat(auto-fill, minmax(145px, 1fr));
     gap: 18px 14px;
 
     &-title {
@@ -68,7 +68,7 @@
 
   @include tablette {
     &-list {
-      grid-template-columns: repeat(3, 1fr);
+      // grid-template-columns: repeat(3, 1fr);
     }
   }
 
@@ -126,7 +126,7 @@
 
     &-list {
       display: grid;
-      grid-template-columns: repeat(4, 170px);
+      // grid-template-columns: repeat(4, 170px);
       justify-content: center;
 
       gap: 28px 36px;

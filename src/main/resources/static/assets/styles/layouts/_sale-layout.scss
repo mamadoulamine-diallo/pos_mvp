@@ -43,7 +43,7 @@
 
   &-grid {
     display: grid;
-    grid-template-columns: repeat(2, minmax(145px, 1fr));
+    grid-template-columns: repeat(auto-fill, minmax(145px, 1fr));
     gap: 18px 14px;
   }
 }
@@ -324,7 +324,7 @@
     }
 
     &-grid {
-      grid-template-columns: repeat(auto-fill, 160px);
+      // grid-template-columns: repeat(auto-fill, 160px);
       justify-content: start;
       gap: 20px;
     }
@@ -377,7 +377,7 @@
     }
 
     &-grid {
-      grid-template-columns: repeat(3, 170px);
+      // grid-template-columns: repeat(3, 170px);
       gap: 28px 36px;
     }
   }

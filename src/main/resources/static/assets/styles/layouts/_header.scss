@@ -63,12 +63,17 @@
     -webkit-backdrop-filter: blur(8px);
 
     border-bottom: 1px solid #ddd;
+
+    .actionButton {
+      margin-right: 10px;
+    }
   }
 
   &-actions {
     display: flex;
     align-items: center;
     gap: 14px;
+    // order: 2;
   }
 
   &-action {
@@ -92,12 +97,18 @@
     display: flex;
     align-items: center;
     gap: 12px;
+    margin-right: auto;
 
     font-size: 14px;
     font-weight: 700;
   }
 
+  @include tablette {
+   
+  }
+
   @include desktop {
+     justify-content: space-between;
     position: sticky;
     top: 0;
     bottom: auto;
@@ -106,9 +117,7 @@
     border-top: none;
     border-bottom: 1px solid #ddd;
 
-    justify-content: space-between;
     padding: 0 24px;
-
     &-nav {
       width: auto;
       gap: 56px;
@@ -129,7 +138,6 @@
 
       display: flex;
       align-items: center;
-
     }
 
     &-actions {

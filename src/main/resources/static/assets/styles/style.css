@@ -73,6 +73,9 @@ button {
   -webkit-backdrop-filter: blur(8px);
   border-bottom: 1px solid #ddd;
 }
+.Header-right .actionButton {
+  margin-right: 10px;
+}
 .Header-actions {
   display: flex;
   align-items: center;
@@ -95,18 +98,19 @@ button {
   display: flex;
   align-items: center;
   gap: 12px;
+  margin-right: auto;
   font-size: 14px;
   font-weight: 700;
 }
 @media screen and (min-width: 1270px) {
   .Header {
+    justify-content: space-between;
     position: sticky;
     top: 0;
     bottom: auto;
     height: 64px;
     border-top: none;
     border-bottom: 1px solid #ddd;
-    justify-content: space-between;
     padding: 0 24px;
   }
   .Header-nav {
@@ -201,7 +205,7 @@ button {
 }
 .Products-list {
   display: grid;
-  grid-template-columns: repeat(2, 1fr);
+  grid-template-columns: repeat(auto-fill, minmax(145px, 1fr));
   gap: 18px 14px;
 }
 .Products-list-title {
@@ -210,11 +214,6 @@ button {
   font-size: 32px;
   font-weight: 500;
   margin-bottom: 2px;
-}
-@media screen and (min-width: 768px) {
-  .Products-list {
-    grid-template-columns: repeat(3, 1fr);
-  }
 }
 @media screen and (min-width: 1270px) {
   .Products {
@@ -261,7 +260,6 @@ button {
   }
   .Products-list {
     display: grid;
-    grid-template-columns: repeat(4, 170px);
     justify-content: center;
     gap: 28px 36px;
   }
@@ -870,7 +868,7 @@ button {
 }
 .SaleProducts-grid {
   display: grid;
-  grid-template-columns: repeat(2, minmax(145px, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(145px, 1fr));
   gap: 18px 14px;
 }
 
@@ -1083,7 +1081,6 @@ button {
     font-size: 15px;
   }
   .SaleProducts-grid {
-    grid-template-columns: repeat(auto-fill, 160px);
     justify-content: start;
     gap: 20px;
   }
@@ -1123,7 +1120,6 @@ button {
     font-size: 34px;
   }
   .SaleProducts-grid {
-    grid-template-columns: repeat(3, 170px);
     gap: 28px 36px;
   }
   .CartPanel {
