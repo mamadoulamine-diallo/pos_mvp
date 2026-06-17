@@ -35,7 +35,7 @@ Cette première version se concentre sur les besoins essentiels :
 * tableau de bord d'activité.
 
 À plus long terme, cette vision pourra évoluer vers une plateforme SaaS de supervision commerciale adaptée aux réalités du marché ouest-africain.
-ette ou ordinateur, permettant de suivre l’activité commerciale en temps réel.
+
 
 ---
 
