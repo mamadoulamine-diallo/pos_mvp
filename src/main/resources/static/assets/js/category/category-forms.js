@@ -1,27 +1,37 @@
 import { createCategory, updateCategory } from "./category-api.js";
 import { showToast } from "../components/toast.js";
 
-
 export function initCategoryForms() {
     const addCategoryOverlay = document.querySelector(".AddCategoryOverlay");
-    const addCategoryButtons = document.querySelectorAll(
-        ".Products-actions-addCategoryDesktop"
-    );
-    const addCategoryForm = document.querySelector(".AddCategoryForm");
     const editCategoryOverlay = document.querySelector(".EditCategoryOverlay");
-    const editCategoryButtons = document.querySelectorAll(
-        ".Products-actions-editCategoryDesktop"
+
+    const addCategoryButton = document.querySelector(
+        ".Products-actions-addCategory"
     );
+
+    const manageCategoriesButton = document.querySelector(
+        ".Products-actions-manageCategories"
+    );
+
+    const addCategoryForm = document.querySelector(".AddCategoryForm");
     const editCategoryForm = document.querySelector(".EditCategoryForm");
 
     function openOverlay(overlay) {
         overlay?.classList.add("open");
     }
 
-    addCategoryButtons.forEach((button) => {
-        button.addEventListener("click", () => {
-            openOverlay(addCategoryOverlay);
-        });
+    function reloadAfterToast() {
+        setTimeout(() => {
+            window.location.reload();
+        }, 600);
+    }
+
+    addCategoryButton?.addEventListener("click", () => {
+        openOverlay(addCategoryOverlay);
+    });
+
+    manageCategoriesButton?.addEventListener("click", () => {
+        openOverlay(editCategoryOverlay);
     });
 
     addCategoryForm?.addEventListener("submit", async (event) => {
@@ -36,22 +46,18 @@ export function initCategoryForms() {
         try {
             await createCategory(payload);
             showToast("Catégorie créée avec succès");
-            setTimeout(() => window.location.reload(), 600);
+            reloadAfterToast();
         } catch (error) {
             console.error(error);
             showToast(error.message, "error");
         }
     });
 
-    editCategoryButtons.forEach((button) => {
-        button.addEventListener("click", () => {
-            editCategoryOverlay?.classList.add("open");
-        });
-    });
-
     editCategoryForm?.categoryId?.addEventListener("change", () => {
         const selectedOption =
-            editCategoryForm.categoryId.options[editCategoryForm.categoryId.selectedIndex];
+            editCategoryForm.categoryId.options[
+                editCategoryForm.categoryId.selectedIndex
+            ];
 
         editCategoryForm.name.value = selectedOption.textContent.trim();
         editCategoryForm.active.value =
@@ -72,7 +78,7 @@ export function initCategoryForms() {
         try {
             await updateCategory(categoryId, payload);
             showToast("Catégorie modifiée avec succès");
-            setTimeout(() => window.location.reload(), 600);
+            reloadAfterToast();
         } catch (error) {
             console.error(error);
             showToast(error.message, "error");

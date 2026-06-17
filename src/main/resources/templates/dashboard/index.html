@@ -280,42 +280,7 @@
       </section>
     </main>
 
-    <div class="CalculatorSheet" aria-hidden="true">
-      <div class="CalculatorSheet-backdrop"></div>
-
-      <div class="CalculatorSheet-panel">
-        <div class="CalculatorSheet-handle"></div>
-
-        <div class="CalculatorSheet-header">
-          <h2 class="CalculatorSheet-title">Calculatrice</h2>
-          <button class="CalculatorSheet-close" type="button">×</button>
-        </div>
-
-        <div class="CalculatorSheet-display">0</div>
-
-        <div class="CalculatorSheet-grid">
-          <button type="button">7</button>
-          <button type="button">8</button>
-          <button type="button">9</button>
-          <button type="button">÷</button>
-
-          <button type="button">4</button>
-          <button type="button">5</button>
-          <button type="button">6</button>
-          <button type="button">×</button>
-
-          <button type="button">1</button>
-          <button type="button">2</button>
-          <button type="button">3</button>
-          <button type="button">-</button>
-
-          <button type="button">0</button>
-          <button type="button">C</button>
-          <button type="button">=</button>
-          <button type="button">+</button>
-        </div>
-      </div>
-    </div>
+    <div th:replace="~{fragments/calculator :: calculator}"></div>
 
     <script th:inline="javascript">
       window.revenueByDay = /*[[${revenueByDay}]]*/ [];

@@ -3,33 +3,29 @@
 
 @use "./base/reset";
 
-@use "./layouts/header";
-@use "./layouts/products-layout";
-
 @use "./components/button";
 @use "./components/search";
 @use "./components/categories";
 @use "./components/filter";
 @use "./components/product-card";
 @use "./components/calculator-sheet";
-
 @use "./components/overlay";
 @use "./components/add-product-form";
 @use "./components/product-preview";
-@use "./layouts/sale-layout";
 @use "./components/checkout";
 @use "./components/receipt";
-@use "./layouts/dashboard-layout";
-
 @use "./components/notifications";
 @use "./components/header-account";
 @use "./components/toast";
+@use "./components/back-button";
+@use "./components/breadcrumb";
 
+@use "./layouts/header";
+@use "./layouts/dashboard-layout";
+@use "./layouts/products-layout";
+@use "./layouts/sale-layout";
 @use "./layouts/users-layout";
 @use "./layouts/sale-details";
 @use "./layouts/product-details";
-
 @use "./layouts/login-layout";
 @use "./layouts/sales-history";
-
-@use "./components/back-button";

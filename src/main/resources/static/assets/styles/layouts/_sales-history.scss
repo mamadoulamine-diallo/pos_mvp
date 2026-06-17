@@ -1,8 +1,13 @@
 .SalesHistory {
   min-height: 100vh;
   padding: 28px 18px 80px;
-
   background: #f3f5ef;
+}
+
+.SalesHistory-header,
+.SalesHistory-list {
+  max-width: 1320px;
+  margin-inline: auto;
 }
 
 .SalesHistory-header {

@@ -12,6 +12,11 @@
   justify-content: space-between;
   gap: 16px;
 }
+.Users-actions,
+.Users-list {
+  max-width: 1320px;
+  margin-inline: auto;
+}
 
 .Users-actions h1 {
   color: #343a40;

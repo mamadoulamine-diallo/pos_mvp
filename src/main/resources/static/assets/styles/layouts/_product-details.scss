@@ -3,6 +3,10 @@
   padding: 28px 18px 80px;
   background: #f3f5ef;
 }
+.ProductDetails > * {
+  max-width: 1320px;
+  margin-inline: auto;
+}
 
 .ProductDetails-card {
   margin-top: 18px;

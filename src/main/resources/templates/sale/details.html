@@ -1,137 +1,157 @@
 <!doctype html>
 <html lang="fr" xmlns:th="http://www.thymeleaf.org">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Détail vente</title>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Détail vente</title>
 
-  <link rel="stylesheet" th:href="@{/assets/styles/style.css}">
-</head>
+    <link rel="stylesheet" th:href="@{/assets/styles/style.css}" />
+  </head>
 
-<body>
+  <body>
+    <main class="SaleDetails">
+      <a th:href="@{/sales}" class="BackButton"> ← Historique </a>
 
-<main class="SaleDetails">
+      <section class="SaleDetails-card">
+        <!doctype html>
 
-  <a th:href="@{/sales}" class="BackButton">
-    ← Historique
-  </a>
+        <html lang="fr" xmlns:th="http://www.thymeleaf.org">
+          <head>
+            <meta charset="UTF-8" />
+            <meta
+              name="viewport"
+              content="width=device-width, initial-scale=1.0"
+            />
+            <title>Détail vente</title>
 
-  <section class="SaleDetails-card">
+            <link rel="stylesheet" th:href="@{/assets/styles/style.css}" />
+          </head>
 
-    <div class="SaleDetails-header">
+          <body>
+            <main class="SaleDetails">
+              <nav class="Breadcrumb">
+                <a th:href="@{/}"> Dashboard </a>
 
-      <div>
-        <p class="SaleDetails-eyebrow">Vente</p>
+                <span>/</span>
 
-        <h1>
-          Reçu #
-          <span th:text="${sale.saleId}">
-                        0001
-                    </span>
-        </h1>
-      </div>
+                <a th:href="@{/sales}"> Historique </a>
 
-      <span
-              class="SaleDetails-status"
-              th:text="${sale.status}"
-      >
-                VALIDEE
-            </span>
+                <span>/</span>
 
-    </div>
-
-    <div class="SaleDetails-meta">
-
-      <article>
-        <span>Date</span>
-
-        <strong
-                th:text="${#temporals.format(sale.saleDate, 'dd/MM/yyyy HH:mm')}"
-        >
-          Date
-        </strong>
-      </article>
-
-      <article>
-        <span>Utilisateur</span>
-
-        <strong th:text="${sale.userName}">
-          Lamine Diallo
-        </strong>
-
-        <small th:text="${sale.userRole}">
-          GERANT
-        </small>
-      </article>
-
-      <article>
-        <span>Articles vendus</span>
-
-        <strong
-                th:text="${sale.itemCount}"
-        >
-          0
-        </strong>
-      </article>
-
-      <article>
-        <span>Total vente</span>
-
-        <strong
-                th:text="${sale.total} + ' F'"
-        >
-          0 F
-        </strong>
-      </article>
-
-    </div>
-
-  </section>
-
-  <section class="SaleDetails-items">
-
-    <h2>Articles vendus</h2>
-
-    <article
-            class="SaleDetails-item"
-            th:each="item : ${sale.items}"
-    >
-
-      <div>
-
-        <strong
-                th:text="${item.productName}"
-        >
-          Produit
-        </strong>
-
-        <span>
-                    <span th:text="${item.quantity}">
-                        1
-                    </span>
-
-                    ×
-
-                    <span th:text="${item.unitPrice}">
-                        0
-                    </span>
-
-                    F
+                <span>
+                  Vente #
+                  <span th:text="${sale.saleId}"></span>
                 </span>
+              </nav>
+              <section class="SaleDetails-card">
+                <div class="SaleDetails-header">
+                  <div>
+                    <p class="SaleDetails-eyebrow">Vente</p>
 
-      </div>
+                    <h1>
+                      Reçu #
+                      <span th:text="${sale.saleId}"> 0001 </span>
+                    </h1>
+                  </div>
 
-      <strong
-              th:text="${item.lineTotal} + ' F'"
-      >
-        0 F
-      </strong>
+                  <span class="SaleDetails-status" th:text="${sale.status}">
+                    VALIDEE
+                  </span>
+                </div>
 
-    </article>
+                <div class="SaleDetails-meta">
+                  <article>
+                    <span>Date</span>
 
-  </section>
+                    <strong
+                      th:text="${#temporals.format(
+              sale.saleDate,
+              'dd/MM/yyyy HH:mm'
+            )}"
+                    >
+                    </strong>
+                  </article>
 
-</main>
+                  <article>
+                    <span>Utilisateur</span>
 
-</body>
+                    <strong th:text="${sale.userName}"> Lamine Diallo </strong>
+
+                    <small th:text="${sale.userRole}"> GERANT </small>
+                  </article>
+
+                  <article>
+                    <span>Articles vendus</span>
+
+                    <strong th:text="${sale.itemCount}"> 0 </strong>
+                  </article>
+
+                  <article>
+                    <span>Total vente</span>
+
+                    <strong
+                      th:text="${#numbers.formatDecimal(
+              sale.total,
+              0,
+              'WHITESPACE',
+              0,
+              'POINT'
+            )} + ' F'"
+                    >
+                      0 F
+                    </strong>
+                  </article>
+                </div>
+              </section>
+
+              <section class="SaleDetails-items">
+                <h2>Articles vendus</h2>
+
+                <article
+                  class="SaleDetails-item"
+                  th:each="item : ${sale.items}"
+                >
+                  <div>
+                    <strong th:text="${item.productName}"> Produit </strong>
+
+                    <span>
+                      <span th:text="${item.quantity}"> 1 </span>
+
+                      ×
+
+                      <span
+                        th:text="${#numbers.formatDecimal(
+                item.unitPrice,
+                0,
+                'WHITESPACE',
+                0,
+                'POINT'
+              )}"
+                      >
+                        0
+                      </span>
+
+                      F
+                    </span>
+                  </div>
+
+                  <strong
+                    th:text="${#numbers.formatDecimal(
+            item.lineTotal,
+            0,
+            'WHITESPACE',
+            0,
+            'POINT'
+          )} + ' F'"
+                  >
+                    0 F
+                  </strong>
+                </article>
+              </section>
+            </main>
+          </body>
+        </html>
+      </section>
+    </main>
+  </body>
 </html>

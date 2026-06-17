@@ -1,6 +1,6 @@
 <!doctype html>
 <html lang="fr" xmlns:th="http://www.thymeleaf.org">
-<head>
+  <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Produits</title>
@@ -8,88 +8,120 @@
     <link rel="stylesheet" th:href="@{/assets/styles/style.css}" />
 
     <link
-            rel="stylesheet"
-            href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.1/css/all.min.css"
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.1/css/all.min.css"
     />
-</head>
+  </head>
 
-<body>
-<div th:replace="~{fragments/header :: header('products')}"></div>
+  <body>
+    <div th:replace="~{fragments/header :: header('products')}"></div>
 
-<main class="Products">
-    <div class="Products-actions ProductAction">
+    <main class="Products">
+      <h1 class="Products-list-title">Produits</h1>
+      <div class="Products-actions ProductAction">
         <form action="" class="ProductAction-search Search">
-            <input class="Products-actions-search-input" type="text" placeholder="Rechercher un produit..." />
+          <input
+            class="Products-actions-search-input"
+            type="text"
+            placeholder="Rechercher un produit..."
+          />
         </form>
 
         <button class="Products-actions-addProductDesktop CTA" type="button">
-            Ajouter un produit
+          Ajouter un produit
         </button>
-    </div>
+      </div>
 
-    <hr />
-    <button class="Products-actions-addCategoryDesktop CTA" type="button">
-        Ajouter une catégorie
-    </button>
-    <button class="Products-actions-editCategoryDesktop CTA" type="button">
-        Modifier catégorie
-    </button>
+      <hr />
 
-    <div class="Products-wrapper">
+      <div class="Products-wrapper">
         <menu class="Products-categories Categories">
-            <button class="Categories-button active Button" type="button" data-category-id="all">
-                Tous
-            </button>
+          <button
+            class="Categories-button active Button"
+            type="button"
+            data-category-id="all"
+          >
+            Tous
+          </button>
 
-            <button
-                    class="Categories-button Button"
-                    type="button"
-                    th:each="category : ${categories}"
-                    th:attr="data-category-id=${category.id}"
-                    th:text="${category.name}">
-                Catégorie
-            </button>
+          <button
+            class="Categories-button Button"
+            type="button"
+            th:each="category : ${categories}"
+            th:attr="data-category-id=${category.id}"
+            th:text="${category.name}"
+          >
+            Catégorie
+          </button>
+          <button
+            class="Products-actions-addCategory CTA CTA--add"
+            type="button"
+          >
+            Ajouter catégorie
+          </button>
+
+          <button
+            class="Products-actions-manageCategories CTA CTA--secondary"
+            type="button"
+          >
+            <i class="fa-solid fa-gear"></i>
+            Gérer catégories
+          </button>
         </menu>
 
         <div class="Products-filter Filter">
-            <button class="Filter-opener" type="button">
-                <img
-                        class="Filter-opener-icon"
-                        th:src="@{/assets/styles/icons/filter.svg}"
-                        alt="Filter products"
-                />
+          <button class="Filter-opener" type="button">
+            <img
+              class="Filter-opener-icon"
+              th:src="@{/assets/styles/icons/filter.svg}"
+              alt="Filter products"
+            />
+          </button>
+
+          <div class="Filter-backdrop"></div>
+
+          <menu class="Filter-list">
+            <button
+              class="Filter-list-item Button active"
+              type="button"
+              data-filter="all"
+            >
+              Tous
             </button>
 
-            <div class="Filter-backdrop"></div>
+            <button
+              class="Filter-list-item Button"
+              type="button"
+              data-filter="low-stock"
+            >
+              Stock faible
+            </button>
 
-            <menu class="Filter-list">
-                <button class="Filter-list-item Button active" type="button" data-filter="all">
-                    Tous
-                </button>
+            <button
+              class="Filter-list-item Button"
+              type="button"
+              data-filter="out-stock"
+            >
+              Rupture
+            </button>
 
-                <button class="Filter-list-item Button" type="button" data-filter="low-stock">
-                    Stock faible
-                </button>
-
-                <button class="Filter-list-item Button" type="button" data-filter="out-stock">
-                    Rupture
-                </button>
-
-                <button class="Filter-list-item Button" type="button" data-filter="inactive">
-                    Inactifs
-                </button>
-            </menu>
+            <button
+              class="Filter-list-item Button"
+              type="button"
+              data-filter="inactive"
+            >
+              Inactifs
+            </button>
+          </menu>
         </div>
-    </div>
+      </div>
 
-    <section class="Products-list">
-        <h1 class="Products-list-title">Produits</h1>
-
+      <section class="Products-list">
         <article
-                class="Products-list-item ProductCard"
-                th:each="product : ${products}"
-                th:classappend="${product.stockQuantity <= 5} ? ' promo' : ''"
-                th:attr="
+          class="Products-list-item ProductCard"
+          th:each="product : ${products}"
+          th:classappend="${product.stockQuantity <= 5} ? ' promo' : ''"
+          th:attr="
         data-id=${product.id},
         data-name=${product.name},
         data-stock=${product.stockQuantity},
@@ -99,426 +131,332 @@
         data-category-id=${product.category.id}
       "
         >
-            <div class="ProductCard-media">
-                <img
-                        th:src="@{/assets/styles/img/{image}(image=${product.imageUrl})}"
-                        class="ProductCard-media-img"
-                        alt=""
-                        onerror="this.onerror=null; this.src='/assets/styles/img/default-product.webp';"
-                />
+          <div class="ProductCard-media">
+            <img
+              th:src="@{/assets/styles/img/{image}(image=${product.imageUrl})}"
+              class="ProductCard-media-img"
+              alt=""
+              onerror="
+                this.onerror = null;
+                this.src = '/assets/styles/img/default-product.webp';
+              "
+            />
 
-                <span class="ProductCard-media-name" th:text="${product.name}">
-          Produit
-        </span>
-            </div>
+            <span class="ProductCard-media-name" th:text="${product.name}">
+              Produit
+            </span>
+          </div>
 
-            <div
-                    class="ProductCard-stock"
-                    th:classappend="${product.stockQuantity == 0}
+          <div
+            class="ProductCard-stock"
+            th:classappend="${product.stockQuantity == 0}
           ? ' ProductCard-stock--out'
           : (${product.stockQuantity <= 5}
             ? ' ProductCard-stock--low'
             : '')"
-                    th:text="'Stock : ' + ${product.stockQuantity}"
+            th:text="'Stock : ' + ${product.stockQuantity}"
+          >
+            Stock : 12
+          </div>
+
+          <div class="ProductCard-footer">
+            <span
+              class="ProductCard-footer-price"
+              th:text="${#numbers.formatDecimal(priceService.getActivePrice(product.id), 0, 'WHITESPACE', 0, 'POINT')} + ' F'"
             >
-                Stock : 12
-            </div>
+              0 F
+            </span>
 
-            <div class="ProductCard-footer">
-        <span
-                class="ProductCard-footer-price"
-                th:text="${priceService.getActivePrice(product.id)} + ' F'"
-        >
-          0 F
-        </span>
-
-                <button class="ProductCard-footer-action" type="button">
-                    <i class="fa-solid fa-cart-arrow-down"></i>
-                </button>
-            </div>
+            <button class="ProductCard-footer-action" type="button">
+              <i class="fa-solid fa-cart-arrow-down"></i>
+            </button>
+          </div>
         </article>
-    </section>
-</main>
+      </section>
+    </main>
 
-<div class="CalculatorSheet" aria-hidden="true">
-    <div class="CalculatorSheet-backdrop"></div>
+    <div th:replace="~{fragments/calculator :: calculator}"></div>
 
-    <div class="CalculatorSheet-panel">
-        <div class="CalculatorSheet-handle"></div>
+    <div class="Overlay AddProductOverlay">
+      <div class="Overlay-backdrop"></div>
 
-        <div class="CalculatorSheet-header">
-            <h2 class="CalculatorSheet-title">Calculatrice</h2>
-            <button class="CalculatorSheet-close" type="button">×</button>
-        </div>
-
-        <div class="CalculatorSheet-display">0</div>
-
-        <div class="CalculatorSheet-grid">
-            <button type="button">7</button>
-            <button type="button">8</button>
-            <button type="button">9</button>
-            <button type="button">÷</button>
-
-            <button type="button">4</button>
-            <button type="button">5</button>
-            <button type="button">6</button>
-            <button type="button">×</button>
-
-            <button type="button">1</button>
-            <button type="button">2</button>
-            <button type="button">3</button>
-            <button type="button">-</button>
-
-            <button type="button">0</button>
-            <button type="button">C</button>
-            <button type="button">=</button>
-            <button type="button">+</button>
-        </div>
-    </div>
-</div>
-
-<div class="Overlay AddProductOverlay">
-    <div class="Overlay-backdrop"></div>
-
-    <div class="Overlay-panel">
+      <div class="Overlay-panel">
         <div class="Overlay-header">
-            <h2 class="Overlay-title">+ Nouveau produit</h2>
-            <button class="Overlay-close" type="button">×</button>
+          <h2 class="Overlay-title">+ Nouveau produit</h2>
+          <button class="Overlay-close" type="button">×</button>
         </div>
 
         <form class="AddProductForm">
-            <label class="AddProductForm-field">
-                <span>Image produit</span>
-                <input name="imageUrl" type="text" placeholder="riz.webp" />
-            </label>
+          <label class="AddProductForm-field">
+            <span>Image produit</span>
+            <input name="imageUrl" type="text" placeholder="riz.webp" />
+          </label>
 
-            <label class="AddProductForm-field">
-                <span>Nom *</span>
-                <input name="name" type="text" required />
-            </label>
+          <label class="AddProductForm-field">
+            <span>Nom *</span>
+            <input name="name" type="text" required />
+          </label>
 
-            <label class="AddProductForm-field">
-                <span>Catégorie *</span>
+          <label class="AddProductForm-field">
+            <span>Catégorie *</span>
 
-                <select name="categoryId" required>
-                    <option value="">Choisir une catégorie</option>
-                    <option
-                            th:each="category : ${categories}"
-                            th:value="${category.id}"
-                            th:text="${category.name}"
-                    >
-                        Catégorie
-                    </option>
-                </select>
-            </label>
+            <select name="categoryId" required>
+              <option value="">Choisir une catégorie</option>
+              <option
+                th:each="category : ${categories}"
+                th:value="${category.id}"
+                th:text="${category.name}"
+              >
+                Catégorie
+              </option>
+            </select>
+          </label>
 
-            <label class="AddProductForm-field">
-                <span>Prix vente *</span>
-                <input name="salePrice" type="number" min="0" required />
-            </label>
+          <label class="AddProductForm-field">
+            <span>Prix vente *</span>
+            <input name="salePrice" type="number" min="0" required />
+          </label>
 
-            <label class="AddProductForm-field">
-                <span>Prix achat</span>
-                <input name="purchasePrice" type="number" min="0" required />
-            </label>
+          <label class="AddProductForm-field">
+            <span>Prix achat</span>
+            <input name="purchasePrice" type="number" min="0" required />
+          </label>
 
-            <label class="AddProductForm-field">
-                <span>Stock initial</span>
-                <input name="stockQuantity" type="number" min="0" required />
-            </label>
+          <label class="AddProductForm-field">
+            <span>Stock initial</span>
+            <input name="stockQuantity" type="number" min="0" required />
+          </label>
 
-            <div class="AddProductForm-actions">
-                <button type="button" class="AddProductForm-cancel">Annuler</button>
-                <button type="submit">Créer</button>
-            </div>
+          <div class="AddProductForm-actions">
+            <button type="button" class="AddProductForm-cancel">Annuler</button>
+            <button type="submit">Créer</button>
+          </div>
         </form>
+      </div>
     </div>
-</div>
 
-<div class="Overlay ProductPreviewOverlay">
-    <div class="Overlay-backdrop"></div>
+    <div class="Overlay ProductPreviewOverlay">
+      <div class="Overlay-backdrop"></div>
 
-    <div class="Overlay-panel">
+      <div class="Overlay-panel">
         <div class="Overlay-header">
-            <div class="ProductPreview-header">
-                <img class="ProductPreview-image" th:src="@{/assets/styles/img/beure.webp}" alt="" />
-                <h2 class="ProductPreview-name">Produit</h2>
-            </div>
+          <div class="ProductPreview-header">
+            <img
+              class="ProductPreview-image"
+              th:src="@{/assets/styles/img/beure.webp}"
+              alt=""
+            />
+            <h2 class="ProductPreview-name">Produit</h2>
+          </div>
 
-            <button class="Overlay-close" type="button">×</button>
+          <button class="Overlay-close" type="button">×</button>
         </div>
 
         <div class="ProductPreview-content">
-            <p>
-                <strong>Stock :</strong>
-                <span class="ProductPreview-stock">0</span>
-            </p>
+          <p>
+            <strong>Stock :</strong>
+            <span class="ProductPreview-stock">0</span>
+          </p>
 
-            <p>
-                <strong>Prix :</strong>
-                <span class="ProductPreview-price">0 F</span>
-            </p>
+          <p>
+            <strong>Prix :</strong>
+            <span class="ProductPreview-price">0 F</span>
+          </p>
 
-            <p>
-                <strong>Statut :</strong>
-                <span class="ProductPreview-status">Actif</span>
-            </p>
+          <p>
+            <strong>Statut :</strong>
+            <span class="ProductPreview-status">Actif</span>
+          </p>
         </div>
 
         <div class="ProductPreview-actions">
-            <button class="ProductPreview-addStock" type="button">+ Stock</button>
-            <button class="ProductPreview-edit" type="button">
-                Modifier
-            </button>
-            <button
-                    class="ProductPreview-changePrice"
-                    type="button">
-                Modifier prix
-            </button>
+          <button class="ProductPreview-addStock" type="button">+ Stock</button>
+          <button class="ProductPreview-edit" type="button">Modifier</button>
+          <button class="ProductPreview-changePrice" type="button">
+            Modifier prix
+          </button>
         </div>
 
-        <a class="ProductPreview-link" href="#">
-            Voir la fiche →
-        </a>
+        <a class="ProductPreview-link" href="#"> Voir la fiche → </a>
+      </div>
     </div>
-</div>
 
-<div class="Overlay EditProductOverlay">
-    <div class="Overlay-backdrop"></div>
+    <div class="Overlay EditProductOverlay">
+      <div class="Overlay-backdrop"></div>
 
-    <div class="Overlay-panel">
+      <div class="Overlay-panel">
         <div class="Overlay-header">
-            <h2 class="Overlay-title">Modifier le produit</h2>
-            <button class="Overlay-close" type="button">×</button>
+          <h2 class="Overlay-title">Modifier le produit</h2>
+          <button class="Overlay-close" type="button">×</button>
         </div>
 
         <form class="EditProductForm">
-            <input type="hidden" name="productId">
+          <input type="hidden" name="productId" />
 
-            <label class="AddProductForm-field">
-                <span>Nom *</span>
-                <input name="name" type="text" required>
-            </label>
+          <label class="AddProductForm-field">
+            <span>Nom *</span>
+            <input name="name" type="text" required />
+          </label>
 
-            <label class="AddProductForm-field">
-                <span>Image</span>
-                <input name="imageUrl" type="text">
-            </label>
+          <label class="AddProductForm-field">
+            <span>Image</span>
+            <input name="imageUrl" type="text" />
+          </label>
 
-            <label class="AddProductForm-field">
-                <span>Catégorie *</span>
-                <select name="categoryId" required>
-                    <option
-                            th:each="category : ${categories}"
-                            th:value="${category.id}"
-                            th:text="${category.name}"
-                    >
-                        Catégorie
-                    </option>
-                </select>
-            </label>
+          <label class="AddProductForm-field">
+            <span>Catégorie *</span>
+            <select name="categoryId" required>
+              <option
+                th:each="category : ${categories}"
+                th:value="${category.id}"
+                th:text="${category.name}"
+              >
+                Catégorie
+              </option>
+            </select>
+          </label>
 
-            <label class="AddProductForm-field">
-                <span>Statut</span>
-                <select name="active" required>
-                    <option value="true">Actif</option>
-                    <option value="false">Inactif</option>
-                </select>
-            </label>
+          <label class="AddProductForm-field">
+            <span>Statut</span>
+            <select name="active" required>
+              <option value="true">Actif</option>
+              <option value="false">Inactif</option>
+            </select>
+          </label>
 
-            <div class="AddProductForm-actions">
-                <button type="submit">Enregistrer</button>
-            </div>
+          <div class="AddProductForm-actions">
+            <button type="submit">Enregistrer</button>
+          </div>
         </form>
+      </div>
     </div>
-</div>
 
-<div class="Overlay ChangePriceOverlay">
+    <div class="Overlay ChangePriceOverlay">
+      <div class="Overlay-backdrop"></div>
 
-    <div class="Overlay-backdrop"></div>
-
-    <div class="Overlay-panel">
-
+      <div class="Overlay-panel">
         <div class="Overlay-header">
+          <h2 class="Overlay-title">Modifier le prix</h2>
 
-            <h2 class="Overlay-title">
-                Modifier le prix
-            </h2>
-
-            <button
-                    class="Overlay-close"
-                    type="button">
-                ×
-            </button>
-
+          <button class="Overlay-close" type="button">×</button>
         </div>
 
         <form class="ChangePriceForm">
+          <input type="hidden" name="productId" />
 
-            <input
-                    type="hidden"
-                    name="productId">
+          <label class="AddProductForm-field">
+            <span>Prix vente</span>
 
-            <label class="AddProductForm-field">
+            <input type="number" step="0.01" name="salePrice" required />
+          </label>
 
-                <span>Prix vente</span>
+          <label class="AddProductForm-field">
+            <span>Prix achat</span>
 
-                <input
-                        type="number"
-                        step="0.01"
-                        name="salePrice"
-                        required>
+            <input type="number" step="0.01" name="purchasePrice" required />
+          </label>
 
-            </label>
-
-            <label class="AddProductForm-field">
-
-                <span>Prix achat</span>
-
-                <input
-                        type="number"
-                        step="0.01"
-                        name="purchasePrice"
-                        required>
-
-            </label>
-
-            <div class="AddProductForm-actions">
-
-                <button type="submit">
-                    Enregistrer
-                </button>
-
-            </div>
-
+          <div class="AddProductForm-actions">
+            <button type="submit">Enregistrer</button>
+          </div>
         </form>
-
+      </div>
     </div>
 
-</div>
+    <div class="Overlay AddStockOverlay">
+      <div class="Overlay-backdrop"></div>
 
-<div class="Overlay AddStockOverlay">
-
-    <div class="Overlay-backdrop"></div>
-
-    <div class="Overlay-panel">
-
+      <div class="Overlay-panel">
         <div class="Overlay-header">
+          <h2 class="Overlay-title">Ajouter du stock</h2>
 
-            <h2 class="Overlay-title">
-                Ajouter du stock
-            </h2>
-
-            <button class="Overlay-close">
-                ×
-            </button>
-
+          <button class="Overlay-close">×</button>
         </div>
 
         <form class="AddStockForm">
+          <input type="hidden" name="productId" />
 
-            <input
-                    type="hidden"
-                    name="productId"
-            >
+          <label class="AddProductForm-field">
+            <span>Quantité</span>
 
-            <label class="AddProductForm-field">
+            <input type="number" name="quantity" min="1" required />
+          </label>
 
-                <span>Quantité</span>
-
-                <input
-                        type="number"
-                        name="quantity"
-                        min="1"
-                        required
-                >
-
-            </label>
-
-            <div class="AddProductForm-actions">
-
-                <button type="submit">
-                    Ajouter
-                </button>
-
-            </div>
-
+          <div class="AddProductForm-actions">
+            <button type="submit">Ajouter</button>
+          </div>
         </form>
-
+      </div>
     </div>
 
-</div>
+    <div class="Overlay AddCategoryOverlay">
+      <div class="Overlay-backdrop"></div>
 
-<div class="Overlay AddCategoryOverlay">
-    <div class="Overlay-backdrop"></div>
-
-    <div class="Overlay-panel">
+      <div class="Overlay-panel">
         <div class="Overlay-header">
-            <h2 class="Overlay-title">+ Nouvelle catégorie</h2>
-            <button class="Overlay-close" type="button">×</button>
+          <h2 class="Overlay-title">+ Nouvelle catégorie</h2>
+          <button class="Overlay-close" type="button">×</button>
         </div>
 
         <form class="AddCategoryForm">
-            <label class="AddProductForm-field">
-                <span>Nom catégorie *</span>
-                <input name="name" type="text" required>
-            </label>
+          <label class="AddProductForm-field">
+            <span>Nom catégorie *</span>
+            <input name="name" type="text" required />
+          </label>
 
-            <div class="AddProductForm-actions">
-                <button type="submit">Créer</button>
-            </div>
+          <div class="AddProductForm-actions">
+            <button type="submit">Créer</button>
+          </div>
         </form>
+      </div>
     </div>
-</div>
-<div class="Overlay EditCategoryOverlay">
-    <div class="Overlay-backdrop"></div>
+    <div class="Overlay EditCategoryOverlay">
+      <div class="Overlay-backdrop"></div>
 
-    <div class="Overlay-panel">
+      <div class="Overlay-panel">
         <div class="Overlay-header">
-            <h2 class="Overlay-title">Modifier une catégorie</h2>
-            <button class="Overlay-close" type="button">×</button>
+          <h2 class="Overlay-title">Modifier une catégorie</h2>
+          <button class="Overlay-close" type="button">×</button>
         </div>
 
         <form class="EditCategoryForm">
-            <label class="AddProductForm-field">
-                <span>Catégorie</span>
-                <select name="categoryId" required>
-                    <option
-                            th:each="category : ${categories}"
-                            th:value="${category.id}"
-                            th:text="${category.name}"
-                            th:attr="data-active=${category.active}"
-                    >
-                        Catégorie
-                    </option>
-                </select>
-            </label>
+          <label class="AddProductForm-field">
+            <span>Catégorie</span>
+            <select name="categoryId" required>
+              <option
+                th:each="category : ${categories}"
+                th:value="${category.id}"
+                th:text="${category.name}"
+                th:attr="data-active=${category.active}"
+              >
+                Catégorie
+              </option>
+            </select>
+          </label>
 
-            <label class="AddProductForm-field">
-                <span>Nouveau nom</span>
-                <input name="name" type="text" required>
-            </label>
+          <label class="AddProductForm-field">
+            <span>Nouveau nom</span>
+            <input name="name" type="text" required />
+          </label>
 
-            <label class="AddProductForm-field">
-                <span>Statut</span>
-                <select name="active" required>
-                    <option value="true">Actif</option>
-                    <option value="false">Inactif</option>
-                </select>
-            </label>
+          <label class="AddProductForm-field">
+            <span>Statut</span>
+            <select name="active" required>
+              <option value="true">Actif</option>
+              <option value="false">Inactif</option>
+            </select>
+          </label>
 
-            <div class="AddProductForm-actions">
-                <button type="submit">Enregistrer</button>
-            </div>
+          <div class="AddProductForm-actions">
+            <button type="submit">Enregistrer</button>
+          </div>
         </form>
+      </div>
     </div>
-</div>
 
-<script th:src="@{/assets/js/components/calculator.js}"></script>
-<script th:src="@{/assets/js/components/filters.js}"></script>
-<script th:src="@{/assets/js/components/overlays.js}"></script>
-<script type="module"
-        th:src="@{/assets/js/product/product.js}">
-</script>
-</body>
+    <script th:src="@{/assets/js/components/calculator.js}"></script>
+    <script th:src="@{/assets/js/components/filters.js}"></script>
+    <script th:src="@{/assets/js/components/overlays.js}"></script>
+    <script type="module" th:src="@{/assets/js/product/product.js}"></script>
+  </body>
 </html>

@@ -20,24 +20,30 @@
 
 .CTA {
   height: 48px;
-  padding: 0 24px;
+  padding: 0 1.8em;
 
   border: none;
   border-radius: 4px;
   background: $primary;
   color: $bg-white;
 
-  font-size: 18px;
+  font-size: 1.1em;
   font-weight: 700;
 
   display: inline-flex;
   align-items: center;
   justify-content: center;
   gap: 10px;
+}
 
-  &::before {
-    content: "+";
-    font-size: 32px;
-    font-weight: 800;
-  }
+.CTA--add::before {
+  content: "+";
+  font-size: 2em;
+  font-weight: 800;
+}
+
+.CTA--secondary {
+  background: $bg-white;
+  color: $primary;
+  border: solid 1px $primary;
 }

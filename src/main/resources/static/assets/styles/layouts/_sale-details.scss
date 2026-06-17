@@ -4,6 +4,11 @@
   background: #f3f5ef;
 }
 
+.SaleDetails > * {
+  max-width: 1320px;
+  margin-inline: auto;
+}
+
 .SaleDetails-card,
 .SaleDetails-items {
   margin-top: 18px;
