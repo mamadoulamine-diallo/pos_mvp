@@ -4,19 +4,38 @@ Application de gestion commerciale développée dans le cadre du titre professio
 
 ## Contexte
 
-Dans de nombreux commerces d’Afrique de l’Ouest, la gestion quotidienne repose encore sur des carnets papier, des échanges WhatsApp et des suivis manuels.
 
-Cette situation entraîne plusieurs difficultés :
 
-* manque de visibilité sur les ventes ;
-* erreurs de stock ;
-* difficulté de supervision à distance ;
-* perte d’informations ;
-* problèmes de confiance entre associés.
+POS MVP est né d'une observation personnelle du commerce en Afrique de l'Ouest.
 
-POS MVP est une première réponse à ces problématiques.
+Ayant grandi dans une famille de commerçants, j'ai été confronté très tôt aux réalités du terrain : gestion sur cahier, suivi manuel des ventes, inventaires approximatifs et difficulté à obtenir une vision fiable de l'activité quotidienne.
 
-L’objectif est de fournir un outil simple, utilisable sur tablette ou ordinateur, permettant de suivre l’activité commerciale en temps réel.
+Ces contraintes deviennent encore plus importantes lorsqu'un commerce est géré par plusieurs personnes ou lorsque les investisseurs, associés ou membres de la famille se trouvent dans une autre ville ou un autre pays.
+
+Un constat revenait régulièrement :
+
+* les ventes sont enregistrées sur papier ;
+* les stocks sont difficiles à suivre ;
+* les informations circulent par téléphone ou WhatsApp ;
+* les chiffres réels sont souvent connus avec retard ;
+* la confiance entre associés repose davantage sur la communication que sur des données fiables.
+
+Cette problématique est particulièrement visible dans de nombreux commerces d'Afrique de l'Ouest où la transformation numérique reste limitée alors même que les smartphones et l'accès à Internet se démocratisent rapidement.
+
+POS MVP a été imaginé comme une première réponse à ce besoin.
+
+L'objectif n'est pas seulement de remplacer un cahier de caisse, mais de créer les fondations d'une plateforme de supervision commerciale permettant à un commerçant, un gérant ou un investisseur de suivre l'activité d'un point de vente en temps réel.
+
+Cette première version se concentre sur les besoins essentiels :
+
+* gestion des produits ;
+* gestion du stock ;
+* suivi des ventes ;
+* gestion des utilisateurs ;
+* tableau de bord d'activité.
+
+À plus long terme, cette vision pourra évoluer vers une plateforme SaaS de supervision commerciale adaptée aux réalités du marché ouest-africain.
+ette ou ordinateur, permettant de suivre l’activité commerciale en temps réel.
 
 ---
 
