@@ -1,20 +1,22 @@
-# POS MVP – Plateforme de Gestion Commerciale
+# POS MVP
 
-## Présentation
+Application de gestion commerciale développée dans le cadre du titre professionnel **Concepteur Développeur d’Applications (CDA)**.
 
-POS MVP est une application de gestion commerciale développée dans le cadre du titre professionnel Concepteur Développeur d'Applications (CDA).
+## Contexte
 
-Le projet est né d’un constat observé dans de nombreux commerces d’Afrique de l’Ouest où la gestion quotidienne repose encore largement sur des cahiers papier, rendant difficile le suivi des ventes, du stock et de l’activité lorsqu’un commerce est géré à distance.
+Dans de nombreux commerces d’Afrique de l’Ouest, la gestion quotidienne repose encore sur des carnets papier, des échanges WhatsApp et des suivis manuels.
 
-L’objectif du projet est de proposer une solution simple, rapide et accessible permettant à un commerçant de :
+Cette situation entraîne plusieurs difficultés :
 
-* gérer son catalogue produits ;
-* suivre son stock ;
-* enregistrer ses ventes ;
-* consulter ses indicateurs commerciaux ;
-* superviser son activité en temps réel.
+* manque de visibilité sur les ventes ;
+* erreurs de stock ;
+* difficulté de supervision à distance ;
+* perte d’informations ;
+* problèmes de confiance entre associés.
 
-L’application a été pensée en priorité pour une utilisation sur tablette tactile, tout en restant pleinement compatible desktop.
+POS MVP est une première réponse à ces problématiques.
+
+L’objectif est de fournir un outil simple, utilisable sur tablette ou ordinateur, permettant de suivre l’activité commerciale en temps réel.
 
 ---
 
@@ -22,104 +24,57 @@ L’application a été pensée en priorité pour une utilisation sur tablette t
 
 ### Authentification
 
-* Connexion par code PIN
-* Gestion des rôles
-* Gestion des sessions
-* Déconnexion sécurisée
+* connexion par code PIN ;
+* gestion des rôles ;
+* session utilisateur.
 
-### Gestion des utilisateurs
+### Produits
 
-* Création d’utilisateurs
-* Modification des utilisateurs
-* Activation / désactivation
-* Gestion des rôles :
+* création et modification de produits ;
+* activation / désactivation ;
+* gestion des catégories ;
+* historique des prix.
 
-    * Gérant
-    * Vendeur
+### Stock
 
-### Gestion des catégories
+* suivi des quantités ;
+* alertes de stock faible ;
+* détection des ruptures.
 
-* Création de catégories
-* Modification des catégories
-* Activation / désactivation
-* Filtrage dynamique
+### Ventes
 
-### Gestion des produits
+* création rapide d’une vente ;
+* calcul automatique des montants ;
+* historique des ventes ;
+* détail des transactions.
 
-* Création de produits
-* Modification de produits
-* Activation / désactivation
-* Images produits
-* Association à une catégorie
+### Utilisateurs
 
-### Gestion des prix
-
-* Historisation complète des prix
-* Prix actif unique
-* Prix d’achat
-* Prix de vente
-* Consultation de l’historique
-
-### Gestion du stock
-
-* Quantité disponible
-* Ajout de stock
-* Alertes stock faible
-* Alertes rupture
-
-### Gestion des ventes
-
-* Création de ventes
-* Panier dynamique
-* Validation des ventes
-* Génération de reçu
-* Historique des ventes
-* Détail complet d’une vente
+* création et modification ;
+* gestion des rôles ;
+* activation / désactivation.
 
 ### Dashboard
 
-* Chiffre d’affaires
-* Nombre de ventes
-* Quantité vendue
-* Produits les plus vendus
-* Revenus par période
-* Ventes récentes
-* Notifications de stock
+* chiffre d’affaires ;
+* ventes réalisées ;
+* articles vendus ;
+* panier moyen ;
+* produits les plus vendus ;
+* ventes récentes ;
+* alertes stock.
 
 ---
 
-## Architecture
-
-Architecture en couches :
-
-Controller
-↓
-Service
-↓
-Repository
-↓
-Base de données
-
-Organisation modulaire :
-
-* user
-* product
-* category
-* sale
-* dashboard
-* shared
-
----
-
-## Stack Technique
+## Stack technique
 
 ### Backend
 
 * Java 21
 * Spring Boot
+* Spring MVC
 * Spring Data JPA
 * Hibernate
-* Maven
 
 ### Base de données
 
@@ -127,22 +82,46 @@ Organisation modulaire :
 
 ### Frontend
 
-* HTML5
-* SCSS / CSS
-* JavaScript ES6
 * Thymeleaf
+* HTML5
+* SCSS
+* JavaScript
 
 ### Outils
 
+* Maven
 * Git
 * GitHub
-* IntelliJ IDEA
-* Figma
-* PlantUML
 
 ---
 
-## Modèle de données
+## Architecture
+
+Architecture modulaire organisée par domaine métier :
+
+```txt
+category/
+product/
+sale/
+stock/
+user/
+dashboard/
+shared/
+```
+
+Chaque module contient :
+
+```txt
+controller
+service
+repository
+entity
+dto
+```
+
+---
+
+## Modèle métier
 
 Principales entités :
 
@@ -155,51 +134,55 @@ Principales entités :
 
 ---
 
-## Installation
+## Captures
+## Dashboard
 
-### Cloner le projet
+Suivi de l'activité commerciale en temps réel.
+Le tableau de bord centralise les principaux indicateurs de performance : chiffre d'affaires, ventes réalisées, produits vendus, panier moyen ainsi que les alertes de stock. Il permet au gérant de suivre l'activité commerciale en temps réel.
 
-git clone <repository>
+![img.png](img.png)
+## Gestion des ventes
 
-### Configurer MySQL
+L'interface de vente a été pensée pour une utilisation rapide sur tablette ou ordinateur. Elle permet d'ajouter des produits au panier, de calculer automatiquement le montant total et d'enregistrer les transactions.
+![img_1.png](img_1.png)
+## Catalogue produits
 
-Créer une base :
+Les produits sont organisés par catégories avec recherche, filtres et informations de stock. Cette vue facilite la gestion quotidienne du catalogue.
+![img_2.png](img_2.png)
+Fiche produit
 
-project_pos
+Chaque produit dispose d'une fiche détaillée comprenant son historique de prix, ses informations principales et les opérations de gestion associées.
+![img_3.png](img_3.png)
+## Gestion des utilisateurs
 
-### Configuration
-
-Modifier :
-
-application.properties
-
-### Lancer
-
-mvn spring-boot:run
-
----
-
+L'application permet de gérer les utilisateurs, leurs rôles et leurs accès afin de sécuriser l'utilisation du système.
+![img_4.png](img_4.png)
 ---
 
 ## Roadmap
 
-### MVP
+### MVP (terminé)
 
-* Authentification
-* Produits
-* Stock
-* Ventes
-* Dashboard
+* gestion produits
+* gestion stock
+* ventes
+* dashboard
+* utilisateurs
 
 ### V1
 
+* API REST
 * Frontend React
-* API REST complète
-* Architecture microservices
+* Authentification JWT
+* Gestion fournisseurs
+* Gestion clients
+
+### V2
+
 * Multi-boutiques
-* SaaS multi-tenant
-* Gestion avancée des utilisateurs
-* Supervision commerciale à distance
+* SaaS
+* Supervision distante
+* Reporting avancé
 
 ---
 
@@ -207,4 +190,4 @@ mvn spring-boot:run
 
 Mamadou Lamine Diallo
 
-Projet réalisé dans le cadre du titre professionnel CDA.
+Projet CDA 2026.
