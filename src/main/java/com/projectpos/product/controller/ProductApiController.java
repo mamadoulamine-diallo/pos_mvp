@@ -1,8 +1,7 @@
 package com.projectpos.product.controller;
 
-import com.projectpos.product.dto.CreateProductRequest;
-import com.projectpos.product.dto.ProductResponse;
-import com.projectpos.product.dto.UpdateProductRequest;
+import com.projectpos.product.dto.*;
+import com.projectpos.product.service.ProductPriceService;
 import com.projectpos.product.service.ProductService;
 import jakarta.validation.Valid;
 import org.springframework.web.bind.annotation.*;
@@ -14,9 +13,14 @@ import java.util.List;
 public class ProductApiController {
 
     private final ProductService productService;
+    private final ProductPriceService productPriceService;
 
-    public ProductApiController(ProductService productService) {
+    public ProductApiController(
+            ProductService productService,
+            ProductPriceService productPriceService
+    ) {
         this.productService = productService;
+        this.productPriceService = productPriceService;
     }
 
     @GetMapping
@@ -43,5 +47,19 @@ public class ProductApiController {
             @Valid @RequestBody UpdateProductRequest request
     ) {
         return productService.toResponse(productService.updateProduct(id, request));
+    }
+
+    @PostMapping("/stock")
+    public void addStock(@Valid @RequestBody AddStockRequest request) {
+        productService.addStock(request.productId(), request.quantity());
+    }
+
+    @PostMapping("/price")
+    public void changePrice(@Valid @RequestBody ChangePriceRequest request) {
+        productPriceService.changePrice(
+                request.productId(),
+                request.salePrice(),
+                request.purchasePrice()
+        );
     }
 }

@@ -55,18 +55,14 @@ public class ProductPriceService {
                         );
 
         currentPrice.setEndDate(LocalDateTime.now());
-
         repository.save(currentPrice);
+        repository.flush();
 
         ProductPrice newPrice = new ProductPrice();
-
         newPrice.setProduct(currentPrice.getProduct());
-
         newPrice.setSalePrice(salePrice);
         newPrice.setPurchasePrice(purchasePrice);
-
         newPrice.setStartDate(LocalDateTime.now());
-
         newPrice.setEndDate(null);
 
         repository.save(newPrice);
