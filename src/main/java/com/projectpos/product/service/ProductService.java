@@ -8,6 +8,7 @@ import com.projectpos.product.dto.UpdateProductRequest;
 import com.projectpos.product.entity.Product;
 import com.projectpos.product.repository.ProductRepository;
 import org.springframework.stereotype.Service;
+import com.projectpos.product.dto.ProductResponse;
 
 import java.util.List;
 
@@ -102,5 +103,18 @@ public class ProductService {
     public Product findById(Integer id) {
         return repository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("Produit introuvable"));
+    }
+
+    public ProductResponse toResponse(Product product) {
+        return new ProductResponse(
+                product.getId(),
+                product.getName(),
+                product.getImageUrl(),
+                product.getActive(),
+                product.getStockQuantity(),
+                product.getCategory().getId(),
+                product.getCategory().getName(),
+                priceService.getActivePrice(product.getId())
+        );
     }
 }
