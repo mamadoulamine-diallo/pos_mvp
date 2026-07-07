@@ -3,6 +3,7 @@ package com.projectpos.sale.controller;
 import com.projectpos.category.service.CategoryService;
 import com.projectpos.product.service.ProductService;
 import com.projectpos.sale.service.SaleService;
+import com.projectpos.shared.security.CurrentUserService;
 import com.projectpos.user.entity.AppUser;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.stereotype.Controller;
@@ -24,15 +25,18 @@ public class SaleController {
     private final SaleService service;
     private final ProductService productService;
     private final CategoryService categoryService;
+    private final CurrentUserService currentUserService;
 
     public SaleController(
             SaleService service,
             ProductService productService,
-            CategoryService categoryService
+            CategoryService categoryService,
+            CurrentUserService currentUserService
     ) {
         this.service = service;
         this.productService = productService;
         this.categoryService = categoryService;
+        this.currentUserService = currentUserService;
     }
 
     @GetMapping("/sales")
@@ -66,11 +70,7 @@ public class SaleController {
     @PostMapping("/sales")
     @ResponseBody
     public Map<String, Object> createSale(@Valid @RequestBody CreateSaleRequest request, HttpSession session) {
-        AppUser currentUser = (AppUser) session.getAttribute("currentUser");
-
-        if (currentUser == null) {
-            throw new IllegalArgumentException("Utilisateur non connecté");
-        }
+        AppUser currentUser = currentUserService.getCurrentUser(session);
 
         Sale sale = service.createSale(request, currentUser);
 
