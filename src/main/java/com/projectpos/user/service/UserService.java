@@ -1,5 +1,6 @@
 package com.projectpos.user.service;
 
+import com.projectpos.user.dto.UserResponse;
 import com.projectpos.user.entity.AppUser;
 import com.projectpos.user.repository.UserRepository;
 import org.springframework.stereotype.Service;
@@ -71,5 +72,15 @@ public class UserService {
         user.setActive(request.active());
 
         return repository.save(user);
+    }
+
+    public UserResponse toResponse(AppUser user) {
+        return new UserResponse(
+                user.getId(),
+                user.getFullName(),
+                user.getEmail(),
+                user.getRole(),
+                user.getActive()
+        );
     }
 }
