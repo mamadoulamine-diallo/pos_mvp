@@ -1,5 +1,6 @@
 package com.projectpos.category.service;
 
+import com.projectpos.category.dto.CategoryResponse;
 import com.projectpos.category.dto.CreateCategoryRequest;
 import com.projectpos.category.dto.UpdateCategoryRequest;
 import com.projectpos.category.entity.Category;
@@ -37,5 +38,13 @@ public class CategoryService {
         category.setActive(request.active());
 
         return repository.save(category);
+    }
+
+    public CategoryResponse toResponse(Category category) {
+        return new CategoryResponse(
+                category.getId(),
+                category.getName(),
+                category.getActive()
+        );
     }
 }
