@@ -3,12 +3,14 @@ package com.projectpos.dashboard.controller;
 import com.projectpos.dashboard.dto.DashboardPeriod;
 import com.projectpos.dashboard.service.DashboardService;
 import com.projectpos.user.entity.AppUser;
+import io.swagger.v3.oas.annotations.Hidden;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+@Hidden
 @Controller
 public class DashboardController {
 

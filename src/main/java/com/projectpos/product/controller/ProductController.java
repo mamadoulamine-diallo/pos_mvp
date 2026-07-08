@@ -9,6 +9,7 @@ import com.projectpos.product.entity.Product;
 import com.projectpos.product.service.ProductPriceService;
 import com.projectpos.product.service.ProductService;
 import com.projectpos.user.entity.AppUser;
+import io.swagger.v3.oas.annotations.Hidden;
 import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
 import org.springframework.stereotype.Controller;
@@ -17,6 +18,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.Map;
 
+@Hidden
 @Controller
 public class ProductController {
 

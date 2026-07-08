@@ -7,6 +7,8 @@ import com.projectpos.sale.entity.Sale;
 import com.projectpos.sale.service.SaleService;
 import com.projectpos.shared.security.CurrentUserService;
 import com.projectpos.user.entity.AppUser;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
 import org.springframework.web.bind.annotation.*;
@@ -14,6 +16,10 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 import java.util.Map;
 
+@Tag(
+        name = "Sales",
+        description = "Sales management"
+)
 @RestController
 @RequestMapping("/api/v1/sales")
 public class SaleApiController {
@@ -29,16 +35,28 @@ public class SaleApiController {
         this.currentUserService = currentUserService;
     }
 
+    @Operation(
+            summary = "Retrieve sales history",
+            description = "Returns the sales history with totals, seller and item count."
+    )
     @GetMapping
     public List<SaleHistoryDto> findAll() {
         return saleService.getSaleHistory();
     }
 
+    @Operation(
+            summary = "Retrieve sale details",
+            description = "Returns detailed information for a sale including sold items and totals."
+    )
     @GetMapping("/{id}")
     public SaleDetailDto findById(@PathVariable Integer id) {
         return saleService.getSaleDetailDto(id);
     }
 
+    @Operation(
+            summary = "Create sale",
+            description = "Creates a validated sale, stores sale items and decrements product stock."
+    )
     @PostMapping
     public Map<String, Object> create(
             @Valid @RequestBody CreateSaleRequest request,

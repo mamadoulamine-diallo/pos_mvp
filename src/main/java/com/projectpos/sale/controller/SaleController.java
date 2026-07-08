@@ -5,6 +5,7 @@ import com.projectpos.product.service.ProductService;
 import com.projectpos.sale.service.SaleService;
 import com.projectpos.shared.security.CurrentUserService;
 import com.projectpos.user.entity.AppUser;
+import io.swagger.v3.oas.annotations.Hidden;
 import jakarta.servlet.http.HttpSession;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -19,6 +20,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 
 import java.util.Map;
 
+@Hidden
 @Controller
 public class SaleController {
 

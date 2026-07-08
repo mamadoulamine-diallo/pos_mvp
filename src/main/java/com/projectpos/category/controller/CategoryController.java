@@ -4,6 +4,7 @@ import com.projectpos.category.dto.CreateCategoryRequest;
 import com.projectpos.category.dto.UpdateCategoryRequest;
 import com.projectpos.category.entity.Category;
 import com.projectpos.category.service.CategoryService;
+import io.swagger.v3.oas.annotations.Hidden;
 import jakarta.validation.Valid;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -11,6 +12,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.Map;
 
+@Hidden
 @Controller
 public class CategoryController {
 

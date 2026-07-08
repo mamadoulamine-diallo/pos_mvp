@@ -5,6 +5,7 @@ import com.projectpos.user.dto.UpdateUserRequest;
 import com.projectpos.user.entity.AppUser;
 import com.projectpos.user.entity.UserRole;
 import com.projectpos.user.service.UserService;
+import io.swagger.v3.oas.annotations.Hidden;
 import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
 import org.springframework.stereotype.Controller;
@@ -13,6 +14,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.Map;
 
+@Hidden
 @Controller
 public class UserController {
 
