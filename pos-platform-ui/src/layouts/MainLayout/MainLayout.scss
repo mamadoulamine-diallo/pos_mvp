@@ -1,0 +1,29 @@
+.main-layout {
+    display: flex;
+    flex-direction: column;
+    height: 100vh;
+}
+
+.header {
+    padding: 1rem;
+    border-bottom: 1px solid #ddd;
+
+    display: flex;
+    justify-content: space-between;
+}
+
+.layout-body {
+    display: flex;
+    flex: 1;
+}
+
+.sidebar {
+    width: 240px;
+    border-right: 1px solid #ddd;
+    padding: 1rem;
+}
+
+.content {
+    flex: 1;
+    padding: 2rem;
+}

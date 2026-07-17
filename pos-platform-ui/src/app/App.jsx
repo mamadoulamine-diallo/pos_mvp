@@ -1,7 +1,12 @@
+import Providers from "./providers";
+import AppRouter from "./router";
+
 function App() {
-  return (
-    <h1>POS Platform</h1>
-  );
+    return (
+        <Providers>
+            <AppRouter />
+        </Providers>
+    );
 }
 
 export default App;
