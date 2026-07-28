@@ -3,64 +3,94 @@ import { loadDashboardSummary } from "../../services/dashboardService";
 
 import "./SummaryCards.scss";
 
-function SummaryCards() {
+const revenueLabels = {
+  TODAY: "CA du jour",
+  LAST_7_DAYS: "CA des 7 derniers jours",
+  LAST_30_DAYS: "CA des 30 derniers jours",
+  ALL: "CA total",
+};
 
-    const [summary, setSummary] = useState(null);
+function SummaryCards({ period = "TODAY" }) {
+  const [summary, setSummary] = useState(null);
+  const [error, setError] = useState(null);
 
-    useEffect(() => {
+  useEffect(() => {
+    async function fetchSummary() {
+      try {
+        setError(null);
 
-        async function fetchSummary() {
+        const data = await loadDashboardSummary(period);
 
-            try {
-
-                const data = await loadDashboardSummary();
-
-                setSummary(data);
-
-            } catch (error) {
-
-                console.error(error);
-
-            }
-
-        }
-
-        fetchSummary();
-
-    }, []);
-
-    if (!summary) {
-        return <p>Loading...</p>;
+        setSummary(data);
+      } catch (requestError) {
+        console.error(requestError);
+        setError("Impossible de charger les indicateurs.");
+      }
     }
 
-    return (
+    fetchSummary();
+  }, [period]);
 
-        <div className="summary-cards">
+  if (error) {
+    return <p>{error}</p>;
+  }
 
-            <div className="summary-card">
-                <h3>Revenue</h3>
-                <p>{summary.revenueFormatted}</p>
-            </div>
+  if (!summary) {
+    return <p>Chargement...</p>;
+  }
 
-            <div className="summary-card">
-                <h3>Sales</h3>
-                <p>{summary.salesCount}</p>
-            </div>
+  const cards = [
+    {
+      label: revenueLabels[period],
+      value: summary.revenueFormatted,
+      help: "Ventes validées",
+      modifier: "DashboardStat--primary",
+    },
+    {
+      label: "Ventes",
+      value: summary.salesCount,
+      help: "Transactions",
+    },
+    {
+      label: "Articles vendus",
+      value: summary.itemsSold,
+      help: "Quantité totale",
+    },
+    {
+      label: "Panier moyen",
+      value: summary.averageBasketFormatted,
+      help: "Par vente",
+    },
+    {
+      label: "Stock faible",
+      value: summary.lowStockCount,
+      help: "Produits à surveiller",
+      modifier: "DashboardStat--warning",
+    },
+    {
+      label: "Ruptures",
+      value: summary.outOfStockCount,
+      help: "Produits indisponibles",
+      modifier: "DashboardStat--danger",
+    },
+  ];
 
-            <div className="summary-card">
-                <h3>Items Sold</h3>
-                <p>{summary.itemsSold}</p>
-            </div>
+  return (
+    <section className="DashboardStats">
+      {cards.map(({ label, value, help, modifier }) => (
+        <article
+          className={`DashboardStat${modifier ? ` ${modifier}` : ""}`}
+          key={label}
+        >
+          <span className="DashboardStat-label">{label}</span>
 
-            <div className="summary-card">
-                <h3>Average Basket</h3>
-                <p>{summary.averageBasketFormatted}</p>
-            </div>
+          <strong className="DashboardStat-value">{value}</strong>
 
-        </div>
-
-    );
-
+          <small className="DashboardStat-help">{help}</small>
+        </article>
+      ))}
+    </section>
+  );
 }
 
 export default SummaryCards;

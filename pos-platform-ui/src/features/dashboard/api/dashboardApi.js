@@ -7,3 +7,19 @@ export async function getDashboardSummary(period = "TODAY") {
 
   return response.data;
 }
+
+export async function getLowStockCount() {
+  const response = await axiosClient.get(
+    "/dashboard/stock-alerts/low-count"
+  );
+
+  return response.data;
+}
+
+export async function getOutOfStockCount() {
+  const response = await axiosClient.get(
+    "/dashboard/stock-alerts/out-count"
+  );
+
+  return response.data;
+}
