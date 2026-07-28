@@ -1,10 +1,16 @@
 import { useState } from "react";
+import PeriodFilter from "../components/PeriodFilter";
 import SummaryCards from "../widgets/SummaryCards";
 
 function DashboardPage() {
-  const [period] = useState("TODAY");
+  const [period, setPeriod] = useState("TODAY");
 
-  return <SummaryCards period={period} />;
+  return (
+    <main className="Dashboard">
+      <PeriodFilter period={period} onChange={setPeriod} />
+      <SummaryCards period={period} />
+    </main>
+  );
 }
 
 export default DashboardPage;
