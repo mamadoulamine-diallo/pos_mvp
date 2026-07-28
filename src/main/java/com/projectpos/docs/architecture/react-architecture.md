@@ -2,7 +2,7 @@
 
 # Objectif
 
-Ce document définit l'architecture du frontend React de la V1.
+Ce document définit l'architecture officielle du frontend React de POS Platform V1.
 
 Le frontend est conçu comme un client de l'API REST.
 
@@ -59,18 +59,19 @@ Contient le cœur de l'application.
 
 Responsabilités :
 
-- configuration React
-- Router
-- Providers
-- Theme
-- configuration Axios
-- gestion globale
+- configuration React ;
+- Router ;
+- Providers ;
+- configuration globale ;
+- point d'entrée de l'application.
 
 Exemples :
 
 App.jsx
 
 router.jsx
+
+routes.jsx
 
 providers.jsx
 
@@ -82,19 +83,16 @@ Contient uniquement les ressources statiques.
 
 Exemples :
 
-images
-
-logos
-
-fonts
-
-icons
+- images
+- logos
+- fonts
+- icons
 
 ---
 
 # layouts/
 
-Contient les layouts principaux.
+Contient les layouts principaux de l'application.
 
 Exemples :
 
@@ -102,15 +100,19 @@ MainLayout
 
 AuthLayout
 
-DashboardLayout
+Les layouts définissent la structure générale de l'interface.
+
+Ils ne contiennent aucune logique métier.
+
+Les fonctionnalités sont affichées via React Router (`Outlet`).
 
 ---
 
 # shared/
 
-Contient les éléments réutilisables dans toute l'application.
+Contient tous les éléments réutilisables dans l'ensemble de l'application.
 
-Exemples :
+shared/
 
 components/
 
@@ -130,7 +132,9 @@ api/
 
 # shared/components
 
-Composants génériques.
+Composants totalement génériques.
+
+Ils ne contiennent aucune logique métier.
 
 Exemples :
 
@@ -139,8 +143,6 @@ Button
 Input
 
 Modal
-
-Table
 
 Card
 
@@ -165,6 +167,10 @@ axiosClient.js
 interceptors.js
 
 auth.js
+
+Le client Axios est centralisé.
+
+Les composants React ne communiquent jamais directement avec Axios.
 
 ---
 
@@ -214,9 +220,11 @@ API URLs
 
 Chaque fonctionnalité possède sa propre organisation.
 
-Exemple :
+Exemples :
 
 features/
+
+dashboard/
 
 products/
 
@@ -226,9 +234,9 @@ sales/
 
 users/
 
-dashboard/
-
 auth/
+
+Chaque feature représente un domaine métier indépendant.
 
 ---
 
@@ -236,9 +244,7 @@ auth/
 
 Chaque feature suit la même organisation.
 
-Exemple :
-
-products/
+feature/
 
 api/
 
@@ -252,23 +258,68 @@ services/
 
 types/
 
+widgets/ (optionnel)
+
 ---
 
 # api/
 
-Communication avec le backend.
+Communication HTTP avec le backend.
 
-Exemple :
+Exemples :
 
 productApi.js
 
-Toutes les requêtes HTTP concernant les produits sont centralisées ici.
+saleApi.js
+
+dashboardApi.js
+
+Toutes les requêtes HTTP concernant une feature sont centralisées ici.
+
+Les composants React n'effectuent jamais directement d'appels HTTP.
+
+---
+
+# services/
+
+Les services préparent les données destinées à l'interface.
+
+Ils ne contiennent aucune logique métier.
+
+Exemples :
+
+- formatage des données
+- adaptation des réponses API
+- préparation des données pour les graphiques
+- agrégation d'informations destinées à l'affichage
+
+---
+
+# pages/
+
+Les pages correspondent aux routes React.
+
+Exemples :
+
+ProductsPage
+
+DashboardPage
+
+SalesPage
+
+UserPage
+
+Une page orchestre les composants de sa feature.
+
+Elle contient le moins de logique possible.
 
 ---
 
 # components/
 
-Composants spécifiques à la feature.
+Composants spécifiques à une feature.
+
+Ils ne sont pas réutilisés en dehors de leur domaine métier.
 
 Exemples :
 
@@ -280,47 +331,127 @@ ProductForm
 
 ProductModal
 
----
+SaleCalculator
 
-# pages/
-
-Pages de la feature.
-
-Exemples :
-
-ProductsPage
-
-ProductDetailsPage
+UserCard
 
 ---
 
 # hooks/
 
-Hooks propres à la feature.
+Hooks propres à une feature.
 
 Exemples :
 
 useProducts
 
-useProductDetails
+useDashboard
 
----
-
-# services/
-
-Logique de présentation.
-
-Aucune logique métier.
-
-Uniquement des traitements liés à l'interface.
+useSales
 
 ---
 
 # types/
 
-Types TypeScript ou définitions JSDoc.
+Définitions des modèles manipulés par React.
 
-Préparation à une future migration TypeScript.
+Aujourd'hui :
+
+JSDoc si nécessaire.
+
+Demain :
+
+migration TypeScript.
+
+Les types représentent les DTO exposés par l'API REST.
+
+Jamais les entités JPA.
+
+---
+
+# widgets/
+
+Le dossier widgets est optionnel.
+
+Il est utilisé lorsqu'une feature est composée de plusieurs blocs métier indépendants.
+
+Exemple :
+
+dashboard/
+
+widgets/
+
+SummaryCards
+
+RevenueChart
+
+TopProducts
+
+RecentSales
+
+StockAlerts
+
+Chaque widget représente une fonctionnalité autonome pouvant évoluer indépendamment.
+
+Les widgets sont particulièrement adaptés aux dashboards.
+
+---
+
+# Hiérarchie des composants
+
+Le frontend distingue trois niveaux de composants.
+
+## 1. Shared Components
+
+Réutilisables dans toute l'application.
+
+Exemples :
+
+Button
+
+Modal
+
+Card
+
+Input
+
+Badge
+
+Loader
+
+---
+
+## 2. Feature Components
+
+Réutilisables uniquement dans leur domaine métier.
+
+Exemples :
+
+ProductTable
+
+SaleForm
+
+UserCard
+
+CategoryModal
+
+---
+
+## 3. Widgets
+
+Blocs métier autonomes utilisés principalement dans les dashboards.
+
+Exemple :
+
+Revenue Widget
+
+Stock Widget
+
+Top Products Widget
+
+Recent Sales Widget
+
+Chaque widget peut évoluer indépendamment des autres.
 
 ---
 
@@ -328,27 +459,29 @@ Préparation à une future migration TypeScript.
 
 Le routage est centralisé.
 
-Exemple :
+Exemples :
 
 /
 
-/login
+login
 
-/dashboard
+products
 
-/products
+products/:id
 
-/products/:id
+categories
 
-/categories
+sales
 
-/users
+sales/new
 
-/sales
+sales/:id
 
-/sales/new
+users
 
-/sales/:id
+Le Layout principal reste affiché.
+
+Les pages sont injectées via React Router (`Outlet`).
 
 ---
 
@@ -358,21 +491,9 @@ Toutes les communications passent par :
 
 shared/api/
 
-Chaque feature appelle son propre client API.
+Chaque feature possède ensuite son propre client API.
 
 Exemple :
-
-Product API
-
-↓
-
-/api/v1/products
-
-Sale API
-
-↓
-
-/api/v1/sales
 
 Dashboard API
 
@@ -380,7 +501,33 @@ Dashboard API
 
 /api/v1/dashboard
 
-Le frontend ne construit jamais les URLs directement dans les composants.
+↓
+
+Dashboard Service
+
+↓
+
+Dashboard Page
+
+Le frontend ne construit jamais directement les URLs.
+
+Le flux est toujours :
+
+Page
+
+↓
+
+Service
+
+↓
+
+API
+
+↓
+
+Backend
+
+Les composants React n'utilisent jamais Axios directement.
 
 ---
 
@@ -398,7 +545,7 @@ Ordre de priorité :
 
 3. Context API
 
-Aucun store global (Redux, Zustand…) ne sera introduit tant que le besoin réel n'est pas identifié.
+Aucun store global (Redux, Zustand...) ne sera introduit tant qu'un besoin réel n'est pas identifié.
 
 ---
 
@@ -420,11 +567,22 @@ Les appels API passeront par un interceptor Axios.
 
 # Philosophie
 
-Le frontend ne connaît pas les entités JPA.
+Le frontend est considéré comme un client de la plateforme.
+
+Il ne connaît jamais les entités JPA.
 
 Il manipule uniquement les DTO exposés par l'API REST.
 
 Le backend reste l'unique source de vérité.
+
+Les règles métier sont implémentées exclusivement dans Spring Boot.
+
+Le frontend est responsable de :
+
+- l'affichage ;
+- la navigation ;
+- les interactions utilisateur ;
+- la consommation de l'API REST.
 
 ---
 
@@ -432,28 +590,36 @@ Le backend reste l'unique source de vérité.
 
 L'architecture est conçue pour intégrer progressivement :
 
-Company
-
-Store
-
-Subscription
-
-Supplier
-
-Stock Transfer
-
-Cash Remittance
+- Company
+- Store
+- Subscription
+- Supplier
+- Stock Transfer
+- Cash Remittance
+- Financial Flows
+- Reports
 
 sans modifier l'organisation générale du frontend.
 
-Chaque nouvelle fonctionnalité sera ajoutée sous forme d'une nouvelle feature.
+Chaque nouveau domaine métier sera ajouté sous la forme d'une nouvelle feature.
 
 ---
 
 # Vision
 
-Le frontend React constitue l'interface utilisateur de la plateforme.
+Le frontend React constitue l'interface utilisateur de POS Platform.
 
 Le backend Spring Boot constitue le moteur métier.
 
-Cette séparation garantit une architecture évolutive, maintenable et compatible avec les futures versions SaaS du projet.
+Les deux applications évoluent indépendamment tout en partageant le même contrat REST.
+
+Cette séparation garantit une architecture :
+
+- évolutive ;
+- maintenable ;
+- testable ;
+- compatible avec la future architecture SaaS multi-entreprises.
+
+Le frontend n'est pas une simple interface.
+
+Il est le client officiel de la plateforme POS Platform.
