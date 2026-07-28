@@ -23,3 +23,27 @@ export async function getOutOfStockCount() {
 
   return response.data;
 }
+
+export async function getRevenueByDay(period = "TODAY") {
+  const response = await axiosClient.get("/dashboard/revenue/day", {
+    params: { period },
+  });
+
+  return response.data;
+}
+
+export async function getRevenueByMonth(period = "TODAY") {
+  const response = await axiosClient.get("/dashboard/revenue/month", {
+    params: { period },
+  });
+
+  return response.data;
+}
+
+export async function getRevenueByYear(period = "TODAY") {
+  const response = await axiosClient.get("/dashboard/revenue/year", {
+    params: { period },
+  });
+
+  return response.data;
+}
