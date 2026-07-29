@@ -1,8 +1,6 @@
 import { useEffect, useState } from "react";
 import { loadTopProducts } from "../../services/dashboardService";
 
-import "./TopProducts.scss";
-
 function TopProducts({ period = "TODAY" }) {
 
     const [products, setProducts] = useState([]);

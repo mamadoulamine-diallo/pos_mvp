@@ -1,8 +1,6 @@
 import { useEffect, useState } from "react";
 import { loadRecentSales } from "../../services/dashboardService";
 
-import "./RecentSales.scss";
-
 function formatSaleTime(saleDate) {
   if (!saleDate) {
     return "--:--";

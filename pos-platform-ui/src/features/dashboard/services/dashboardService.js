@@ -7,6 +7,7 @@ import {
   getRevenueByMonth,
   getRevenueByYear,
   getTopProducts,
+  getStockAlerts,
 } from "../api/dashboardApi";
 
 export async function loadDashboardSummary(period = "TODAY") {
@@ -45,4 +46,8 @@ export async function loadTopProducts(period = "TODAY") {
 
 export async function loadRecentSales(period = "TODAY") {
   return getRecentSales(period);
+}
+
+export async function loadStockAlerts() {
+  return getStockAlerts();
 }

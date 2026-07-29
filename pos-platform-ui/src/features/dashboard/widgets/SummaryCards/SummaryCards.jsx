@@ -1,8 +1,6 @@
 import { useEffect, useState } from "react";
 import { loadDashboardSummary } from "../../services/dashboardService";
 
-import "./SummaryCards.scss";
-
 const revenueLabels = {
   TODAY: "CA du jour",
   LAST_7_DAYS: "CA des 7 derniers jours",

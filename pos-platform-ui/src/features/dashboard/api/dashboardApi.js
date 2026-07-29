@@ -63,3 +63,8 @@ export async function getRecentSales(period = "TODAY") {
 
   return response.data;
 }
+
+export async function getStockAlerts() {
+  const response = await axiosClient.get("/dashboard/stock-alerts");
+  return response.data;
+}
