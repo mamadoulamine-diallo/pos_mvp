@@ -6,6 +6,7 @@ import RevenueChart from "../widgets/RevenueChart";
 import TopProducts from "../widgets/TopProducts";
 import RecentSales from "../widgets/RecentSales";
 import StockAlerts from "../widgets/StockAlerts";
+import QuickActions from "../widgets/QuickActions";
 import "./DashboardPage.scss";
 
 function DashboardPage() {
@@ -25,6 +26,7 @@ function DashboardPage() {
         <TopProducts period={period} />
         <RecentSales period={period} />
          <StockAlerts />
+         <QuickActions />
       </section>
     </main>
   );
