@@ -2,9 +2,11 @@ import {
   getDashboardSummary,
   getLowStockCount,
   getOutOfStockCount,
+  getRecentSales,
   getRevenueByDay,
   getRevenueByMonth,
   getRevenueByYear,
+  getTopProducts,
 } from "../api/dashboardApi";
 
 export async function loadDashboardSummary(period = "TODAY") {
@@ -35,4 +37,12 @@ export async function loadRevenueChart(
   const data = await loader(period);
 
   return view === "day" ? data.slice(-14) : data;
+}
+
+export async function loadTopProducts(period = "TODAY") {
+    return await getTopProducts(period);
+}
+
+export async function loadRecentSales(period = "TODAY") {
+  return getRecentSales(period);
 }

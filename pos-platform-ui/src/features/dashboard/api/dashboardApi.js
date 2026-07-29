@@ -47,3 +47,19 @@ export async function getRevenueByYear(period = "TODAY") {
 
   return response.data;
 }
+
+export async function getTopProducts(period = "TODAY") {
+    const response = await axiosClient.get("/dashboard/top-products", {
+        params: { period },
+    });
+
+    return response.data;
+}
+
+export async function getRecentSales(period = "TODAY") {
+  const response = await axiosClient.get("/dashboard/recent-sales", {
+    params: { period },
+  });
+
+  return response.data;
+}
