@@ -5,6 +5,7 @@ import DashboardPage from "../features/dashboard/pages/DashboardPage";
 import ProductsPage from "../features/products/pages/ProductsPage";
 import CategoriesPage from "../features/categories/pages/CategoriesPage";
 import SalesPage from "../features/sales/pages/SalesPage";
+import NewSalePage from "../features/sales/pages/NewSalePage";
 import UsersPage from "../features/users/pages/UsersPage";
 
 const routes = createBrowserRouter([
@@ -27,6 +28,10 @@ const routes = createBrowserRouter([
       {
         path: "sales",
         element: <SalesPage />,
+      },
+      {
+        path: "sales/new",
+        element: <NewSalePage />,
       },
       {
         path: "users",

@@ -7,6 +7,7 @@ import TopProducts from "../widgets/TopProducts";
 import RecentSales from "../widgets/RecentSales";
 import StockAlerts from "../widgets/StockAlerts";
 import QuickActions from "../widgets/QuickActions";
+import DashboardHero from "../widgets/DashboardHero";
 import "./DashboardPage.scss";
 
 function DashboardPage() {
@@ -14,6 +15,8 @@ function DashboardPage() {
 
   return (
     <main className="Dashboard">
+        <DashboardHero />
+
       <PeriodFilter
         period={period}
         onChange={setPeriod}
