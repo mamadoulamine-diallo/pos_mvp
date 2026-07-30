@@ -1,29 +1,54 @@
-import Header from "./components/Header";
+import { useState } from "react";
+import { Outlet } from "react-router-dom";
+
 import Sidebar from "./components/Sidebar";
-import Content from "./components/Content";
 
 import "./MainLayout.scss";
 
 function MainLayout() {
+  const [sidebarCollapsed, setSidebarCollapsed] = useState(() => {
+    return localStorage.getItem("sidebarCollapsed") === "true";
+  });
 
-    return (
+  function toggleSidebar() {
+    setSidebarCollapsed((currentValue) => {
+      const nextValue = !currentValue;
 
-        <div className="main-layout">
+      localStorage.setItem(
+        "sidebarCollapsed",
+        String(nextValue)
+      );
 
-            <Header />
+      return nextValue;
+    });
+  }
 
-            <div className="layout-body">
+  return (
+    <div
+      className={
+        sidebarCollapsed
+          ? "MainLayout MainLayout--sidebarCollapsed"
+          : "MainLayout"
+      }
+    >
+      <header className="MainLayout-header">
+        <span className="MainLayout-brand">
+          POS Platform
+        </span>
+      </header>
 
-                <Sidebar />
+      <div className="MainLayout-body">
+        <Sidebar
+          collapsed={sidebarCollapsed}
+          onToggle={toggleSidebar}
+        />
 
-                <Content />
-
-            </div>
-
-        </div>
-
-    );
-
+        <main className="MainLayout-content">
+          <Outlet />
+        </main>
+      </div>
+    </div>
+  );
 }
 
 export default MainLayout;

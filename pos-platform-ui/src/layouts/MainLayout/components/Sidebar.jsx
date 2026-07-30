@@ -1,62 +1,102 @@
-import {
-  ChartNoAxesCombined,
-  FolderTree,
-  Package,
-  ReceiptText,
-  Users,
-} from "lucide-react";
 import { NavLink } from "react-router-dom";
 
-const menuItems = [
+const navigationItems = [
   {
     label: "Dashboard",
     path: "/",
-    icon: ChartNoAxesCombined,
+    icon: "⌂",
     end: true,
   },
   {
-    label: "Products",
+    label: "Caisse",
+    path: "/sales/new",
+    icon: "+",
+  },
+  {
+    label: "Produits",
     path: "/products",
-    icon: Package,
+    icon: "▣",
   },
   {
-    label: "Categories",
+    label: "Catégories",
     path: "/categories",
-    icon: FolderTree,
+    icon: "▤",
   },
   {
-    label: "Sales",
+    label: "Historique des ventes",
     path: "/sales",
-    icon: ReceiptText,
+    icon: "€",
   },
   {
-    label: "Users",
+    label: "Utilisateurs",
     path: "/users",
-    icon: Users,
+    icon: "♙",
   },
 ];
 
-function Sidebar() {
+function Sidebar({ collapsed, onToggle }) {
   return (
-    <aside className="sidebar">
-      <nav aria-label="Main navigation">
-        <ul className="sidebar__list">
-          {menuItems.map(({ label, path, icon: Icon, end }) => (
-            <li key={path}>
-              <NavLink
-                to={path}
-                end={end}
-                className={({ isActive }) =>
-                  `sidebar__link${isActive ? " sidebar__link--active" : ""}`
-                }
-              >
-                <Icon size={20} aria-hidden="true" />
-                <span>{label}</span>
-              </NavLink>
-            </li>
-          ))}
-        </ul>
+    <aside
+      className={
+        collapsed
+          ? "Sidebar Sidebar--collapsed"
+          : "Sidebar"
+      }
+    >
+      <nav
+        className="Sidebar-nav"
+        aria-label="Navigation principale"
+      >
+        {navigationItems.map((item) => (
+          <NavLink
+            key={item.path}
+            to={item.path}
+            end={item.end}
+            title={collapsed ? item.label : undefined}
+            className={({ isActive }) =>
+              isActive
+                ? "Sidebar-link Sidebar-link--active"
+                : "Sidebar-link"
+            }
+          >
+            <span
+              className="Sidebar-icon"
+              aria-hidden="true"
+            >
+              {item.icon}
+            </span>
+
+            <span className="Sidebar-label">
+              {item.label}
+            </span>
+          </NavLink>
+        ))}
       </nav>
+
+      <footer className="Sidebar-footer">
+        <button
+          type="button"
+          className="Sidebar-toggle"
+          onClick={onToggle}
+          aria-label={
+            collapsed
+              ? "Déployer la navigation"
+              : "Réduire la navigation"
+          }
+          aria-expanded={!collapsed}
+        >
+          <span
+            className="Sidebar-icon"
+            aria-hidden="true"
+          >
+            {collapsed ? "›" : "‹"}
+          </span>
+
+          <span className="Sidebar-toggleLabel">
+            Réduire
+          </span>
+        </button>
+      </footer>
     </aside>
   );
 }
