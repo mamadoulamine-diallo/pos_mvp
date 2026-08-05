@@ -1,0 +1,433 @@
+.Dashboard {
+  min-height: 100vh;
+  padding: 24px 14px 90px;
+  background: #fafaf8;
+}
+.Dashboard-hero {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+      -ms-flex-direction: column;
+          flex-direction: column;
+  gap: 16px;
+  margin-bottom: 22px;
+}
+.Dashboard-eyebrow {
+  color: #6c757d;
+  font-size: 13px;
+  font-weight: 800;
+}
+.Dashboard-title {
+  color: #343a40;
+  font-size: 30px;
+  font-weight: 900;
+}
+.Dashboard-subtitle {
+  color: #6c757d;
+  font-size: 14px;
+}
+.Dashboard-cta {
+  height: 48px;
+  padding: 0 18px;
+  display: -webkit-inline-box;
+  display: -ms-inline-flexbox;
+  display: inline-flex;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  -webkit-box-pack: center;
+      -ms-flex-pack: center;
+          justify-content: center;
+  border-radius: 10px;
+  background: #74a23c;
+  color: #ffffff;
+  font-weight: 900;
+  text-decoration: none;
+}
+.Dashboard-grid {
+  display: grid;
+  gap: 16px;
+}
+
+.DashboardPeriod {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -ms-flex-wrap: wrap;
+      flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 18px;
+}
+.DashboardPeriod button {
+  height: 36px;
+  padding: 0 14px;
+  display: -webkit-inline-box;
+  display: -ms-inline-flexbox;
+  display: inline-flex;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  -webkit-box-pack: center;
+      -ms-flex-pack: center;
+          justify-content: center;
+  border: none;
+  border-radius: 999px;
+  background: #ffffff;
+  color: #343a40;
+  font-size: 13px;
+  font-weight: 800;
+  cursor: pointer;
+}
+.DashboardPeriod button.active {
+  background: #74a23c;
+  color: #ffffff;
+}
+
+.DashboardStats {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 12px;
+  margin-bottom: 18px;
+}
+
+.DashboardStat {
+  padding: 16px;
+  background: #ffffff;
+  border-radius: 14px;
+  -webkit-box-shadow: 0 2px 10px rgba(0, 0, 0, 0.06);
+          box-shadow: 0 2px 10px rgba(0, 0, 0, 0.06);
+}
+.DashboardStat--primary {
+  grid-column: 1/-1;
+}
+.DashboardStat--primary .DashboardStat-value {
+  color: #74a23c;
+  font-size: 30px;
+}
+.DashboardStat--warning .DashboardStat-value {
+  color: #d68910;
+}
+.DashboardStat--danger .DashboardStat-value {
+  color: #c0392b;
+}
+.DashboardStat-label {
+  display: block;
+  margin-bottom: 8px;
+  color: #6c757d;
+  font-size: 12px;
+  font-weight: 800;
+}
+.DashboardStat-value {
+  display: block;
+  color: #343a40;
+  font-size: 24px;
+  font-weight: 900;
+}
+.DashboardStat-help {
+  display: block;
+  margin-top: 8px;
+  color: #6c757d;
+  font-size: 11px;
+}
+
+.DashboardCard {
+  min-width: 0;
+  padding: 16px;
+  background: #ffffff;
+  border-radius: 16px;
+  -webkit-box-shadow: 0 2px 10px rgba(0, 0, 0, 0.06);
+          box-shadow: 0 2px 10px rgba(0, 0, 0, 0.06);
+}
+.DashboardCard-header {
+  margin-bottom: 14px;
+}
+.DashboardCard-header h2 {
+  color: #343a40;
+  font-size: 18px;
+  font-weight: 900;
+}
+.DashboardCard-header p {
+  margin-top: 4px;
+  color: #6c757d;
+  font-size: 13px;
+}
+.DashboardCard-message {
+  padding: 16px;
+  background: #fafaf8;
+  border-radius: 10px;
+  color: #6c757d;
+  font-size: 13px;
+  text-align: center;
+}
+.DashboardCard-message--error {
+  background: #fdeaea;
+  color: #c0392b;
+}
+.DashboardCard--chart {
+  min-height: 280px;
+}
+.DashboardCard canvas {
+  width: 100% !important;
+  max-height: 260px;
+}
+
+.ChartTabs {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -ms-flex-wrap: wrap;
+      flex-wrap: wrap;
+  gap: 8px;
+}
+.ChartTabs-button {
+  height: 34px;
+  padding: 0 14px;
+  border: none;
+  border-radius: 999px;
+  background: #fafaf8;
+  color: #343a40;
+  font-size: 13px;
+  font-weight: 800;
+  cursor: pointer;
+  -webkit-transition: 180ms ease;
+  transition: 180ms ease;
+}
+.ChartTabs-button.active {
+  background: #74a23c;
+  color: #ffffff;
+}
+
+.DashboardCard-header--chart {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+      -ms-flex-direction: column;
+          flex-direction: column;
+  gap: 14px;
+}
+
+.RevenueChart-container {
+  position: relative;
+  width: 100%;
+  height: 260px;
+}
+
+.RecentSales-list,
+.TopProducts-list {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+      -ms-flex-direction: column;
+          flex-direction: column;
+  gap: 10px;
+}
+
+.RecentSales-item,
+.TopProducts-item {
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  gap: 10px;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  padding: 12px;
+  background: #fafaf8;
+  border-radius: 10px;
+}
+
+.RecentSales-time,
+.TopProducts-rank {
+  color: #6c757d;
+  font-size: 12px;
+  font-weight: 800;
+}
+
+.RecentSales-total,
+.TopProducts-revenue {
+  color: #343a40;
+  font-weight: 900;
+  white-space: nowrap;
+}
+
+.RecentSales-method {
+  grid-column: 2/-1;
+  color: #6c757d;
+  font-size: 12px;
+}
+
+.TopProducts-info {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+      -ms-flex-direction: column;
+          flex-direction: column;
+  gap: 2px;
+}
+.TopProducts-info strong {
+  font-size: 14px;
+  font-weight: 900;
+}
+.TopProducts-info small {
+  color: #6c757d;
+  font-size: 12px;
+}
+
+.StockAlerts-list {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+      -ms-flex-direction: column;
+          flex-direction: column;
+  gap: 10px;
+}
+
+.StockAlert {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  -webkit-box-pack: justify;
+      -ms-flex-pack: justify;
+          justify-content: space-between;
+  padding: 12px;
+  background: #fafaf8;
+  border-radius: 10px;
+}
+.StockAlert-info {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+      -ms-flex-direction: column;
+          flex-direction: column;
+  gap: 4px;
+}
+.StockAlert-info strong {
+  font-size: 14px;
+  font-weight: 900;
+}
+.StockAlert-info small {
+  color: #6c757d;
+  font-size: 12px;
+}
+.StockAlert-badge {
+  padding: 6px 10px;
+  border-radius: 999px;
+  background: #fff3cd;
+  color: #b26a00;
+  font-size: 11px;
+  font-weight: 900;
+}
+.StockAlert-badge--out {
+  background: #fdeaea;
+  color: #c0392b;
+}
+
+.DashboardActions {
+  display: grid;
+  gap: 10px;
+}
+.DashboardActions-link {
+  height: 46px;
+  padding: 0 14px;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  -webkit-box-pack: center;
+      -ms-flex-pack: center;
+          justify-content: center;
+  border: none;
+  border-radius: 10px;
+  background: #e7edd4;
+  color: #343a40;
+  font-weight: 900;
+  text-decoration: none;
+}
+
+@media screen and (min-width: 768px) {
+  .Dashboard {
+    padding: 24px 20px;
+  }
+  .Dashboard-hero {
+    -webkit-box-orient: horizontal;
+    -webkit-box-direction: normal;
+        -ms-flex-direction: row;
+            flex-direction: row;
+    -webkit-box-align: center;
+        -ms-flex-align: center;
+            align-items: center;
+    -webkit-box-pack: justify;
+        -ms-flex-pack: justify;
+            justify-content: space-between;
+  }
+  .Dashboard-cta {
+    width: auto;
+    min-width: 180px;
+  }
+  .Dashboard-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    -webkit-box-align: start;
+        -ms-flex-align: start;
+            align-items: start;
+  }
+  .DashboardStats {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+  .DashboardStat--primary {
+    grid-column: 1/-1;
+  }
+  .DashboardCard--chart {
+    grid-column: 1/-1;
+  }
+  .DashboardCard-header--chart {
+    -webkit-box-orient: horizontal;
+    -webkit-box-direction: normal;
+        -ms-flex-direction: row;
+            flex-direction: row;
+    -webkit-box-align: center;
+        -ms-flex-align: center;
+            align-items: center;
+    -webkit-box-pack: justify;
+        -ms-flex-pack: justify;
+            justify-content: space-between;
+  }
+}
+@media screen and (min-width: 1270px) {
+  .Dashboard {
+    padding: 32px 40px;
+  }
+  .Dashboard-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 22px;
+  }
+  .DashboardStats {
+    grid-template-columns: repeat(6, minmax(0, 1fr));
+    gap: 18px;
+    margin-bottom: 22px;
+  }
+  .DashboardStat--primary {
+    grid-column: span 2;
+  }
+  .DashboardCard {
+    padding: 20px;
+  }
+  .DashboardCard--chart {
+    grid-column: 1/-1;
+  }
+}/*# sourceMappingURL=DashboardPage.css.map */

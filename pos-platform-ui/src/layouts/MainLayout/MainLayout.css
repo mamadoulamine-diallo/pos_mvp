@@ -1,0 +1,288 @@
+.MainLayout {
+  --header-height: 64px;
+  --sidebar-width: 240px;
+  min-height: 100vh;
+  background-color: #e7edd4;
+}
+.MainLayout--sidebarCollapsed {
+  --sidebar-width: 72px;
+}
+.MainLayout-body {
+  display: grid;
+  grid-template-columns: var(--sidebar-width) minmax(0, 1fr);
+  min-height: calc(100vh - var(--header-height));
+  -webkit-transition: grid-template-columns 200ms ease;
+  transition: grid-template-columns 200ms ease;
+  transition: grid-template-columns 200ms ease, -ms-grid-columns 200ms ease;
+}
+.MainLayout-content {
+  min-width: 0;
+  overflow-x: hidden;
+}
+
+.Header {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  -webkit-box-pack: justify;
+      -ms-flex-pack: justify;
+          justify-content: space-between;
+  gap: 1rem;
+  height: var(--header-height);
+  padding: 0 1.25rem;
+  background-color: #ffffff;
+  border-bottom: 1px solid #d8caca;
+}
+.Header-brand {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  gap: 0.75rem;
+  min-width: 0;
+}
+.Header-logo {
+  display: grid;
+  -ms-flex-negative: 0;
+      flex-shrink: 0;
+  place-items: center;
+  width: 38px;
+  height: 38px;
+  color: #ffffff;
+  background-color: #74a23c;
+  border-radius: 0.65rem;
+  font-size: 0.75rem;
+  font-weight: 700;
+}
+.Header-brandName {
+  overflow: hidden;
+  font-size: 1rem;
+  font-weight: 700;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+.Header-actions {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  gap: 0.5rem;
+  margin-left: auto;
+}
+.Header-actionButton, .Header-userButton {
+  border: 0;
+  background-color: transparent;
+  font-family: inherit;
+  cursor: pointer;
+  -webkit-transition: background-color 150ms ease, color 150ms ease;
+  transition: background-color 150ms ease, color 150ms ease;
+}
+.Header-actionButton:hover, .Header-userButton:hover {
+  background-color: #ebedd4;
+}
+.Header-actionButton:focus-visible, .Header-userButton:focus-visible {
+  outline: 2px solid #74a23c;
+  outline-offset: 2px;
+}
+.Header-actionButton {
+  position: relative;
+  display: grid;
+  place-items: center;
+  width: 40px;
+  height: 40px;
+  border-radius: 0.5rem;
+  font-size: 1.1rem;
+}
+.Header-notificationBadge {
+  position: absolute;
+  top: 2px;
+  right: 2px;
+  display: grid;
+  place-items: center;
+  min-width: 17px;
+  height: 17px;
+  padding-inline: 4px;
+  color: #ffffff;
+  background-color: #74a23c;
+  border: 2px solid #ffffff;
+  border-radius: 999px;
+  font-size: 0.65rem;
+  font-weight: 700;
+  line-height: 1;
+}
+.Header-userButton {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  gap: 0.65rem;
+  min-height: 44px;
+  padding: 0.25rem 0.5rem;
+  border-radius: 0.6rem;
+}
+.Header-userAvatar {
+  display: grid;
+  -ms-flex-negative: 0;
+      flex-shrink: 0;
+  place-items: center;
+  width: 36px;
+  height: 36px;
+  color: #74a23c;
+  background-color: #ebedd4;
+  border-radius: 50%;
+  font-size: 0.75rem;
+  font-weight: 700;
+}
+.Header-userInfo {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+      -ms-flex-direction: column;
+          flex-direction: column;
+  -webkit-box-align: start;
+      -ms-flex-align: start;
+          align-items: flex-start;
+  min-width: 0;
+}
+.Header-userName {
+  max-width: 170px;
+  overflow: hidden;
+  color: #74a23c;
+  font-size: 0.85rem;
+  font-weight: 600;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+.Header-userRole {
+  color: #6c757d;
+  font-size: 0.72rem;
+}
+.Header-userChevron {
+  color: #6c757d;
+  font-size: 0.75rem;
+}
+
+.Sidebar {
+  position: sticky;
+  top: var(--header-height);
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+      -ms-flex-direction: column;
+          flex-direction: column;
+  width: var(--sidebar-width);
+  height: calc(100vh - var(--header-height));
+  overflow: hidden;
+  background-color: #ffffff;
+  border-right: 1px solid #d8caca;
+  -webkit-transition: width 200ms ease;
+  transition: width 200ms ease;
+}
+.Sidebar-nav {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-flex: 1;
+      -ms-flex: 1;
+          flex: 1;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+      -ms-flex-direction: column;
+          flex-direction: column;
+  gap: 0.25rem;
+  padding: 1rem 0.75rem;
+  overflow-x: hidden;
+  overflow-y: auto;
+}
+.Sidebar-link, .Sidebar-toggle {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  gap: 0.75rem;
+  min-height: 48px;
+  padding: 0 0.75rem;
+  color: #6c757d;
+  text-decoration: none;
+  white-space: nowrap;
+  border: 0;
+  border-radius: 0.5rem;
+  background-color: transparent;
+  cursor: pointer;
+  -webkit-transition: color 150ms ease, background-color 150ms ease;
+  transition: color 150ms ease, background-color 150ms ease;
+}
+.Sidebar-link:hover, .Sidebar-toggle:hover {
+  color: #74a23c;
+  background-color: #ebedd4;
+}
+.Sidebar-link:focus-visible, .Sidebar-toggle:focus-visible {
+  outline: 2px solid #74a23c;
+  outline-offset: 2px;
+}
+.Sidebar-link {
+  width: auto;
+}
+.Sidebar-toggle {
+  width: 100%;
+  font-family: inherit;
+  font-size: inherit;
+}
+.Sidebar-link--active {
+  color: #74a23c;
+  background-color: #ebedd4;
+  font-weight: 600;
+}
+.Sidebar-icon {
+  display: grid;
+  -webkit-box-flex: 0;
+      -ms-flex: 0 0 32px;
+          flex: 0 0 32px;
+  place-items: center;
+  width: 32px;
+  height: 32px;
+  font-size: 1.2rem;
+}
+.Sidebar-label, .Sidebar-toggleLabel {
+  overflow: hidden;
+  opacity: 1;
+  visibility: visible;
+  -webkit-transition: width 200ms ease, opacity 150ms ease, visibility 150ms ease;
+  transition: width 200ms ease, opacity 150ms ease, visibility 150ms ease;
+}
+.Sidebar-footer {
+  padding: 0.75rem;
+  border-top: 1px solid #d8caca;
+}
+.Sidebar--collapsed .Sidebar-link,
+.Sidebar--collapsed .Sidebar-toggle {
+  -webkit-box-pack: center;
+      -ms-flex-pack: center;
+          justify-content: center;
+  gap: 0;
+  padding-inline: 0;
+}
+.Sidebar--collapsed .Sidebar-label,
+.Sidebar--collapsed .Sidebar-toggleLabel {
+  width: 0;
+  opacity: 0;
+  visibility: hidden;
+}/*# sourceMappingURL=MainLayout.css.map */
