@@ -1,73 +1,36 @@
-import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 
-import { loadCurrentUser } from "../../../auth/services/authService";
+import useAuth from "../../../auth/hooks/useAuth";
 
 function DashboardHero() {
-  const [currentUser, setCurrentUser] = useState(null);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState("");
+  const {
+    currentUser,
+    loading,
+  } = useAuth();
 
-  useEffect(() => {
-    let cancelled = false;
-
-    async function fetchCurrentUser() {
-      try {
-        const user = await loadCurrentUser();
-
-        if (!cancelled) {
-          setCurrentUser(user);
-        }
-      } catch (requestError) {
-        if (!cancelled) {
-          console.error(
-            "Impossible de charger l'utilisateur connecté",
-            requestError
-          );
-
-          setError("Utilisateur non identifié");
-        }
-      } finally {
-        if (!cancelled) {
-          setLoading(false);
-        }
-      }
-    }
-
-    fetchCurrentUser();
-
-    return () => {
-      cancelled = true;
-    };
-  }, []);
-
-  let greeting = "Bonjour";
-
-  if (loading) {
-    greeting = "Bonjour…";
-  } else if (currentUser?.fullName) {
-    greeting = `Bonjour ${currentUser.fullName}`;
-  } else if (error) {
-    greeting = "Bonjour";
-  }
+  const greeting = loading
+    ? "Bonjour..."
+    : `Bonjour ${currentUser?.fullName ?? "utilisateur"}`;
 
   return (
-    <section className="DashboardHero">
-      <div className="DashboardHero-content">
-        <p className="DashboardHero-eyebrow">Tableau de bord</p>
+    <section className="Dashboard-hero">
+      <div>
+        <p className="Dashboard-eyebrow">
+          Tableau de bord
+        </p>
 
-        <h1 className="DashboardHero-title">
+        <h1 className="Dashboard-title">
           {greeting}
         </h1>
 
-        <p className="DashboardHero-subtitle">
-          Voici un aperçu de l’activité de votre commerce.
+        <p className="Dashboard-subtitle">
+          Voici l’activité de votre commerce aujourd’hui.
         </p>
       </div>
 
       <Link
         to="/sales/new"
-        className="DashboardHero-action"
+        className="Dashboard-cta"
       >
         Nouvelle vente
       </Link>
