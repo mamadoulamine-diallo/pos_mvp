@@ -3,7 +3,7 @@
 
 .Dashboard {
   min-height: 100vh;
-  padding: 68px 14px 90px;
+  padding: 24px 14px 90px;
   background: $bg-light;
 
   &-hero {
@@ -381,7 +381,7 @@
 
 @include tablette {
   .Dashboard {
-    padding: 76px 20px 24px;
+    padding: 24px 20px;
 
     &-hero {
       flex-direction: row;

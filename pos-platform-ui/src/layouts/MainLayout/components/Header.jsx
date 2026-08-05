@@ -1,13 +1,29 @@
 function Header() {
-    return (
-        <header className="header">
-            <h2>POS Platform</h2>
+  return (
+    <header className="Header">
+      <div className="Header-brand">
+        <span className="Header-logo" aria-hidden="true">
+          POS
+        </span>
 
-            <div>
-                Lamine Diallo
-            </div>
-        </header>
-    );
+        <span className="Header-brandName">
+          POS Platform
+        </span>
+      </div>
+
+      <div className="Header-actions">
+        <div className="Header-userInfo">
+          <span className="Header-userName">
+            Lamine Diallo
+          </span>
+
+          <span className="Header-userRole">
+            Gérant
+          </span>
+        </div>
+      </div>
+    </header>
+  );
 }
 
 export default Header;
