@@ -1,0 +1,139 @@
+@use "../../../assets/styles/abstracts/variables" as *;
+
+.CalculatorSheet {
+  visibility: hidden;
+  pointer-events: none;
+
+  &.open {
+    visibility: visible;
+    pointer-events: auto;
+
+    .CalculatorSheet-backdrop {
+      opacity: 1;
+    }
+
+    .CalculatorSheet-panel {
+      transform: translate(-50%, 0);
+    }
+  }
+
+  &-backdrop {
+    position: fixed;
+    inset: 0;
+    z-index: 200;
+
+    border: 0;
+
+    background: rgba(0, 0, 0, 0.35);
+    opacity: 0;
+
+    transition: opacity 250ms ease;
+  }
+
+  &-panel {
+    position: fixed;
+    left: 50%;
+    bottom: 0;
+    z-index: 210;
+
+    width: min(100%, 500px);
+    min-height: 420px;
+    padding: 18px 16px 22px;
+
+    transform: translate(-50%, 100%);
+    transition: transform 250ms ease-out;
+
+    background: $bg-white;
+    border-radius: 18px 18px 0 0;
+
+    box-shadow: 0 -4px 18px rgba(0, 0, 0, 0.2);
+  }
+
+  &-handle {
+    width: 44px;
+    height: 5px;
+    margin: 0 auto 14px;
+
+    background: $border-light;
+    border-radius: 999px;
+  }
+
+  &-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    margin-bottom: 14px;
+  }
+
+  &-title {
+    font-size: 18px;
+    font-weight: 700;
+  }
+
+  &-close {
+    width: 40px;
+    height: 40px;
+
+    border: none;
+    background: transparent;
+
+    font-size: 30px;
+    line-height: 1;
+  }
+
+  &-display {
+    height: 56px;
+    margin-bottom: 14px;
+    padding: 0 14px;
+
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+
+    overflow: hidden;
+
+    background: $bg-light;
+    border-radius: 8px;
+
+    font-size: 28px;
+    font-weight: 700;
+    white-space: nowrap;
+  }
+
+  &-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 10px;
+
+    button {
+      height: 54px;
+
+      border: none;
+      border-radius: 8px;
+
+      background: $background;
+      color: $gray-secondary;
+
+      font-size: 22px;
+      font-weight: 700;
+
+      transition:
+        background-color 150ms ease,
+        transform 100ms ease;
+
+      &:hover {
+        background: $hover;
+      }
+
+      &:active {
+        transform: scale(0.97);
+      }
+
+      &:focus-visible {
+        outline: 2px solid $primary;
+        outline-offset: 2px;
+      }
+    }
+  }
+}

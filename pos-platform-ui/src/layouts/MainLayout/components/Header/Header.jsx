@@ -1,9 +1,12 @@
 import { Calculator } from "lucide-react";
 
+import { useCalculator } from "../../../../shared/calculator";
 import NotificationMenu from "./NotificationMenu";
 import UserMenu from "./UserMenu";
 
 function Header() {
+  const { openCalculator } = useCalculator();
+
   return (
     <header className="Header">
       <div className="Header-brand">
@@ -25,12 +28,15 @@ function Header() {
           className="Header-actionButton"
           aria-label="Ouvrir la calculatrice"
           title="Calculatrice"
+          onClick={openCalculator}
         >
-          <Calculator size={20} aria-hidden="true" />
+          <Calculator
+            size={20}
+            aria-hidden="true"
+          />
         </button>
 
         <NotificationMenu />
-
         <UserMenu />
       </div>
     </header>

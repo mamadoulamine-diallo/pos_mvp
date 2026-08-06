@@ -1,9 +1,12 @@
 import AuthProvider from "../features/auth/context/AuthProvider";
+import { CalculatorProvider } from "../shared/calculator";
 
 function Providers({ children }) {
   return (
     <AuthProvider>
-      {children}
+      <CalculatorProvider>
+        {children}
+      </CalculatorProvider>
     </AuthProvider>
   );
 }
