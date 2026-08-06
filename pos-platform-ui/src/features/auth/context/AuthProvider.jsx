@@ -5,7 +5,10 @@ import {
   useState,
 } from "react";
 
-import { loadCurrentUser } from "../services/authService";
+import {
+  loadCurrentUser,
+  logoutUser,
+} from "../services/authService";
 import AuthContext from "./AuthContext";
 
 function AuthProvider({ children }) {
@@ -73,6 +76,25 @@ function AuthProvider({ children }) {
     }
   }, []);
 
+  const logout = useCallback(async () => {
+    try {
+      setError(null);
+
+      await logoutUser();
+
+      setCurrentUser(null);
+    } catch (requestError) {
+      console.error(
+        "Impossible de déconnecter l'utilisateur.",
+        requestError,
+      );
+
+      setError(requestError);
+
+      throw requestError;
+    }
+  }, []);
+
   const value = useMemo(
     () => ({
       currentUser,
@@ -80,12 +102,14 @@ function AuthProvider({ children }) {
       error,
       authenticated: Boolean(currentUser),
       refreshCurrentUser,
+      logout,
     }),
     [
       currentUser,
       loading,
       error,
       refreshCurrentUser,
+      logout,
     ],
   );
 

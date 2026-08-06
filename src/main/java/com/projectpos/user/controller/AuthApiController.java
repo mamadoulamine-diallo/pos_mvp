@@ -42,4 +42,14 @@ public class AuthApiController {
 
         return userService.toResponse(currentUser);
     }
+
+    @Operation(
+            summary = "Logout current user",
+            description = "Invalidates the current HTTP session."
+    )
+    @PostMapping("/logout")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void logout(HttpSession session) {
+        session.invalidate();
+    }
 }
