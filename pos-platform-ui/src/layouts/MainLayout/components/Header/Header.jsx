@@ -1,8 +1,6 @@
-import {
-  Bell,
-  Calculator,
-} from "lucide-react";
+import { Calculator } from "lucide-react";
 
+import NotificationMenu from "./NotificationMenu";
 import UserMenu from "./UserMenu";
 
 function Header() {
@@ -31,14 +29,7 @@ function Header() {
           <Calculator size={20} aria-hidden="true" />
         </button>
 
-        <button
-          type="button"
-          className="Header-actionButton"
-          aria-label="Afficher les notifications"
-          title="Notifications"
-        >
-          <Bell size={20} aria-hidden="true" />
-        </button>
+        <NotificationMenu />
 
         <UserMenu />
       </div>
