@@ -1,40 +1,55 @@
+import {
+  LayoutDashboard,
+  Package,
+  PanelLeftClose,
+  PanelLeftOpen,
+  ReceiptText,
+  ShoppingCart,
+  Tags,
+  Users,
+} from "lucide-react";
 import { NavLink } from "react-router-dom";
 
 const navigationItems = [
   {
     label: "Dashboard",
     path: "/",
-    icon: "⌂",
+    icon: LayoutDashboard,
     end: true,
   },
   {
     label: "Caisse",
     path: "/sales/new",
-    icon: "+",
+    icon: ShoppingCart,
   },
   {
     label: "Produits",
     path: "/products",
-    icon: "▣",
+    icon: Package,
   },
   {
     label: "Catégories",
     path: "/categories",
-    icon: "▤",
+    icon: Tags,
   },
   {
     label: "Historique des ventes",
     path: "/sales",
-    icon: "€",
+    icon: ReceiptText,
+    end: true,
   },
   {
     label: "Utilisateurs",
     path: "/users",
-    icon: "♙",
+    icon: Users,
   },
 ];
 
 function Sidebar({ collapsed, onToggle }) {
+  const ToggleIcon = collapsed
+    ? PanelLeftOpen
+    : PanelLeftClose;
+
   return (
     <aside
       className={
@@ -47,30 +62,32 @@ function Sidebar({ collapsed, onToggle }) {
         className="Sidebar-nav"
         aria-label="Navigation principale"
       >
-        {navigationItems.map((item) => (
-          <NavLink
-            key={item.path}
-            to={item.path}
-            end={item.end}
-            title={collapsed ? item.label : undefined}
-            className={({ isActive }) =>
-              isActive
-                ? "Sidebar-link Sidebar-link--active"
-                : "Sidebar-link"
-            }
-          >
-            <span
-              className="Sidebar-icon"
-              aria-hidden="true"
+        {navigationItems.map(
+          ({ label, path, icon: Icon, end }) => (
+            <NavLink
+              key={path}
+              to={path}
+              end={end}
+              title={collapsed ? label : undefined}
+              className={({ isActive }) =>
+                isActive
+                  ? "Sidebar-link Sidebar-link--active"
+                  : "Sidebar-link"
+              }
             >
-              {item.icon}
-            </span>
+              <span
+                className="Sidebar-icon"
+                aria-hidden="true"
+              >
+                <Icon size={20} strokeWidth={2} />
+              </span>
 
-            <span className="Sidebar-label">
-              {item.label}
-            </span>
-          </NavLink>
-        ))}
+              <span className="Sidebar-label">
+                {label}
+              </span>
+            </NavLink>
+          ),
+        )}
       </nav>
 
       <footer className="Sidebar-footer">
@@ -89,7 +106,7 @@ function Sidebar({ collapsed, onToggle }) {
             className="Sidebar-icon"
             aria-hidden="true"
           >
-            {collapsed ? "›" : "‹"}
+            <ToggleIcon size={20} strokeWidth={2} />
           </span>
 
           <span className="Sidebar-toggleLabel">

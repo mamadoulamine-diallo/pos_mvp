@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { LogOut, Settings, Users } from "lucide-react";
 
 import useAuth from "../../../../features/auth/hooks/useAuth";
 
@@ -32,21 +33,14 @@ function UserMenu() {
   const navigate = useNavigate();
   const menuRef = useRef(null);
 
-  const {
-    currentUser,
-    loading,
-    logout,
-  } = useAuth();
+  const { currentUser, loading, logout } = useAuth();
 
   const [open, setOpen] = useState(false);
   const [loggingOut, setLoggingOut] = useState(false);
 
   useEffect(() => {
     function handlePointerDown(event) {
-      if (
-        menuRef.current &&
-        !menuRef.current.contains(event.target)
-      ) {
+      if (menuRef.current && !menuRef.current.contains(event.target)) {
         setOpen(false);
       }
     }
@@ -61,15 +55,9 @@ function UserMenu() {
     document.addEventListener("keydown", handleKeyDown);
 
     return () => {
-      document.removeEventListener(
-        "pointerdown",
-        handlePointerDown,
-      );
+      document.removeEventListener("pointerdown", handlePointerDown);
 
-      document.removeEventListener(
-        "keydown",
-        handleKeyDown,
-      );
+      document.removeEventListener("keydown", handleKeyDown);
     };
   }, []);
 
@@ -90,7 +78,7 @@ function UserMenu() {
 
   const fullName = loading
     ? "Chargement..."
-    : currentUser?.fullName ?? "Utilisateur";
+    : (currentUser?.fullName ?? "Utilisateur");
 
   const roleLabel = formatRole(currentUser?.role);
   const initials = getInitials(currentUser?.fullName);
@@ -104,38 +92,23 @@ function UserMenu() {
         aria-expanded={open}
         onClick={() => setOpen((current) => !current)}
       >
-        <span
-          className="Header-userAvatar"
-          aria-hidden="true"
-        >
+        <span className="Header-userAvatar" aria-hidden="true">
           {initials}
         </span>
 
         <span className="Header-userInfo">
-          <span className="Header-userName">
-            {fullName}
-          </span>
+          <span className="Header-userName">{fullName}</span>
 
-          {roleLabel && (
-            <span className="Header-userRole">
-              {roleLabel}
-            </span>
-          )}
+          {roleLabel && <span className="Header-userRole">{roleLabel}</span>}
         </span>
 
-        <span
-          className="Header-userChevron"
-          aria-hidden="true"
-        >
+        <span className="Header-userChevron" aria-hidden="true">
           {open ? "▴" : "▾"}
         </span>
       </button>
 
       {open && (
-        <div
-          className="UserMenu-dropdown"
-          role="menu"
-        >
+        <div className="UserMenu-dropdown" role="menu">
           <div className="UserMenu-summary">
             <strong>{fullName}</strong>
 
@@ -153,7 +126,8 @@ function UserMenu() {
               navigate("/users");
             }}
           >
-            Gérer les utilisateurs
+            <Users size={18} aria-hidden="true" />
+            <span>Gérer les utilisateurs</span>
           </button>
 
           <button
@@ -165,7 +139,8 @@ function UserMenu() {
               navigate("/settings");
             }}
           >
-            Paramètres
+            <Settings size={18} aria-hidden="true" />
+            <span>Paramètres</span>
           </button>
 
           <div className="UserMenu-separator" />
@@ -177,9 +152,9 @@ function UserMenu() {
             disabled={loggingOut}
             onClick={handleLogout}
           >
-            {loggingOut
-              ? "Déconnexion..."
-              : "Déconnexion"}
+            <LogOut size={18} aria-hidden="true" />
+
+            <span>{loggingOut ? "Déconnexion..." : "Déconnexion"}</span>
           </button>
         </div>
       )}
