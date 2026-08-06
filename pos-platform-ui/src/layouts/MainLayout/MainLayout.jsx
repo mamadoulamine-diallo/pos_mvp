@@ -1,8 +1,8 @@
 import { useState } from "react";
 import { Outlet } from "react-router-dom";
 
-import Sidebar from "./components/Sidebar";
 import Header from "./components/Header";
+import Sidebar from "./components/Sidebar";
 
 import "./MainLayout.scss";
 
@@ -15,7 +15,10 @@ function MainLayout() {
     setSidebarCollapsed((currentValue) => {
       const nextValue = !currentValue;
 
-      localStorage.setItem("sidebarCollapsed", String(nextValue));
+      localStorage.setItem(
+        "sidebarCollapsed",
+        String(nextValue),
+      );
 
       return nextValue;
     });
@@ -32,7 +35,10 @@ function MainLayout() {
       <Header />
 
       <div className="MainLayout-body">
-        <Sidebar collapsed={sidebarCollapsed} onToggle={toggleSidebar} />
+        <Sidebar
+          collapsed={sidebarCollapsed}
+          onToggle={toggleSidebar}
+        />
 
         <main className="MainLayout-content">
           <Outlet />

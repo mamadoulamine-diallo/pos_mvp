@@ -10,7 +10,11 @@ function Header() {
     ? "Chargement..."
     : currentUser?.fullName ?? "Utilisateur";
 
-  const userRole = currentUser?.role ?? "";
+  const userRole = currentUser?.role === "GERANT"
+    ? "Gérant"
+    : currentUser?.role === "VENDEUR"
+      ? "Vendeur"
+      : "";
 
   return (
     <header className="Header">
@@ -35,9 +39,7 @@ function Header() {
 
           {userRole && (
             <span className="Header-userRole">
-              {userRole === "GERANT"
-                ? "Gérant"
-                : "Vendeur"}
+              {userRole}
             </span>
           )}
         </div>

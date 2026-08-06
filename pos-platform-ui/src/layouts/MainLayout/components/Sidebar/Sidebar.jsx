@@ -8,7 +8,7 @@ const navigationItems = [
     end: true,
   },
   {
-    label: "Nouvelle vente",
+    label: "Caisse",
     path: "/sales/new",
     icon: "+",
   },
@@ -23,7 +23,7 @@ const navigationItems = [
     icon: "▤",
   },
   {
-    label: "Ventes",
+    label: "Historique des ventes",
     path: "/sales",
     icon: "€",
   },
@@ -37,9 +37,11 @@ const navigationItems = [
 function Sidebar({ collapsed, onToggle }) {
   return (
     <aside
-      className={`Sidebar ${
-        collapsed ? "Sidebar--collapsed" : ""
-      }`}
+      className={
+        collapsed
+          ? "Sidebar Sidebar--collapsed"
+          : "Sidebar"
+      }
     >
       <nav
         className="Sidebar-nav"
@@ -71,7 +73,7 @@ function Sidebar({ collapsed, onToggle }) {
         ))}
       </nav>
 
-      <div className="Sidebar-footer">
+      <footer className="Sidebar-footer">
         <button
           type="button"
           className="Sidebar-toggle"
@@ -83,7 +85,10 @@ function Sidebar({ collapsed, onToggle }) {
           }
           aria-expanded={!collapsed}
         >
-          <span aria-hidden="true">
+          <span
+            className="Sidebar-icon"
+            aria-hidden="true"
+          >
             {collapsed ? "›" : "‹"}
           </span>
 
@@ -91,7 +96,7 @@ function Sidebar({ collapsed, onToggle }) {
             Réduire
           </span>
         </button>
-      </div>
+      </footer>
     </aside>
   );
 }
