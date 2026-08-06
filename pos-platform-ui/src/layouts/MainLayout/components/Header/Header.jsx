@@ -1,21 +1,6 @@
-import useAuth from "../../../../features/auth/hooks/useAuth";
+import UserMenu from "./UserMenu";
 
 function Header() {
-  const {
-    currentUser,
-    loading,
-  } = useAuth();
-
-  const userName = loading
-    ? "Chargement..."
-    : currentUser?.fullName ?? "Utilisateur";
-
-  const userRole = currentUser?.role === "GERANT"
-    ? "Gérant"
-    : currentUser?.role === "VENDEUR"
-      ? "Vendeur"
-      : "";
-
   return (
     <header className="Header">
       <div className="Header-brand">
@@ -32,17 +17,7 @@ function Header() {
       </div>
 
       <div className="Header-actions">
-        <div className="Header-userInfo">
-          <span className="Header-userName">
-            {userName}
-          </span>
-
-          {userRole && (
-            <span className="Header-userRole">
-              {userRole}
-            </span>
-          )}
-        </div>
+        <UserMenu />
       </div>
     </header>
   );

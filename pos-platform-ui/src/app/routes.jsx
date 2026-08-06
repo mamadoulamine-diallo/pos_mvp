@@ -7,8 +7,13 @@ import CategoriesPage from "../features/categories/pages/CategoriesPage";
 import SalesPage from "../features/sales/pages/SalesPage";
 import NewSalePage from "../features/sales/pages/NewSalePage";
 import UsersPage from "../features/users/pages/UsersPage";
+import LoginPage from "../features/auth/pages/LoginPage";
 
 const routes = createBrowserRouter([
+  {
+    path: "/login",
+    element: <LoginPage />,
+  },
   {
     path: "/",
     element: <MainLayout />,
