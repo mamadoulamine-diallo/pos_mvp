@@ -1,0 +1,196 @@
+@use "../../../assets/styles/abstracts/variables" as *;
+@use "../../../assets/styles/abstracts/mixins" as *;
+
+.Products {
+  min-height: calc(100vh - var(--header-height));
+  padding: 24px 14px 90px;
+
+  background: $bg-light;
+
+  hr {
+    display: none;
+  }
+
+  &-actions {
+    position: fixed;
+    left: 12px;
+    right: 12px;
+    bottom: 58px;
+
+    z-index: 40;
+
+    &-addProductDesktop {
+      display: none !important;
+    }
+  }
+
+  &-wrapper {
+    position: fixed;
+    left: 8px;
+    right: 8px;
+    bottom: 95px;
+
+    display: flex;
+    gap: 8px;
+
+    z-index: 35;
+
+    &::before {
+      content: "";
+
+      position: absolute;
+      inset: 0;
+
+      border-radius: 10px;
+
+      background: rgba(250, 250, 248, 0.82);
+
+      backdrop-filter: blur(8px);
+      -webkit-backdrop-filter: blur(8px);
+
+      z-index: -1;
+    }
+  }
+
+  &-list {
+    display: grid;
+    grid-template-columns: repeat(
+      auto-fill,
+      minmax(145px, 1fr)
+    );
+
+    gap: 18px 14px;
+
+    &-title {
+      grid-column: 1 / -1;
+
+      margin-bottom: 18px;
+
+      color: $gray-secondary;
+
+      font-size: 30px;
+      font-weight: 600;
+      text-align: left;
+    }
+  }
+
+  &-message {
+    padding: 16px;
+
+    color: $text-secondary;
+
+    font-size: 14px;
+
+    &--error {
+      color: #c0392b;
+    }
+  }
+
+  &-empty {
+    grid-column: 1 / -1;
+
+    padding: 32px 16px;
+
+    color: $text-secondary;
+
+    text-align: center;
+  }
+}
+
+.ProductAction {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.CTA {
+  min-height: 44px;
+  padding: 0 16px;
+
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+
+  border: none;
+  border-radius: 8px;
+
+  background: $primary;
+  color: $bg-white;
+
+  font-family: inherit;
+  font-size: 14px;
+  font-weight: 700;
+
+  cursor: pointer;
+
+  &:hover {
+    opacity: 0.92;
+  }
+
+  &:focus-visible {
+    outline: 2px solid $primary;
+    outline-offset: 2px;
+  }
+}
+
+@include desktop {
+  .Products {
+    padding: 32px 40px;
+
+    hr {
+      display: block;
+
+      margin: 18px 24px 22px;
+
+      border: none;
+      border-top: 1px solid $gray-secondary;
+    }
+
+    &-actions {
+      position: static;
+
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+
+      margin-bottom: 24px;
+
+      &-addProductDesktop {
+        display: inline-flex !important;
+      }
+    }
+
+    &-wrapper {
+      position: static;
+
+      width: 220px;
+      margin-right: 48px;
+      padding: 0;
+
+      display: block;
+      float: left;
+
+      border-radius: 0;
+
+      background: transparent;
+
+      backdrop-filter: none;
+      -webkit-backdrop-filter: none;
+
+      box-shadow: none;
+    }
+
+    &-list {
+      justify-content: center;
+
+      gap: 28px 36px;
+
+      &-title {
+        margin-bottom: 18px;
+
+        font-size: 34px;
+      }
+    }
+  }
+}

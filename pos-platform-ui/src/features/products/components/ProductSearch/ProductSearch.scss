@@ -1,0 +1,46 @@
+@use "../../../../assets/styles/abstracts/variables" as *;
+@use "../../../../assets/styles/abstracts/mixins" as *;
+
+.ProductSearch {
+  position: relative;
+
+  &-icon {
+    position: absolute;
+    left: 14px;
+    top: 50%;
+
+    transform: translateY(-50%);
+
+    color: $text-secondary;
+    pointer-events: none;
+  }
+
+  &-input {
+    width: 100%;
+    height: 38px;
+
+    padding: 0 14px 0 42px;
+
+    border: 1px solid #ccc;
+    border-radius: 4px;
+
+    background: $bg-white;
+
+    font-size: 14px;
+
+    outline: none;
+
+    &::placeholder {
+      color: $text-secondary;
+    }
+  }
+
+  @include desktop {
+    &-input {
+      width: 420px;
+      height: 44px;
+
+      font-size: 16px;
+    }
+  }
+}
