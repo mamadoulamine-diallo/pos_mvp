@@ -1,0 +1,143 @@
+.CategoriesPage {
+  min-height: calc(100vh - var(--header-height));
+  padding: 24px 14px;
+  background: #fafaf8;
+}
+.CategoriesPage-header {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+      -ms-flex-direction: column;
+          flex-direction: column;
+  gap: 16px;
+  margin-bottom: 24px;
+}
+.CategoriesPage-header h1 {
+  margin-top: 4px;
+  color: #343a40;
+  font-size: 30px;
+  font-weight: 800;
+}
+.CategoriesPage-eyebrow {
+  color: #6c757d;
+  font-size: 13px;
+  font-weight: 700;
+}
+.CategoriesPage-subtitle {
+  margin-top: 6px;
+  color: #6c757d;
+  font-size: 14px;
+}
+.CategoriesPage-addButton {
+  min-height: 44px;
+  padding: 0 16px;
+  display: -webkit-inline-box;
+  display: -ms-inline-flexbox;
+  display: inline-flex;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  -webkit-box-pack: center;
+      -ms-flex-pack: center;
+          justify-content: center;
+  gap: 8px;
+  -ms-flex-item-align: start;
+      align-self: flex-start;
+  border: 0;
+  border-radius: 8px;
+  background: #74a23c;
+  color: #ffffff;
+  font-weight: 700;
+}
+
+.Categories-list {
+  display: grid;
+  gap: 12px;
+}
+
+.CategoryCard {
+  padding: 16px;
+  background: #ffffff;
+  border: 1px solid #d8caca;
+  border-radius: 10px;
+  -webkit-box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+          box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+}
+.CategoryCard-info {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  -webkit-box-pack: justify;
+      -ms-flex-pack: justify;
+          justify-content: space-between;
+  gap: 16px;
+}
+.CategoryCard-name {
+  color: #343a40;
+  font-size: 15px;
+  font-weight: 700;
+}
+.CategoryCard-status {
+  padding: 5px 10px;
+  border-radius: 999px;
+  font-size: 11px;
+  font-weight: 800;
+}
+.CategoryCard-status--active {
+  background: #e8f5e9;
+  color: #2e7d32;
+}
+.CategoryCard-status--inactive {
+  background: #eeeeee;
+  color: #6c757d;
+}
+
+.Categories-message,
+.Categories-empty {
+  padding: 24px;
+  color: #6c757d;
+  text-align: center;
+}
+
+.Categories-message--error {
+  color: #c0392b;
+}
+
+@media screen and (min-width: 768px) {
+  .CategoriesPage {
+    padding: 24px 20px;
+  }
+  .CategoriesPage-header {
+    -webkit-box-orient: horizontal;
+    -webkit-box-direction: normal;
+        -ms-flex-direction: row;
+            flex-direction: row;
+    -webkit-box-align: center;
+        -ms-flex-align: center;
+            align-items: center;
+    -webkit-box-pack: justify;
+        -ms-flex-pack: justify;
+            justify-content: space-between;
+  }
+  .CategoriesPage-addButton {
+    -ms-flex-item-align: auto;
+        align-self: auto;
+  }
+  .Categories-list {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+@media screen and (min-width: 1270px) {
+  .CategoriesPage {
+    padding: 32px 40px;
+  }
+  .Categories-list {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 18px;
+  }
+}/*# sourceMappingURL=CategoriesPage.css.map */

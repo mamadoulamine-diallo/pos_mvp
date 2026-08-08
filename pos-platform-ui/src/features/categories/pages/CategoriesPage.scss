@@ -1,0 +1,157 @@
+@use "../../../assets/styles/abstracts/variables" as *;
+@use "../../../assets/styles/abstracts/mixins" as *;
+
+.CategoriesPage {
+  min-height: calc(100vh - var(--header-height));
+  padding: 24px 14px;
+
+  background: $bg-light;
+
+  &-header {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+
+    margin-bottom: 24px;
+
+    h1 {
+      margin-top: 4px;
+
+      color: $gray-secondary;
+
+      font-size: 30px;
+      font-weight: 800;
+    }
+  }
+
+  &-eyebrow {
+    color: $text-secondary;
+
+    font-size: 13px;
+    font-weight: 700;
+  }
+
+  &-subtitle {
+    margin-top: 6px;
+
+    color: $text-secondary;
+
+    font-size: 14px;
+  }
+
+  &-addButton {
+    min-height: 44px;
+    padding: 0 16px;
+
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+
+    align-self: flex-start;
+
+    border: 0;
+    border-radius: 8px;
+
+    background: $primary;
+    color: $bg-white;
+
+    font-weight: 700;
+  }
+}
+
+.Categories-list {
+  display: grid;
+  gap: 12px;
+}
+
+.CategoryCard {
+  padding: 16px;
+
+  background: $bg-white;
+
+  border: 1px solid $border-light;
+  border-radius: 10px;
+
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+
+  &-info {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+  }
+
+  &-name {
+    color: $gray-secondary;
+
+    font-size: 15px;
+    font-weight: 700;
+  }
+
+  &-status {
+    padding: 5px 10px;
+
+    border-radius: 999px;
+
+    font-size: 11px;
+    font-weight: 800;
+
+    &--active {
+      background: #e8f5e9;
+      color: #2e7d32;
+    }
+
+    &--inactive {
+      background: #eeeeee;
+      color: $text-secondary;
+    }
+  }
+}
+
+.Categories-message,
+.Categories-empty {
+  padding: 24px;
+
+  color: $text-secondary;
+
+  text-align: center;
+}
+
+.Categories-message--error {
+  color: #c0392b;
+}
+
+@include tablette {
+  .CategoriesPage {
+    padding: 24px 20px;
+
+    &-header {
+      flex-direction: row;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    &-addButton {
+      align-self: auto;
+    }
+  }
+
+  .Categories-list {
+    grid-template-columns:
+      repeat(2, minmax(0, 1fr));
+  }
+}
+
+@include desktop {
+  .CategoriesPage {
+    padding: 32px 40px;
+  }
+
+  .Categories-list {
+    grid-template-columns:
+      repeat(3, minmax(0, 1fr));
+
+    gap: 18px;
+  }
+}
