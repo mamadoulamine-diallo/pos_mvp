@@ -1,0 +1,84 @@
+.ProductForm {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+      -ms-flex-direction: column;
+          flex-direction: column;
+  gap: 12px;
+}
+.ProductForm-field {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+      -ms-flex-direction: column;
+          flex-direction: column;
+  gap: 6px;
+}
+.ProductForm-field span {
+  color: #343a40;
+  font-size: 13px;
+  font-weight: 700;
+}
+.ProductForm input,
+.ProductForm select {
+  height: 42px;
+  padding: 0 12px;
+  border: 1px solid #d7d7d7;
+  border-radius: 8px;
+  background: #fafaf8;
+  font-size: 14px;
+  outline: none;
+}
+.ProductForm input:focus,
+.ProductForm select:focus {
+  border-color: #74a23c;
+  background: #ffffff;
+}
+.ProductForm input:disabled,
+.ProductForm select:disabled {
+  cursor: not-allowed;
+  opacity: 0.65;
+}
+.ProductForm-error {
+  color: #c0392b;
+  font-size: 13px;
+  font-weight: 600;
+}
+.ProductForm-actions {
+  position: sticky;
+  bottom: -20px;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-pack: end;
+      -ms-flex-pack: end;
+          justify-content: flex-end;
+  gap: 12px;
+  margin: 10px -20px -20px;
+  padding: 14px 20px;
+  background: #ffffff;
+  border-top: 1px solid #eee;
+}
+.ProductForm-cancel, .ProductForm-submit {
+  height: 44px;
+  min-width: 110px;
+  border: none;
+  border-radius: 8px;
+  font-weight: 800;
+}
+.ProductForm-cancel:disabled, .ProductForm-submit:disabled {
+  cursor: wait;
+  opacity: 0.65;
+}
+.ProductForm-cancel {
+  background: #fafaf8;
+  color: #343a40;
+}
+.ProductForm-submit {
+  background: #74a23c;
+  color: #ffffff;
+}/*# sourceMappingURL=ProductForm.css.map */

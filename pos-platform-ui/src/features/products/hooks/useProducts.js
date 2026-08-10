@@ -1,6 +1,14 @@
-import { useEffect, useMemo, useState } from "react";
+import {
+  useCallback,
+  useEffect,
+  useMemo,
+  useState,
+} from "react";
 
-import { loadProducts } from "../services/productService";
+import {
+  createProduct as createProductService,
+  loadProducts,
+} from "../services/productService";
 
 function useProducts() {
   const [products, setProducts] = useState([]);
@@ -8,10 +16,30 @@ function useProducts() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
+  const refreshProducts = useCallback(async () => {
+    try {
+      const data = await loadProducts();
+
+      setProducts(data);
+      setError(null);
+
+      return data;
+    } catch (requestError) {
+      console.error(
+        "Impossible de charger les produits.",
+        requestError,
+      );
+
+      setError("Impossible de charger les produits.");
+
+      return [];
+    }
+  }, []);
+
   useEffect(() => {
     let cancelled = false;
 
-    async function fetchProducts() {
+    async function initializeProducts() {
       try {
         const data = await loadProducts();
 
@@ -20,13 +48,15 @@ function useProducts() {
           setError(null);
         }
       } catch (requestError) {
-        console.error(
-          "Impossible de charger les produits.",
-          requestError,
-        );
-
         if (!cancelled) {
-          setError("Impossible de charger les produits.");
+          console.error(
+            "Impossible de charger les produits.",
+            requestError,
+          );
+
+          setError(
+            "Impossible de charger les produits.",
+          );
         }
       } finally {
         if (!cancelled) {
@@ -35,12 +65,24 @@ function useProducts() {
       }
     }
 
-    void fetchProducts();
+    void initializeProducts();
 
     return () => {
       cancelled = true;
     };
   }, []);
+
+  const createProduct = useCallback(
+    async (data) => {
+      const createdProduct =
+        await createProductService(data);
+
+      await refreshProducts();
+
+      return createdProduct;
+    },
+    [refreshProducts],
+  );
 
   const filteredProducts = useMemo(() => {
     const normalizedSearch = search
@@ -64,6 +106,8 @@ function useProducts() {
     setSearch,
     loading,
     error,
+    refreshProducts,
+    createProduct,
   };
 }
 

@@ -1,0 +1,93 @@
+@use "../../../../assets/styles/abstracts/variables" as *;
+
+.ProductForm {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+
+  &-field {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+
+    span {
+      color: $gray-secondary;
+
+      font-size: 13px;
+      font-weight: 700;
+    }
+  }
+
+  input,
+  select {
+    height: 42px;
+    padding: 0 12px;
+
+    border: 1px solid #d7d7d7;
+    border-radius: 8px;
+
+    background: $bg-light;
+
+    font-size: 14px;
+
+    outline: none;
+
+    &:focus {
+      border-color: $primary;
+      background: $bg-white;
+    }
+
+    &:disabled {
+      cursor: not-allowed;
+      opacity: 0.65;
+    }
+  }
+
+  &-error {
+    color: #c0392b;
+
+    font-size: 13px;
+    font-weight: 600;
+  }
+
+  &-actions {
+    position: sticky;
+    bottom: -20px;
+
+    display: flex;
+    justify-content: flex-end;
+    gap: 12px;
+
+    margin: 10px -20px -20px;
+    padding: 14px 20px;
+
+    background: $bg-white;
+    border-top: 1px solid #eee;
+  }
+
+  &-cancel,
+  &-submit {
+    height: 44px;
+    min-width: 110px;
+
+    border: none;
+    border-radius: 8px;
+
+    font-weight: 800;
+
+    &:disabled {
+      cursor: wait;
+      opacity: 0.65;
+    }
+  }
+
+  &-cancel {
+    background: $bg-light;
+    color: $gray-secondary;
+  }
+
+  &-submit {
+    background: $primary;
+    color: $bg-white;
+  }
+}
