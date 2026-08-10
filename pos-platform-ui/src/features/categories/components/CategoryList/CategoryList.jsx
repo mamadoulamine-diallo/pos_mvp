@@ -1,6 +1,9 @@
 import CategoryCard from "../CategoryCard";
 
-function CategoryList({ categories }) {
+function CategoryList({
+  categories,
+  onEdit,
+}) {
   if (categories.length === 0) {
     return (
       <p className="Categories-empty">
@@ -15,6 +18,7 @@ function CategoryList({ categories }) {
         <CategoryCard
           key={category.id}
           category={category}
+          onEdit={onEdit}
         />
       ))}
     </section>

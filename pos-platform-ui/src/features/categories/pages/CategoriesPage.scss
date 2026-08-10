@@ -109,6 +109,180 @@
   }
 }
 
+.CategoryCard {
+  &-main {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    min-width: 0;
+  }
+
+  &-edit {
+    display: grid;
+    place-items: center;
+
+    width: 38px;
+    height: 38px;
+
+    flex-shrink: 0;
+
+    border: 0;
+    border-radius: 8px;
+
+    background: transparent;
+    color: $text-secondary;
+
+    &:hover {
+      background: $hover;
+      color: $primary;
+    }
+  }
+}
+
+.CategoryModal {
+  position: fixed;
+  inset: 0;
+  z-index: 300;
+
+  display: grid;
+  place-items: center;
+
+  padding: 16px;
+
+  &-backdrop {
+    position: absolute;
+    inset: 0;
+
+    width: 100%;
+    height: 100%;
+
+    border: 0;
+    background: rgba(0, 0, 0, 0.35);
+  }
+
+  &-panel {
+    position: relative;
+    z-index: 1;
+
+    width: min(100%, 460px);
+    padding: 20px;
+
+    background: $bg-white;
+    border-radius: 16px;
+
+    box-shadow: 0 14px 40px rgba(0, 0, 0, 0.18);
+  }
+
+  &-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+
+    margin-bottom: 20px;
+
+    h2 {
+      color: $gray-secondary;
+
+      font-size: 20px;
+    }
+  }
+
+  &-close {
+    display: grid;
+    place-items: center;
+
+    width: 38px;
+    height: 38px;
+
+    border: 0;
+    border-radius: 8px;
+
+    background: transparent;
+    color: $text-secondary;
+
+    &:hover {
+      background: $hover;
+    }
+  }
+}
+
+.CategoryForm {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+
+  &-field {
+    display: flex;
+    flex-direction: column;
+    gap: 7px;
+
+    span {
+      color: $gray-secondary;
+
+      font-size: 13px;
+      font-weight: 700;
+    }
+
+    input,
+    select {
+      width: 100%;
+      height: 44px;
+      padding: 0 12px;
+
+      border: 1px solid $border-light;
+      border-radius: 8px;
+
+      background: $bg-white;
+      color: $gray-secondary;
+
+      outline: none;
+
+      &:focus {
+        border-color: $primary;
+      }
+    }
+  }
+
+  &-error {
+    color: #c0392b;
+
+    font-size: 13px;
+  }
+
+  &-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+  }
+
+  &-cancel,
+  &-submit {
+    min-height: 42px;
+    padding: 0 16px;
+
+    border: 0;
+    border-radius: 8px;
+
+    font-weight: 700;
+
+    &:disabled {
+      cursor: wait;
+      opacity: 0.65;
+    }
+  }
+
+  &-cancel {
+    background: $bg-light;
+    color: $gray-secondary;
+  }
+
+  &-submit {
+    background: $primary;
+    color: $bg-white;
+  }
+}
+
 .Categories-message,
 .Categories-empty {
   padding: 24px;

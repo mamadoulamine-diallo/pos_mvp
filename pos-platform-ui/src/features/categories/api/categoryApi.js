@@ -5,3 +5,21 @@ export async function getCategories() {
 
   return response.data;
 }
+
+export async function createCategory(request) {
+  const response = await axiosClient.post(
+    "/categories",
+    request,
+  );
+
+  return response.data;
+}
+
+export async function updateCategory(id, request) {
+  const response = await axiosClient.put(
+    `/categories/${id}`,
+    request,
+  );
+
+  return response.data;
+}
