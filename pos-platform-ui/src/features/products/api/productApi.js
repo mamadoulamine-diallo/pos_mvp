@@ -23,3 +23,11 @@ export async function updateProduct(id, request) {
 
   return response.data;
 }
+
+export async function addProductStock(request) {
+  await axiosClient.post("/products/stock", request);
+}
+
+export async function changeProductPrice(request) {
+  await axiosClient.post("/products/price", request);
+}

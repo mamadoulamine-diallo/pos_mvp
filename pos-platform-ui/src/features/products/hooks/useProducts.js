@@ -1,14 +1,11 @@
-import {
-  useCallback,
-  useEffect,
-  useMemo,
-  useState,
-} from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 
 import {
+  addStock as addStockService,
   createProduct as createProductService,
   loadProducts,
   updateProduct as updateProductService,
+  changePrice as changePriceService,
 } from "../services/productService";
 
 function useProducts() {
@@ -26,10 +23,7 @@ function useProducts() {
 
       return data;
     } catch (requestError) {
-      console.error(
-        "Impossible de charger les produits.",
-        requestError,
-      );
+      console.error("Impossible de charger les produits.", requestError);
 
       setError("Impossible de charger les produits.");
 
@@ -50,14 +44,9 @@ function useProducts() {
         }
       } catch (requestError) {
         if (!cancelled) {
-          console.error(
-            "Impossible de charger les produits.",
-            requestError,
-          );
+          console.error("Impossible de charger les produits.", requestError);
 
-          setError(
-            "Impossible de charger les produits.",
-          );
+          setError("Impossible de charger les produits.");
         }
       } finally {
         if (!cancelled) {
@@ -75,8 +64,7 @@ function useProducts() {
 
   const createProduct = useCallback(
     async (data) => {
-      const createdProduct =
-        await createProductService(data);
+      const createdProduct = await createProductService(data);
 
       await refreshProducts();
 
@@ -87,8 +75,7 @@ function useProducts() {
 
   const updateProduct = useCallback(
     async (id, data) => {
-      const updatedProduct =
-        await updateProductService(id, data);
+      const updatedProduct = await updateProductService(id, data);
 
       await refreshProducts();
 
@@ -98,20 +85,41 @@ function useProducts() {
   );
 
   const filteredProducts = useMemo(() => {
-    const normalizedSearch = search
-      .trim()
-      .toLowerCase();
+    const normalizedSearch = search.trim().toLowerCase();
 
     if (!normalizedSearch) {
       return products;
     }
 
     return products.filter((product) =>
-      product.name
-        .toLowerCase()
-        .includes(normalizedSearch),
+      product.name.toLowerCase().includes(normalizedSearch),
     );
   }, [products, search]);
+
+  const addStock = useCallback(
+    async (productId, quantity) => {
+      await addStockService({
+        productId,
+        quantity,
+      });
+
+      await refreshProducts();
+    },
+    [refreshProducts],
+  );
+
+  const changePrice = useCallback(
+    async (productId, salePrice, purchasePrice) => {
+      await changePriceService({
+        productId,
+        salePrice,
+        purchasePrice,
+      });
+
+      await refreshProducts();
+    },
+    [refreshProducts],
+  );
 
   return {
     products: filteredProducts,
@@ -122,6 +130,8 @@ function useProducts() {
     refreshProducts,
     createProduct,
     updateProduct,
+    addStock,
+    changePrice,
   };
 }
 

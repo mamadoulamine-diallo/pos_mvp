@@ -1,0 +1,101 @@
+@use "../../../../assets/styles/abstracts/variables" as *;
+
+.ChangePriceForm {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+
+  &-product {
+    padding: 12px;
+
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+
+    background: $bg-light;
+    border-radius: 8px;
+
+    color: $text-secondary;
+    font-size: 13px;
+
+    strong {
+      color: $gray-secondary;
+    }
+
+    small {
+      color: $text-secondary;
+      font-size: 12px;
+    }
+  }
+
+  &-field {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+
+    span {
+      color: $gray-secondary;
+
+      font-size: 13px;
+      font-weight: 700;
+    }
+
+    input {
+      height: 42px;
+      padding: 0 12px;
+
+      border: 1px solid #d7d7d7;
+      border-radius: 8px;
+
+      background: $bg-light;
+
+      font-size: 14px;
+      outline: none;
+
+      &:focus {
+        border-color: $primary;
+        background: $bg-white;
+      }
+    }
+  }
+
+  &-error {
+    color: #c0392b;
+    font-size: 13px;
+    font-weight: 600;
+  }
+
+  &-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 12px;
+
+    margin-top: 4px;
+  }
+
+  &-cancel,
+  &-submit {
+    height: 44px;
+    min-width: 110px;
+
+    border: 0;
+    border-radius: 8px;
+
+    font-weight: 800;
+
+    &:disabled {
+      cursor: wait;
+      opacity: 0.65;
+    }
+  }
+
+  &-cancel {
+    background: $bg-light;
+    color: $gray-secondary;
+  }
+
+  &-submit {
+    background: $primary;
+    color: $bg-white;
+  }
+}

@@ -1,6 +1,8 @@
 import {
+  addProductStock,
   createProduct as createProductRequest,
   getProducts,
+  changeProductPrice,
   updateProduct as updateProductRequest,
 } from "../api/productApi";
 
@@ -14,4 +16,12 @@ export async function createProduct(data) {
 
 export async function updateProduct(id, data) {
   return updateProductRequest(id, data);
+}
+
+export async function addStock(data) {
+  await addProductStock(data);
+}
+
+export async function changePrice(data) {
+  await changeProductPrice(data);
 }
