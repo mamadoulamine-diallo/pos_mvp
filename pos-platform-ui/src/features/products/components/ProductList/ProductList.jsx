@@ -1,6 +1,9 @@
 import ProductCard from "../ProductCard";
 
-function ProductList({ products }) {
+function ProductList({
+  products,
+  onSelect,
+}) {
   if (products.length === 0) {
     return (
       <p className="Products-empty">
@@ -15,6 +18,7 @@ function ProductList({ products }) {
         <ProductCard
           key={product.id}
           product={product}
+          onSelect={onSelect}
         />
       ))}
     </section>

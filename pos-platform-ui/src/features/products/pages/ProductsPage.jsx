@@ -4,6 +4,7 @@ import { useState } from "react";
 import ProductForm from "../components/ProductForm";
 import ProductList from "../components/ProductList";
 import ProductModal from "../components/ProductModal";
+import ProductPreview from "../components/ProductPreview";
 import ProductSearch from "../components/ProductSearch";
 import useProducts from "../hooks/useProducts";
 
@@ -17,21 +18,52 @@ function ProductsPage() {
     loading,
     error,
     createProduct,
+    updateProduct,
   } = useProducts();
 
-  const [createOpen, setCreateOpen] = useState(false);
+  const [createOpen, setCreateOpen] =
+    useState(false);
+
+  const [selectedProduct, setSelectedProduct] =
+    useState(null);
+
+  const [editingProduct, setEditingProduct] =
+    useState(null);
 
   async function handleCreateProduct(request) {
     await createProduct(request);
+
     setCreateOpen(false);
   }
 
-  function handleOpenCreateModal() {
-    setCreateOpen(true);
+  async function handleUpdateProduct(request) {
+    if (!editingProduct) {
+      return;
+    }
+
+    await updateProduct(
+      editingProduct.id,
+      request,
+    );
+
+    setEditingProduct(null);
   }
 
-  function handleCloseCreateModal() {
-    setCreateOpen(false);
+  function handleEditProduct(product) {
+    setSelectedProduct(null);
+    setEditingProduct(product);
+  }
+
+  function handleAddStock(product) {
+    console.log("Add stock:", product);
+
+    setSelectedProduct(null);
+  }
+
+  function handleChangePrice(product) {
+    console.log("Change price:", product);
+
+    setSelectedProduct(null);
   }
 
   return (
@@ -49,10 +81,9 @@ function ProductsPage() {
         <button
           className="Products-actions-addProductDesktop CTA"
           type="button"
-          onClick={handleOpenCreateModal}
+          onClick={() => setCreateOpen(true)}
         >
           <Plus size={18} aria-hidden="true" />
-
           Ajouter un produit
         </button>
       </div>
@@ -72,19 +103,55 @@ function ProductsPage() {
       )}
 
       {!loading && !error && (
-        <ProductList products={products} />
+        <ProductList
+          products={products}
+          onSelect={setSelectedProduct}
+        />
       )}
+
+      {/* Création */}
 
       <ProductModal
         open={createOpen}
         title="Nouveau produit"
-        onClose={handleCloseCreateModal}
+        onClose={() => setCreateOpen(false)}
       >
         <ProductForm
           key={createOpen ? "create-open" : "create-closed"}
+          mode="create"
           onSubmit={handleCreateProduct}
-          onCancel={handleCloseCreateModal}
+          onCancel={() => setCreateOpen(false)}
         />
+      </ProductModal>
+
+      {/* Preview */}
+
+      <ProductPreview
+        product={selectedProduct}
+        onClose={() => setSelectedProduct(null)}
+        onAddStock={handleAddStock}
+        onEdit={handleEditProduct}
+        onChangePrice={handleChangePrice}
+      />
+
+      {/* Edition */}
+
+      <ProductModal
+        open={Boolean(editingProduct)}
+        title="Modifier le produit"
+        onClose={() => setEditingProduct(null)}
+      >
+        {editingProduct && (
+          <ProductForm
+            key={editingProduct.id}
+            mode="edit"
+            product={editingProduct}
+            onSubmit={handleUpdateProduct}
+            onCancel={() =>
+              setEditingProduct(null)
+            }
+          />
+        )}
       </ProductModal>
     </main>
   );

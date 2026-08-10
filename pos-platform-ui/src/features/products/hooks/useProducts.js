@@ -8,6 +8,7 @@ import {
 import {
   createProduct as createProductService,
   loadProducts,
+  updateProduct as updateProductService,
 } from "../services/productService";
 
 function useProducts() {
@@ -84,6 +85,18 @@ function useProducts() {
     [refreshProducts],
   );
 
+  const updateProduct = useCallback(
+    async (id, data) => {
+      const updatedProduct =
+        await updateProductService(id, data);
+
+      await refreshProducts();
+
+      return updatedProduct;
+    },
+    [refreshProducts],
+  );
+
   const filteredProducts = useMemo(() => {
     const normalizedSearch = search
       .trim()
@@ -108,6 +121,7 @@ function useProducts() {
     error,
     refreshProducts,
     createProduct,
+    updateProduct,
   };
 }
 

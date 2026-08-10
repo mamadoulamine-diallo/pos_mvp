@@ -5,24 +5,49 @@ import useCategories from "../../../categories/hooks/useCategories";
 import "./ProductForm.scss";
 
 function ProductForm({
+  mode = "create",
+  product = null,
   onSubmit,
   onCancel,
 }) {
+  const isEditing = mode === "edit";
+
   const {
     categories,
     loading: categoriesLoading,
     error: categoriesError,
   } = useCategories();
 
-  const [name, setName] = useState("");
-  const [imageUrl, setImageUrl] = useState("");
-  const [categoryId, setCategoryId] = useState("");
-  const [stockQuantity, setStockQuantity] = useState("0");
-  const [salePrice, setSalePrice] = useState("");
+  const [name, setName] = useState(
+    product?.name ?? "",
+  );
+
+  const [imageUrl, setImageUrl] = useState(
+    product?.imageUrl ?? "",
+  );
+
+  const [categoryId, setCategoryId] = useState(
+    product?.categoryId
+      ? String(product.categoryId)
+      : "",
+  );
+
+  const [active, setActive] = useState(
+    product?.active ?? true,
+  );
+
+  const [stockQuantity, setStockQuantity] =
+    useState("0");
+
+  const [salePrice, setSalePrice] =
+    useState("");
+
   const [purchasePrice, setPurchasePrice] =
     useState("");
 
-  const [submitting, setSubmitting] = useState(false);
+  const [submitting, setSubmitting] =
+    useState(false);
+
   const [error, setError] = useState(null);
 
   async function handleSubmit(event) {
@@ -31,22 +56,15 @@ function ProductForm({
     const normalizedName = name.trim();
 
     if (!normalizedName) {
-      setError("Le nom du produit est obligatoire.");
+      setError(
+        "Le nom du produit est obligatoire.",
+      );
       return;
     }
 
     if (!categoryId) {
-      setError("La catégorie est obligatoire.");
-      return;
-    }
-
-    if (
-      Number(stockQuantity) < 0 ||
-      Number(salePrice) < 0 ||
-      Number(purchasePrice) < 0
-    ) {
       setError(
-        "Le stock et les prix doivent être positifs.",
+        "La catégorie est obligatoire.",
       );
       return;
     }
@@ -55,27 +73,75 @@ function ProductForm({
       setSubmitting(true);
       setError(null);
 
+      if (isEditing) {
+        await onSubmit({
+          name: normalizedName,
+          imageUrl: imageUrl.trim(),
+          categoryId: Number(categoryId),
+          active,
+        });
+
+        return;
+      }
+
+      if (
+        stockQuantity === "" ||
+        salePrice === "" ||
+        purchasePrice === ""
+      ) {
+        setError(
+          "Le stock et les prix sont obligatoires.",
+        );
+        return;
+      }
+
+      const stock = Number(stockQuantity);
+      const sale = Number(salePrice);
+      const purchase = Number(purchasePrice);
+
+      if (
+        stock < 0 ||
+        sale < 0 ||
+        purchase < 0
+      ) {
+        setError(
+          "Le stock et les prix doivent être positifs.",
+        );
+        return;
+      }
+
       await onSubmit({
         name: normalizedName,
         imageUrl: imageUrl.trim(),
         categoryId: Number(categoryId),
-        stockQuantity: Number(stockQuantity),
-        salePrice: Number(salePrice),
-        purchasePrice: Number(purchasePrice),
+        stockQuantity: stock,
+        salePrice: sale,
+        purchasePrice: purchase,
       });
     } catch (requestError) {
       console.error(
-        "Impossible de créer le produit.",
+        isEditing
+          ? "Impossible de modifier le produit."
+          : "Impossible de créer le produit.",
         requestError,
       );
 
       setError(
-        "Impossible de créer le produit.",
+        isEditing
+          ? "Impossible de modifier le produit."
+          : "Impossible de créer le produit.",
       );
     } finally {
       setSubmitting(false);
     }
   }
+
+  const availableCategories = categories.filter(
+    (category) =>
+      category.active ||
+      (isEditing &&
+        category.id === product?.categoryId),
+  );
 
   return (
     <form
@@ -126,16 +192,14 @@ function ProductForm({
               : "Choisir une catégorie"}
           </option>
 
-          {categories
-            .filter((category) => category.active)
-            .map((category) => (
-              <option
-                key={category.id}
-                value={category.id}
-              >
-                {category.name}
-              </option>
-            ))}
+          {availableCategories.map((category) => (
+            <option
+              key={category.id}
+              value={category.id}
+            >
+              {category.name}
+            </option>
+          ))}
         </select>
       </label>
 
@@ -145,50 +209,79 @@ function ProductForm({
         </p>
       )}
 
-      <label className="ProductForm-field">
-        <span>Prix vente *</span>
+      {isEditing ? (
+        <label className="ProductForm-field">
+          <span>Statut</span>
 
-        <input
-          type="number"
-          min="0"
-          step="0.01"
-          required
-          value={salePrice}
-          onChange={(event) =>
-            setSalePrice(event.target.value)
-          }
-        />
-      </label>
+          <select
+            value={String(active)}
+            onChange={(event) =>
+              setActive(
+                event.target.value === "true",
+              )
+            }
+          >
+            <option value="true">
+              Actif
+            </option>
 
-      <label className="ProductForm-field">
-        <span>Prix achat *</span>
+            <option value="false">
+              Inactif
+            </option>
+          </select>
+        </label>
+      ) : (
+        <>
+          <label className="ProductForm-field">
+            <span>Prix vente *</span>
 
-        <input
-          type="number"
-          min="0"
-          step="0.01"
-          required
-          value={purchasePrice}
-          onChange={(event) =>
-            setPurchasePrice(event.target.value)
-          }
-        />
-      </label>
+            <input
+              type="number"
+              min="0"
+              step="0.01"
+              required
+              value={salePrice}
+              onChange={(event) =>
+                setSalePrice(event.target.value)
+              }
+            />
+          </label>
 
-      <label className="ProductForm-field">
-        <span>Stock initial *</span>
+          <label className="ProductForm-field">
+            <span>Prix achat *</span>
 
-        <input
-          type="number"
-          min="0"
-          step="1"
-          required
-          value={stockQuantity}
-          onChange={(event) =>
-            setStockQuantity(event.target.value)
-          }
-        />
-      </label>
+            <input
+              type="number"
+              min="0"
+              step="0.01"
+              required
+              value={purchasePrice}
+              onChange={(event) =>
+                setPurchasePrice(
+                  event.target.value,
+                )
+              }
+            />
+          </label>
+
+          <label className="ProductForm-field">
+            <span>Stock initial *</span>
+
+            <input
+              type="number"
+              min="0"
+              step="1"
+              required
+              value={stockQuantity}
+              onChange={(event) =>
+                setStockQuantity(
+                  event.target.value,
+                )
+              }
+            />
+          </label>
+        </>
+      )}
 
       {error && (
         <p className="ProductForm-error">
@@ -216,8 +309,10 @@ function ProductForm({
           }
         >
           {submitting
-            ? "Création..."
-            : "Créer"}
+            ? "Enregistrement..."
+            : isEditing
+              ? "Enregistrer"
+              : "Créer"}
         </button>
       </div>
     </form>
