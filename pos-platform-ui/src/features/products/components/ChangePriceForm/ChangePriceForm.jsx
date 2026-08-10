@@ -2,12 +2,21 @@ import { useState } from "react";
 
 import "./ChangePriceForm.scss";
 
-function ChangePriceForm({ product, onSubmit, onCancel }) {
-  const [salePrice, setSalePrice] = useState("");
-  const [purchasePrice, setPurchasePrice] = useState("");
+function ChangePriceForm({
+  product,
+  pricing,
+  onSubmit,
+  onCancel,
+}) {
+  const [salePrice, setSalePrice] = useState(
+    String(pricing.salePrice ?? ""),
+  );
+
+  const [purchasePrice, setPurchasePrice] = useState(
+    String(pricing.purchasePrice ?? ""),
+  );
 
   const [submitting, setSubmitting] = useState(false);
-
   const [error, setError] = useState(null);
 
   async function handleSubmit(event) {
@@ -17,7 +26,9 @@ function ChangePriceForm({ product, onSubmit, onCancel }) {
     const purchase = Number(purchasePrice);
 
     if (sale <= 0 || purchase <= 0) {
-      setError("Les prix doivent être supérieurs à zéro.");
+      setError(
+        "Les prix doivent être supérieurs à zéro.",
+      );
 
       return;
     }
@@ -30,22 +41,32 @@ function ChangePriceForm({ product, onSubmit, onCancel }) {
     } catch (requestError) {
       console.error(requestError);
 
-      setError("Impossible de modifier le prix.");
+      setError(
+        "Impossible de modifier le prix.",
+      );
     } finally {
       setSubmitting(false);
     }
   }
 
   return (
-    <form className="ChangePriceForm" onSubmit={handleSubmit}>
+    <form
+      className="ChangePriceForm"
+      onSubmit={handleSubmit}
+    >
       <div className="ChangePriceForm-product">
         <span>Produit</span>
 
         <strong>{product.name}</strong>
 
         <small>
-          Prix actuel : {Number(product.salePrice ?? 0).toLocaleString("fr-FR")}{" "}
-          F
+          Prix de vente actuel :{" "}
+          {Number(pricing.salePrice).toLocaleString("fr-FR")} F
+        </small>
+
+        <small>
+          Prix d'achat actuel :{" "}
+          {Number(pricing.purchasePrice).toLocaleString("fr-FR")} F
         </small>
       </div>
 
@@ -58,7 +79,9 @@ function ChangePriceForm({ product, onSubmit, onCancel }) {
           step="0.01"
           required
           value={salePrice}
-          onChange={(event) => setSalePrice(event.target.value)}
+          onChange={(event) =>
+            setSalePrice(event.target.value)
+          }
         />
       </label>
 
@@ -71,11 +94,17 @@ function ChangePriceForm({ product, onSubmit, onCancel }) {
           step="0.01"
           required
           value={purchasePrice}
-          onChange={(event) => setPurchasePrice(event.target.value)}
+          onChange={(event) =>
+            setPurchasePrice(event.target.value)
+          }
         />
       </label>
 
-      {error && <p className="ChangePriceForm-error">{error}</p>}
+      {error && (
+        <p className="ChangePriceForm-error">
+          {error}
+        </p>
+      )}
 
       <div className="ChangePriceForm-actions">
         <button
@@ -92,7 +121,9 @@ function ChangePriceForm({ product, onSubmit, onCancel }) {
           className="ChangePriceForm-submit"
           disabled={submitting}
         >
-          {submitting ? "Modification..." : "Modifier"}
+          {submitting
+            ? "Modification..."
+            : "Modifier"}
         </button>
       </div>
     </form>

@@ -31,3 +31,11 @@ export async function addProductStock(request) {
 export async function changeProductPrice(request) {
   await axiosClient.post("/products/price", request);
 }
+
+export async function getProductPricing(id) {
+  const response = await axiosClient.get(
+    `/products/${id}/pricing`,
+  );
+
+  return response.data;
+}

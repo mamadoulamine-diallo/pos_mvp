@@ -92,4 +92,15 @@ public class ProductApiController {
                 request.purchasePrice()
         );
     }
+
+    @Operation(
+            summary = "Retrieve current product pricing",
+            description = "Returns the current active sale and purchase prices for a product."
+    )
+    @GetMapping("/{id}/pricing")
+    public ProductPricingResponse getPricing(
+            @PathVariable Integer id
+    ) {
+        return productPriceService.getCurrentPricing(id);
+    }
 }

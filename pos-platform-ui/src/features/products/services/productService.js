@@ -1,5 +1,6 @@
 import {
   addProductStock,
+  getProductPricing,
   createProduct as createProductRequest,
   getProducts,
   changeProductPrice,
@@ -8,6 +9,10 @@ import {
 
 export async function loadProducts() {
   return getProducts();
+}
+
+export async function loadProductPricing(id) {
+  return getProductPricing(id);
 }
 
 export async function createProduct(data) {

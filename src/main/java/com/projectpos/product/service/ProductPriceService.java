@@ -1,5 +1,6 @@
 package com.projectpos.product.service;
 
+import com.projectpos.product.dto.ProductPricingResponse;
 import com.projectpos.product.entity.Product;
 import com.projectpos.product.entity.ProductPrice;
 import com.projectpos.product.repository.ProductPriceRepository;
@@ -22,6 +23,24 @@ public class ProductPriceService {
         return repository.findByProductIdAndEndDateIsNull(productId)
                 .map(ProductPrice::getSalePrice)
                 .orElse(BigDecimal.ZERO);
+    }
+
+    public ProductPricingResponse getCurrentPricing(Integer productId) {
+
+        ProductPrice currentPrice =
+                repository.findByProductIdAndEndDateIsNull(productId)
+                        .orElseThrow(
+                                () -> new IllegalArgumentException(
+                                        "Prix actif introuvable"
+                                )
+                        );
+
+        return new ProductPricingResponse(
+                productId,
+                currentPrice.getProduct().getName(),
+                currentPrice.getSalePrice(),
+                currentPrice.getPurchasePrice()
+        );
     }
 
     public ProductPrice createInitialPrice(
@@ -59,6 +78,7 @@ public class ProductPriceService {
         repository.flush();
 
         ProductPrice newPrice = new ProductPrice();
+
         newPrice.setProduct(currentPrice.getProduct());
         newPrice.setSalePrice(salePrice);
         newPrice.setPurchasePrice(purchasePrice);

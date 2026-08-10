@@ -9,6 +9,7 @@ import ProductSearch from "../components/ProductSearch";
 import useProducts from "../hooks/useProducts";
 import AddStockForm from "../components/AddStockForm";
 import ChangePriceForm from "../components/ChangePriceForm";
+import { loadProductPricing } from "../services/productService";
 
 import "./ProductsPage.scss";
 
@@ -34,6 +35,10 @@ function ProductsPage() {
   const [stockProduct, setStockProduct] = useState(null);
 
   const [priceProduct, setPriceProduct] = useState(null);
+
+  const [pricing, setPricing] = useState(null);
+
+  const [pricingLoading, setPricingLoading] = useState(false);
 
   async function handleCreateProduct(request) {
     await createProduct(request);
@@ -61,9 +66,20 @@ function ProductsPage() {
     setStockProduct(product);
   }
 
-  function handleChangePrice(product) {
-    setSelectedProduct(null);
-    setPriceProduct(product);
+  async function handleChangePrice(product) {
+    try {
+      setSelectedProduct(null);
+      setPricingLoading(true);
+
+      const currentPricing = await loadProductPricing(product.id);
+
+      setPriceProduct(product);
+      setPricing(currentPricing);
+    } catch (error) {
+      console.error("Impossible de charger les prix du produit.", error);
+    } finally {
+      setPricingLoading(false);
+    }
   }
 
   async function handleSubmitStock(quantity) {
@@ -77,11 +93,14 @@ function ProductsPage() {
   }
 
   async function handleSubmitPrice(salePrice, purchasePrice) {
-    if (!priceProduct) return;
+    if (!priceProduct) {
+      return;
+    }
 
     await changePrice(priceProduct.id, salePrice, purchasePrice);
 
     setPriceProduct(null);
+    setPricing(null);
   }
 
   return (
@@ -178,14 +197,25 @@ function ProductsPage() {
       <ProductModal
         open={Boolean(priceProduct)}
         title="Modifier le prix"
-        onClose={() => setPriceProduct(null)}
+        onClose={() => {
+          setPriceProduct(null);
+          setPricing(null);
+        }}
       >
-        {priceProduct && (
+        {pricingLoading && (
+          <p className="Products-message">Chargement des prix...</p>
+        )}
+
+        {priceProduct && pricing && !pricingLoading && (
           <ChangePriceForm
-            key={priceProduct.id}
+            key={`${priceProduct.id}-${pricing.salePrice}-${pricing.purchasePrice}`}
             product={priceProduct}
+            pricing={pricing}
             onSubmit={handleSubmitPrice}
-            onCancel={() => setPriceProduct(null)}
+            onCancel={() => {
+              setPriceProduct(null);
+              setPricing(null);
+            }}
           />
         )}
       </ProductModal>
