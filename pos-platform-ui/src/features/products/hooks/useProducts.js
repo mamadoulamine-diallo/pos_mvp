@@ -1,11 +1,16 @@
-import { useCallback, useEffect, useMemo, useState } from "react";
+import {
+  useCallback,
+  useEffect,
+  useMemo,
+  useState,
+} from "react";
 
 import {
   addStock as addStockService,
+  changePrice as changePriceService,
   createProduct as createProductService,
   loadProducts,
   updateProduct as updateProductService,
-  changePrice as changePriceService,
 } from "../services/productService";
 
 function useProducts() {
@@ -13,6 +18,12 @@ function useProducts() {
   const [search, setSearch] = useState("");
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+
+  const [selectedCategory, setSelectedCategory] =
+    useState("all");
+
+  const [selectedFilter, setSelectedFilter] =
+    useState("all");
 
   const refreshProducts = useCallback(async () => {
     try {
@@ -23,9 +34,14 @@ function useProducts() {
 
       return data;
     } catch (requestError) {
-      console.error("Impossible de charger les produits.", requestError);
+      console.error(
+        "Impossible de charger les produits.",
+        requestError,
+      );
 
-      setError("Impossible de charger les produits.");
+      setError(
+        "Impossible de charger les produits.",
+      );
 
       return [];
     }
@@ -44,9 +60,14 @@ function useProducts() {
         }
       } catch (requestError) {
         if (!cancelled) {
-          console.error("Impossible de charger les produits.", requestError);
+          console.error(
+            "Impossible de charger les produits.",
+            requestError,
+          );
 
-          setError("Impossible de charger les produits.");
+          setError(
+            "Impossible de charger les produits.",
+          );
         }
       } finally {
         if (!cancelled) {
@@ -64,7 +85,8 @@ function useProducts() {
 
   const createProduct = useCallback(
     async (data) => {
-      const createdProduct = await createProductService(data);
+      const createdProduct =
+        await createProductService(data);
 
       await refreshProducts();
 
@@ -75,7 +97,8 @@ function useProducts() {
 
   const updateProduct = useCallback(
     async (id, data) => {
-      const updatedProduct = await updateProductService(id, data);
+      const updatedProduct =
+        await updateProductService(id, data);
 
       await refreshProducts();
 
@@ -83,18 +106,6 @@ function useProducts() {
     },
     [refreshProducts],
   );
-
-  const filteredProducts = useMemo(() => {
-    const normalizedSearch = search.trim().toLowerCase();
-
-    if (!normalizedSearch) {
-      return products;
-    }
-
-    return products.filter((product) =>
-      product.name.toLowerCase().includes(normalizedSearch),
-    );
-  }, [products, search]);
 
   const addStock = useCallback(
     async (productId, quantity) => {
@@ -109,7 +120,11 @@ function useProducts() {
   );
 
   const changePrice = useCallback(
-    async (productId, salePrice, purchasePrice) => {
+    async (
+      productId,
+      salePrice,
+      purchasePrice,
+    ) => {
       await changePriceService({
         productId,
         salePrice,
@@ -121,12 +136,87 @@ function useProducts() {
     [refreshProducts],
   );
 
+  const filteredProducts = useMemo(() => {
+    const normalizedSearch = search
+      .trim()
+      .toLowerCase();
+
+    return products.filter((product) => {
+      // Recherche
+
+      const matchesSearch =
+        !normalizedSearch ||
+        product.name
+          .toLowerCase()
+          .includes(normalizedSearch);
+
+      // Catégorie
+
+      const matchesCategory =
+        selectedCategory === "all" ||
+        product.categoryId ===
+          Number(selectedCategory);
+
+      // État du stock / statut produit
+
+      const matchesFilter = (() => {
+        switch (selectedFilter) {
+          case "in-stock":
+            return (
+              product.active &&
+              product.stockQuantity > 5
+            );
+
+          case "low-stock":
+            return (
+              product.active &&
+              product.stockQuantity > 0 &&
+              product.stockQuantity <= 5
+            );
+
+          case "out-stock":
+            return (
+              product.active &&
+              product.stockQuantity === 0
+            );
+
+          case "inactive":
+            return !product.active;
+
+          case "all":
+          default:
+            return true;
+        }
+      })();
+
+      return (
+        matchesSearch &&
+        matchesCategory &&
+        matchesFilter
+      );
+    });
+  }, [
+    products,
+    search,
+    selectedCategory,
+    selectedFilter,
+  ]);
+
   return {
     products: filteredProducts,
+
     search,
     setSearch,
+
+    selectedCategory,
+    setSelectedCategory,
+
+    selectedFilter,
+    setSelectedFilter,
+
     loading,
     error,
+
     refreshProducts,
     createProduct,
     updateProduct,

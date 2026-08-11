@@ -1,0 +1,52 @@
+.ProductCategoryFilter {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  gap: 8px;
+  width: 100%;
+  overflow-x: auto;
+  padding: 4px 0 6px;
+  scrollbar-width: none;
+  scroll-behavior: smooth;
+}
+.ProductCategoryFilter::-webkit-scrollbar {
+  display: none;
+}
+.ProductCategoryFilter-button {
+  -ms-flex-negative: 0;
+      flex-shrink: 0;
+  height: 38px;
+  padding: 0 14px;
+  border: 1px solid #d8caca;
+  border-radius: 999px;
+  background: #ffffff;
+  color: #343a40;
+  font-family: inherit;
+  font-size: 13px;
+  font-weight: 700;
+  white-space: nowrap;
+  cursor: pointer;
+  -webkit-transition: border-color 180ms ease, background-color 180ms ease, color 180ms ease;
+  transition: border-color 180ms ease, background-color 180ms ease, color 180ms ease;
+}
+.ProductCategoryFilter-button:hover {
+  border-color: #74a23c;
+}
+.ProductCategoryFilter-button.active {
+  background: #74a23c;
+  border-color: #74a23c;
+  color: #ffffff;
+}
+@media screen and (min-width: 1270px) {
+  .ProductCategoryFilter {
+    -ms-flex-wrap: wrap;
+        flex-wrap: wrap;
+    overflow: visible;
+    gap: 10px;
+    padding: 4px 0;
+  }
+  .ProductCategoryFilter-button {
+    height: 40px;
+    padding: 0 18px;
+  }
+}/*# sourceMappingURL=ProductCategoryFilter.css.map */

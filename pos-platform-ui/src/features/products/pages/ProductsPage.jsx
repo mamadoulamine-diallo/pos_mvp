@@ -1,14 +1,17 @@
 import { Plus } from "lucide-react";
 import { useState } from "react";
 
+import AddStockForm from "../components/AddStockForm";
+import ChangePriceForm from "../components/ChangePriceForm";
+import ProductCategoryFilter from "../components/ProductCategoryFilter";
 import ProductForm from "../components/ProductForm";
 import ProductList from "../components/ProductList";
 import ProductModal from "../components/ProductModal";
 import ProductPreview from "../components/ProductPreview";
 import ProductSearch from "../components/ProductSearch";
+import ProductStatusFilter from "../components/ProductStatusFilter";
+
 import useProducts from "../hooks/useProducts";
-import AddStockForm from "../components/AddStockForm";
-import ChangePriceForm from "../components/ChangePriceForm";
 import { loadProductPricing } from "../services/productService";
 
 import "./ProductsPage.scss";
@@ -16,29 +19,47 @@ import "./ProductsPage.scss";
 function ProductsPage() {
   const {
     products,
+
     search,
     setSearch,
+
+    selectedCategory,
+    setSelectedCategory,
+
+    selectedFilter,
+    setSelectedFilter,
+
     loading,
     error,
+
     createProduct,
     updateProduct,
     addStock,
     changePrice,
   } = useProducts();
 
+  // Modales
+
   const [createOpen, setCreateOpen] = useState(false);
 
-  const [selectedProduct, setSelectedProduct] = useState(null);
+  const [selectedProduct, setSelectedProduct] =
+    useState(null);
 
-  const [editingProduct, setEditingProduct] = useState(null);
+  const [editingProduct, setEditingProduct] =
+    useState(null);
 
-  const [stockProduct, setStockProduct] = useState(null);
+  const [stockProduct, setStockProduct] =
+    useState(null);
 
-  const [priceProduct, setPriceProduct] = useState(null);
+  const [priceProduct, setPriceProduct] =
+    useState(null);
+
+  // Pricing
 
   const [pricing, setPricing] = useState(null);
 
-  const [pricingLoading, setPricingLoading] = useState(false);
+  const [pricingLoading, setPricingLoading] =
+    useState(false);
 
   async function handleCreateProduct(request) {
     await createProduct(request);
@@ -51,7 +72,10 @@ function ProductsPage() {
       return;
     }
 
-    await updateProduct(editingProduct.id, request);
+    await updateProduct(
+      editingProduct.id,
+      request,
+    );
 
     setEditingProduct(null);
   }
@@ -71,12 +95,16 @@ function ProductsPage() {
       setSelectedProduct(null);
       setPricingLoading(true);
 
-      const currentPricing = await loadProductPricing(product.id);
+      const currentPricing =
+        await loadProductPricing(product.id);
 
       setPriceProduct(product);
       setPricing(currentPricing);
-    } catch (error) {
-      console.error("Impossible de charger les prix du produit.", error);
+    } catch (requestError) {
+      console.error(
+        "Impossible de charger les prix du produit.",
+        requestError,
+      );
     } finally {
       setPricingLoading(false);
     }
@@ -87,31 +115,62 @@ function ProductsPage() {
       return;
     }
 
-    await addStock(stockProduct.id, quantity);
+    await addStock(
+      stockProduct.id,
+      quantity,
+    );
 
     setStockProduct(null);
   }
 
-  async function handleSubmitPrice(salePrice, purchasePrice) {
+  async function handleSubmitPrice(
+    salePrice,
+    purchasePrice,
+  ) {
     if (!priceProduct) {
       return;
     }
 
-    await changePrice(priceProduct.id, salePrice, purchasePrice);
+    await changePrice(
+      priceProduct.id,
+      salePrice,
+      purchasePrice,
+    );
 
+    setPriceProduct(null);
+    setPricing(null);
+  }
+
+  function closePriceModal() {
     setPriceProduct(null);
     setPricing(null);
   }
 
   return (
     <main className="Products">
-      <h1 className="Products-list-title">Produits</h1>
+      {/* Header */}
 
-      <div className="Products-actions ProductAction">
-        <ProductSearch value={search} onChange={setSearch} />
+      <div className="Products-header">
+        <div className="Products-heading">
+          <h1 className="Products-list-title">
+            Produits
+          </h1>
+
+          <p className="Products-count">
+            {products.length} produit
+            {products.length > 1 ? "s" : ""}
+          </p>
+        </div>
+
+        <div className="Products-header-search">
+          <ProductSearch
+            value={search}
+            onChange={setSearch}
+          />
+        </div>
 
         <button
-          className="Products-actions-addProductDesktop CTA"
+          className="Products-addButton CTA"
           type="button"
           onClick={() => setCreateOpen(true)}
         >
@@ -122,16 +181,50 @@ function ProductsPage() {
 
       <hr />
 
+      {/* Filtres */}
+
+      <div className="Products-filters">
+        <ProductCategoryFilter
+          value={selectedCategory}
+          onChange={setSelectedCategory}
+        />
+
+        <ProductStatusFilter
+          value={selectedFilter}
+          onChange={setSelectedFilter}
+        />
+      </div>
+
+      {/* États */}
+
       {loading && (
-        <p className="Products-message">Chargement des produits...</p>
+        <p className="Products-message">
+          Chargement des produits...
+        </p>
       )}
 
       {error && (
-        <p className="Products-message Products-message--error">{error}</p>
+        <p className="Products-message Products-message--error">
+          {error}
+        </p>
       )}
 
-      {!loading && !error && (
-        <ProductList products={products} onSelect={setSelectedProduct} />
+      {!loading && !error && products.length === 0 && (
+        <div className="Products-empty">
+          <h2>Aucun produit trouvé</h2>
+
+          <p>
+            Essayez de modifier votre recherche
+            ou vos filtres.
+          </p>
+        </div>
+      )}
+
+      {!loading && !error && products.length > 0 && (
+        <ProductList
+          products={products}
+          onSelect={setSelectedProduct}
+        />
       )}
 
       {/* Création */}
@@ -142,7 +235,11 @@ function ProductsPage() {
         onClose={() => setCreateOpen(false)}
       >
         <ProductForm
-          key={createOpen ? "create-open" : "create-closed"}
+          key={
+            createOpen
+              ? "create-open"
+              : "create-closed"
+          }
           mode="create"
           onSubmit={handleCreateProduct}
           onCancel={() => setCreateOpen(false)}
@@ -172,7 +269,9 @@ function ProductsPage() {
             mode="edit"
             product={editingProduct}
             onSubmit={handleUpdateProduct}
-            onCancel={() => setEditingProduct(null)}
+            onCancel={() =>
+              setEditingProduct(null)
+            }
           />
         )}
       </ProductModal>
@@ -189,35 +288,37 @@ function ProductsPage() {
             key={stockProduct.id}
             product={stockProduct}
             onSubmit={handleSubmitStock}
-            onCancel={() => setStockProduct(null)}
+            onCancel={() =>
+              setStockProduct(null)
+            }
           />
         )}
       </ProductModal>
 
+      {/* Modification du prix */}
+
       <ProductModal
         open={Boolean(priceProduct)}
         title="Modifier le prix"
-        onClose={() => {
-          setPriceProduct(null);
-          setPricing(null);
-        }}
+        onClose={closePriceModal}
       >
         {pricingLoading && (
-          <p className="Products-message">Chargement des prix...</p>
+          <p className="Products-message">
+            Chargement des prix...
+          </p>
         )}
 
-        {priceProduct && pricing && !pricingLoading && (
-          <ChangePriceForm
-            key={`${priceProduct.id}-${pricing.salePrice}-${pricing.purchasePrice}`}
-            product={priceProduct}
-            pricing={pricing}
-            onSubmit={handleSubmitPrice}
-            onCancel={() => {
-              setPriceProduct(null);
-              setPricing(null);
-            }}
-          />
-        )}
+        {priceProduct &&
+          pricing &&
+          !pricingLoading && (
+            <ChangePriceForm
+              key={`${priceProduct.id}-${pricing.salePrice}-${pricing.purchasePrice}`}
+              product={priceProduct}
+              pricing={pricing}
+              onSubmit={handleSubmitPrice}
+              onCancel={closePriceModal}
+            />
+          )}
       </ProductModal>
     </main>
   );

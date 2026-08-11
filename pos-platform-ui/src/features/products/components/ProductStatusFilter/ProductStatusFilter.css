@@ -1,0 +1,158 @@
+.ProductStatusFilter {
+  position: relative;
+}
+.ProductStatusFilter-opener {
+  display: -webkit-inline-box;
+  display: -ms-inline-flexbox;
+  display: inline-flex;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  gap: 8px;
+  min-height: 42px;
+  padding: 0 14px;
+  border: 1px solid #d8caca;
+  border-radius: 10px;
+  background: #ffffff;
+  color: #343a40;
+  font-family: inherit;
+  font-size: 14px;
+  font-weight: 700;
+  cursor: pointer;
+  -webkit-transition: border-color 180ms ease, background-color 180ms ease;
+  transition: border-color 180ms ease, background-color 180ms ease;
+}
+.ProductStatusFilter-opener:hover {
+  border-color: #74a23c;
+}
+.ProductStatusFilter-opener-active {
+  margin-left: 2px;
+  font-size: 13px;
+  line-height: 1;
+}
+.ProductStatusFilter-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 190;
+  width: 100%;
+  height: 100%;
+  border: none;
+  background: rgba(0, 0, 0, 0.3);
+  backdrop-filter: blur(1px);
+}
+.ProductStatusFilter-content {
+  display: none;
+  position: absolute;
+  left: 0;
+  bottom: calc(100% + 8px);
+  z-index: 200;
+  width: min(280px, 100vw - 28px);
+  padding: 14px;
+  background: #ffffff;
+  border: 1px solid #d8caca;
+  border-radius: 12px;
+  -webkit-box-shadow: 0 12px 30px rgba(0, 0, 0, 0.18);
+          box-shadow: 0 12px 30px rgba(0, 0, 0, 0.18);
+}
+.ProductStatusFilter.open .ProductStatusFilter-content {
+  display: block;
+}
+.ProductStatusFilter-title {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  gap: 8px;
+  margin-bottom: 10px;
+  color: #343a40;
+  font-size: 14px;
+  font-weight: 700;
+}
+.ProductStatusFilter-list {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+      -ms-flex-direction: column;
+          flex-direction: column;
+  gap: 8px;
+}
+.ProductStatusFilter-button {
+  display: -webkit-inline-box;
+  display: -ms-inline-flexbox;
+  display: inline-flex;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  gap: 8px;
+  width: 100%;
+  height: 40px;
+  padding: 0 14px;
+  border: 1px solid #d8caca;
+  border-radius: 999px;
+  background: #ffffff;
+  color: #343a40;
+  font-family: inherit;
+  font-size: 13px;
+  font-weight: 700;
+  cursor: pointer;
+  -webkit-transition: border-color 180ms ease, background-color 180ms ease, color 180ms ease;
+  transition: border-color 180ms ease, background-color 180ms ease, color 180ms ease;
+}
+.ProductStatusFilter-button:hover {
+  border-color: #74a23c;
+}
+.ProductStatusFilter-button.active {
+  background: #74a23c;
+  border-color: #74a23c;
+  color: #ffffff;
+}
+.ProductStatusFilter-icon {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  -webkit-box-pack: center;
+      -ms-flex-pack: center;
+          justify-content: center;
+  font-size: 14px;
+  line-height: 1;
+}
+@media screen and (min-width: 1270px) {
+  .ProductStatusFilter-opener {
+    display: none;
+  }
+  .ProductStatusFilter-backdrop {
+    display: none;
+  }
+  .ProductStatusFilter-content {
+    display: block;
+    position: static;
+    width: auto;
+    padding: 0;
+    border: none;
+    border-radius: 0;
+    background: transparent;
+    -webkit-box-shadow: none;
+            box-shadow: none;
+  }
+  .ProductStatusFilter-list {
+    -webkit-box-orient: horizontal;
+    -webkit-box-direction: normal;
+        -ms-flex-direction: row;
+            flex-direction: row;
+    -ms-flex-wrap: wrap;
+        flex-wrap: wrap;
+    gap: 8px;
+  }
+  .ProductStatusFilter-button {
+    width: auto;
+    height: 40px;
+    padding: 0 18px;
+  }
+}/*# sourceMappingURL=ProductStatusFilter.css.map */

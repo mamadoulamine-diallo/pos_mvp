@@ -1,0 +1,214 @@
+@use "../../../../assets/styles/abstracts/variables" as *;
+@use "../../../../assets/styles/abstracts/mixins" as *;
+
+.ProductStatusFilter {
+  position: relative;
+
+  // =========================
+  // Bouton mobile / tablette
+  // =========================
+
+  &-opener {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+
+    min-height: 42px;
+    padding: 0 14px;
+
+    border: 1px solid $border-light;
+    border-radius: 10px;
+
+    background: $bg-white;
+    color: $gray-secondary;
+
+    font-family: inherit;
+    font-size: 14px;
+    font-weight: 700;
+
+    cursor: pointer;
+
+    transition:
+      border-color 180ms ease,
+      background-color 180ms ease;
+
+    &:hover {
+      border-color: $primary;
+    }
+
+    &-active {
+      margin-left: 2px;
+
+      font-size: 13px;
+      line-height: 1;
+    }
+  }
+
+  // =========================
+  // Backdrop mobile / tablette
+  // =========================
+
+  &-backdrop {
+    position: fixed;
+    inset: 0;
+    z-index: 190;
+
+    width: 100%;
+    height: 100%;
+
+    border: none;
+
+    background: rgba(0, 0, 0, 0.3);
+    backdrop-filter: blur(1px);
+  }
+
+  // =========================
+  // Contenu mobile / tablette
+  // =========================
+
+  &-content {
+    display: none;
+
+    position: absolute;
+    left: 0;
+    bottom: calc(100% + 8px);
+
+    z-index: 200;
+
+    width: min(280px, calc(100vw - 28px));
+    padding: 14px;
+
+    background: $bg-white;
+
+    border: 1px solid $border-light;
+    border-radius: 12px;
+
+    box-shadow: 0 12px 30px rgba(0, 0, 0, 0.18);
+  }
+
+  &.open {
+    .ProductStatusFilter-content {
+      display: block;
+    }
+  }
+
+  // =========================
+  // Titre
+  // =========================
+
+  &-title {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+
+    margin-bottom: 10px;
+
+    color: $gray-secondary;
+
+    font-size: 14px;
+    font-weight: 700;
+  }
+
+  // =========================
+  // Liste
+  // =========================
+
+  &-list {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+
+  // =========================
+  // Chips
+  // =========================
+
+  &-button {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+
+    width: 100%;
+    height: 40px;
+    padding: 0 14px;
+
+    border: 1px solid $border-light;
+    border-radius: 999px;
+
+    background: $bg-white;
+    color: $gray-secondary;
+
+    font-family: inherit;
+    font-size: 13px;
+    font-weight: 700;
+
+    cursor: pointer;
+
+    transition:
+      border-color 180ms ease,
+      background-color 180ms ease,
+      color 180ms ease;
+
+    &:hover {
+      border-color: $primary;
+    }
+
+    &.active {
+      background: $primary;
+      border-color: $primary;
+      color: $bg-white;
+    }
+  }
+
+  &-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    font-size: 14px;
+    line-height: 1;
+  }
+
+  // =========================
+  // Desktop
+  // =========================
+
+  @include desktop {
+    &-opener {
+      display: none;
+    }
+
+    &-backdrop {
+      display: none;
+    }
+
+    &-content {
+      display: block;
+
+      position: static;
+
+      width: auto;
+      padding: 0;
+
+      border: none;
+      border-radius: 0;
+
+      background: transparent;
+
+      box-shadow: none;
+    }
+
+    &-list {
+      flex-direction: row;
+      flex-wrap: wrap;
+
+      gap: 8px;
+    }
+
+    &-button {
+      width: auto;
+      height: 40px;
+      padding: 0 18px;
+    }
+  }
+}
