@@ -1,41 +1,40 @@
 import {
   useCallback,
   useEffect,
-  useMemo,
   useState,
 } from "react";
 
-import {
-  loadCurrentUser,
-  logoutUser,
-} from "../services/authService";
 import AuthContext from "./AuthContext";
 
+import {
+  loadCurrentUser,
+  login as loginService,
+  logout as logoutService,
+} from "../services/authService";
+
 function AuthProvider({ children }) {
-  const [currentUser, setCurrentUser] = useState(null);
+  const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
 
   useEffect(() => {
     let cancelled = false;
 
     async function initializeAuth() {
       try {
-        const user = await loadCurrentUser();
+        const currentUser =
+          await loadCurrentUser();
 
         if (!cancelled) {
-          setCurrentUser(user);
-          setError(null);
+          setUser(currentUser);
         }
-      } catch (requestError) {
-        if (!cancelled) {
-          console.error(
-            "Impossible de charger l'utilisateur connecté.",
-            requestError,
-          );
+      } catch (error) {
+        console.error(
+          "Impossible de vérifier la session.",
+          error,
+        );
 
-          setCurrentUser(null);
-          setError(requestError);
+        if (!cancelled) {
+          setUser(null);
         }
       } finally {
         if (!cancelled) {
@@ -51,67 +50,31 @@ function AuthProvider({ children }) {
     };
   }, []);
 
-  const refreshCurrentUser = useCallback(async () => {
-    try {
-      setLoading(true);
-      setError(null);
+  const login = useCallback(
+    async (pinCode) => {
+      const authenticatedUser =
+        await loginService(pinCode);
 
-      const user = await loadCurrentUser();
+      setUser(authenticatedUser);
 
-      setCurrentUser(user);
-
-      return user;
-    } catch (requestError) {
-      console.error(
-        "Impossible de rafraîchir l'utilisateur connecté.",
-        requestError,
-      );
-
-      setCurrentUser(null);
-      setError(requestError);
-
-      return null;
-    } finally {
-      setLoading(false);
-    }
-  }, []);
+      return authenticatedUser;
+    },
+    [],
+  );
 
   const logout = useCallback(async () => {
-    try {
-      setError(null);
+    await logoutService();
 
-      await logoutUser();
-
-      setCurrentUser(null);
-    } catch (requestError) {
-      console.error(
-        "Impossible de déconnecter l'utilisateur.",
-        requestError,
-      );
-
-      setError(requestError);
-
-      throw requestError;
-    }
+    setUser(null);
   }, []);
 
-  const value = useMemo(
-    () => ({
-      currentUser,
-      loading,
-      error,
-      authenticated: Boolean(currentUser),
-      refreshCurrentUser,
-      logout,
-    }),
-    [
-      currentUser,
-      loading,
-      error,
-      refreshCurrentUser,
-      logout,
-    ],
-  );
+  const value = {
+    user,
+    loading,
+    authenticated: Boolean(user),
+    login,
+    logout,
+  };
 
   return (
     <AuthContext.Provider value={value}>

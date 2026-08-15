@@ -34,9 +34,8 @@ const navigationItems = [
   },
   {
     label: "Historique des ventes",
-    path: "/sales",
+    path: "/sales/history",
     icon: ReceiptText,
-    end: true,
   },
   {
     label: "Utilisateurs",

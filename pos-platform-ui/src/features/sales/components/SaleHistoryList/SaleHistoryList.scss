@@ -1,0 +1,7 @@
+@use "../../../../assets/styles/abstracts/variables" as *;
+
+.SaleHistoryList {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}

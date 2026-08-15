@@ -1,0 +1,149 @@
+@use "../../../assets/styles/abstracts/variables" as *;
+@use "../../../assets/styles/abstracts/mixins" as *;
+
+.LoginPage {
+  min-height: 100vh;
+  padding: 24px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  background:
+    radial-gradient(
+      circle at 50% 0%,
+      rgba(116, 162, 60, 0.16),
+      transparent 34%
+    ),
+    linear-gradient(
+      180deg,
+      #f9faf7 0%,
+      $bg-light 100%
+    );
+
+  &-loading {
+    color: $text-secondary;
+
+    font-size: 14px;
+    font-weight: 700;
+  }
+}
+
+.LoginCard {
+  width: min(100%, 400px);
+  padding: 28px;
+
+  border: 1px solid rgba(116, 162, 60, 0.15);
+  border-radius: 22px;
+
+  background: rgba(255, 255, 255, 0.96);
+
+  box-shadow:
+    0 20px 60px rgba(0, 0, 0, 0.08),
+    0 2px 8px rgba(0, 0, 0, 0.04);
+
+  &-header {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+
+    margin-bottom: 24px;
+
+    h1 {
+      margin: 2px 0 0;
+
+      color: $gray-secondary;
+
+      font-size: 26px;
+      font-weight: 800;
+      line-height: 1.1;
+    }
+  }
+
+  &-logo {
+    width: 52px;
+    height: 52px;
+
+    flex-shrink: 0;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    border-radius: 15px;
+
+    background: $primary;
+    color: $bg-white;
+
+    box-shadow:
+      0 8px 18px rgba(116, 162, 60, 0.22);
+  }
+
+  &-app {
+    color: $primary;
+
+    font-size: 11px;
+    font-weight: 800;
+
+    text-transform: uppercase;
+    letter-spacing: 0.09em;
+  }
+
+  &-intro {
+    margin-bottom: 18px;
+    padding: 13px 14px;
+
+    display: flex;
+    align-items: center;
+    gap: 10px;
+
+    border: 1px solid $border-light;
+    border-radius: 12px;
+
+    background: $bg-light;
+    color: $gray-secondary;
+
+    svg {
+      flex-shrink: 0;
+      color: $primary;
+    }
+
+    p {
+      margin: 0;
+
+      font-size: 13px;
+      line-height: 1.45;
+    }
+  }
+
+  &-error {
+    margin: 0 0 14px;
+    padding: 11px 12px;
+
+    border: 1px solid rgba(192, 57, 43, 0.12);
+    border-radius: 10px;
+
+    background: rgba(192, 57, 43, 0.07);
+    color: #c0392b;
+
+    font-size: 13px;
+    font-weight: 700;
+    text-align: center;
+  }
+
+  &-status {
+    margin: 14px 0 0;
+
+    color: $primary;
+
+    font-size: 13px;
+    font-weight: 800;
+    text-align: center;
+  }
+}
+
+@include tablette {
+  .LoginCard {
+    padding: 30px;
+  }
+}

@@ -1,0 +1,137 @@
+@use "../../../../assets/styles/abstracts/variables" as *;
+
+.UserForm {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+
+  &-field {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+
+    > span {
+      color: $gray-secondary;
+
+      font-size: 13px;
+      font-weight: 700;
+    }
+
+    small {
+      color: $text-secondary;
+
+      font-size: 11px;
+    }
+
+    input,
+    select {
+      width: 100%;
+      height: 44px;
+
+      padding: 0 12px;
+
+      border: 1px solid $border-light;
+      border-radius: 10px;
+
+      background: $bg-light;
+
+      color: $gray-secondary;
+
+      font-family: inherit;
+      font-size: 14px;
+
+      outline: none;
+
+      transition:
+        border-color 180ms ease,
+        background-color 180ms ease,
+        box-shadow 180ms ease;
+
+      &:focus {
+        border-color: $primary;
+
+        background: $bg-white;
+
+        box-shadow:
+          0 0 0 3px rgba(116, 162, 60, 0.1);
+      }
+    }
+  }
+
+  &-switch {
+    padding: 12px;
+
+    display: flex;
+    align-items: center;
+    gap: 10px;
+
+    border-radius: 10px;
+
+    background: $bg-light;
+
+    color: $gray-secondary;
+
+    font-size: 13px;
+    font-weight: 700;
+
+    cursor: pointer;
+
+    input {
+      width: 18px;
+      height: 18px;
+
+      accent-color: $primary;
+    }
+  }
+
+  &-error {
+    margin: 0;
+    padding: 10px 12px;
+
+    border-radius: 8px;
+
+    background: rgba(192, 57, 43, 0.08);
+    color: #c0392b;
+
+    font-size: 13px;
+    font-weight: 600;
+  }
+
+  &-actions {
+    margin-top: 4px;
+
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+  }
+
+  &-cancel,
+  &-submit {
+    min-width: 110px;
+    min-height: 44px;
+
+    border: none;
+    border-radius: 10px;
+
+    font-family: inherit;
+    font-size: 13px;
+    font-weight: 800;
+
+    cursor: pointer;
+
+    &:disabled {
+      cursor: not-allowed;
+      opacity: 0.55;
+    }
+  }
+
+  &-cancel {
+    background: $bg-light;
+    color: $gray-secondary;
+  }
+
+  &-submit {
+    background: $primary;
+    color: $bg-white;
+  }
+}

@@ -1,0 +1,98 @@
+.NewSalePage {
+  min-height: calc(100vh - var(--header-height));
+  padding: 24px 14px 80px;
+  background: #fafaf8;
+}
+
+.SaleProducts {
+  min-width: 0;
+}
+.SaleProducts-header {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+      -ms-flex-direction: column;
+          flex-direction: column;
+  gap: 14px;
+  margin-bottom: 18px;
+}
+.SaleProducts-header h1 {
+  margin: 0;
+  color: #343a40;
+  font-size: 28px;
+  font-weight: 600;
+}
+.SaleProducts-message {
+  padding: 16px 0;
+  color: #6c757d;
+  font-size: 14px;
+}
+.SaleProducts-message--error {
+  color: #c0392b;
+}
+.SaleProducts-empty {
+  grid-column: 1/-1;
+  padding: 40px 16px;
+  color: #6c757d;
+  text-align: center;
+}
+.SaleProducts-empty h2 {
+  margin: 0 0 6px;
+  color: #343a40;
+  font-size: 18px;
+  font-weight: 700;
+}
+.SaleProducts-empty p {
+  margin: 0;
+  font-size: 14px;
+}
+
+@media screen and (min-width: 768px) {
+  .NewSalePage {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) 300px;
+    -webkit-box-align: start;
+        -ms-flex-align: start;
+            align-items: start;
+    gap: 24px;
+    padding: 24px 20px 50px;
+  }
+  .SaleProducts-header {
+    display: grid;
+    grid-template-columns: auto minmax(260px, 1fr);
+    -webkit-box-align: center;
+        -ms-flex-align: center;
+            align-items: center;
+    gap: 24px;
+  }
+  .SaleProducts-header h1 {
+    white-space: nowrap;
+  }
+  .SaleProducts-header .SaleSearch {
+    min-width: 0;
+  }
+}
+@media screen and (min-width: 1270px) {
+  .NewSalePage {
+    grid-template-columns: minmax(0, 1fr) 340px;
+    gap: 32px;
+    padding: 32px 40px 50px;
+  }
+  .SaleProducts-header {
+    grid-template-columns: auto minmax(320px, 460px);
+    -webkit-box-pack: justify;
+        -ms-flex-pack: justify;
+            justify-content: space-between;
+    gap: 40px;
+    margin-bottom: 20px;
+  }
+  .SaleProducts-header h1 {
+    font-size: 28px;
+  }
+  .SaleProducts-header .SaleSearch {
+    width: 100%;
+    justify-self: end;
+  }
+}/*# sourceMappingURL=NewSalePage.css.map */

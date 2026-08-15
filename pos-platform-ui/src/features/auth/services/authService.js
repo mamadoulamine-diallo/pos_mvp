@@ -1,14 +1,17 @@
 import {
   getCurrentUser,
-  logoutCurrentUser,
+  postLogin,
+  postLogout,
 } from "../api/authApi";
 
-export async function loadCurrentUser() {
-  const response = await getCurrentUser();
-
-  return response.data;
+export async function login(pinCode) {
+  return postLogin(pinCode);
 }
 
-export async function logoutUser() {
-  await logoutCurrentUser();
+export async function loadCurrentUser() {
+  return getCurrentUser();
+}
+
+export async function logout() {
+  return postLogout();
 }

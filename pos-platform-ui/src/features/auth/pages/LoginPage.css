@@ -1,0 +1,123 @@
+.LoginPage {
+  min-height: 100vh;
+  padding: 24px;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  -webkit-box-pack: center;
+      -ms-flex-pack: center;
+          justify-content: center;
+  background: radial-gradient(circle at 50% 0%, rgba(116, 162, 60, 0.16), transparent 34%), -webkit-gradient(linear, left top, left bottom, from(#f9faf7), to(#fafaf8));
+  background: radial-gradient(circle at 50% 0%, rgba(116, 162, 60, 0.16), transparent 34%), linear-gradient(180deg, #f9faf7 0%, #fafaf8 100%);
+}
+.LoginPage-loading {
+  color: #6c757d;
+  font-size: 14px;
+  font-weight: 700;
+}
+
+.LoginCard {
+  width: min(100%, 400px);
+  padding: 28px;
+  border: 1px solid rgba(116, 162, 60, 0.15);
+  border-radius: 22px;
+  background: rgba(255, 255, 255, 0.96);
+  -webkit-box-shadow: 0 20px 60px rgba(0, 0, 0, 0.08), 0 2px 8px rgba(0, 0, 0, 0.04);
+          box-shadow: 0 20px 60px rgba(0, 0, 0, 0.08), 0 2px 8px rgba(0, 0, 0, 0.04);
+}
+.LoginCard-header {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  gap: 14px;
+  margin-bottom: 24px;
+}
+.LoginCard-header h1 {
+  margin: 2px 0 0;
+  color: #343a40;
+  font-size: 26px;
+  font-weight: 800;
+  line-height: 1.1;
+}
+.LoginCard-logo {
+  width: 52px;
+  height: 52px;
+  -ms-flex-negative: 0;
+      flex-shrink: 0;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  -webkit-box-pack: center;
+      -ms-flex-pack: center;
+          justify-content: center;
+  border-radius: 15px;
+  background: #74a23c;
+  color: #ffffff;
+  -webkit-box-shadow: 0 8px 18px rgba(116, 162, 60, 0.22);
+          box-shadow: 0 8px 18px rgba(116, 162, 60, 0.22);
+}
+.LoginCard-app {
+  color: #74a23c;
+  font-size: 11px;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.09em;
+}
+.LoginCard-intro {
+  margin-bottom: 18px;
+  padding: 13px 14px;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  gap: 10px;
+  border: 1px solid #d8caca;
+  border-radius: 12px;
+  background: #fafaf8;
+  color: #343a40;
+}
+.LoginCard-intro svg {
+  -ms-flex-negative: 0;
+      flex-shrink: 0;
+  color: #74a23c;
+}
+.LoginCard-intro p {
+  margin: 0;
+  font-size: 13px;
+  line-height: 1.45;
+}
+.LoginCard-error {
+  margin: 0 0 14px;
+  padding: 11px 12px;
+  border: 1px solid rgba(192, 57, 43, 0.12);
+  border-radius: 10px;
+  background: rgba(192, 57, 43, 0.07);
+  color: #c0392b;
+  font-size: 13px;
+  font-weight: 700;
+  text-align: center;
+}
+.LoginCard-status {
+  margin: 14px 0 0;
+  color: #74a23c;
+  font-size: 13px;
+  font-weight: 800;
+  text-align: center;
+}
+
+@media screen and (min-width: 768px) {
+  .LoginCard {
+    padding: 30px;
+  }
+}/*# sourceMappingURL=LoginPage.css.map */

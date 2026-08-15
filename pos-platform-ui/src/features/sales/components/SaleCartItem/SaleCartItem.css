@@ -1,0 +1,151 @@
+.SaleCartItem {
+  padding: 11px 12px;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+      -ms-flex-direction: column;
+          flex-direction: column;
+  gap: 9px;
+  background: #fafaf8;
+  border-radius: 12px;
+}
+.SaleCartItem-top {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-align: start;
+      -ms-flex-align: start;
+          align-items: flex-start;
+  -webkit-box-pack: justify;
+      -ms-flex-pack: justify;
+          justify-content: space-between;
+  gap: 12px;
+}
+.SaleCartItem-info {
+  min-width: 0;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+      -ms-flex-direction: column;
+          flex-direction: column;
+  gap: 3px;
+}
+.SaleCartItem-name {
+  overflow: hidden;
+  color: #343a40;
+  font-size: 14px;
+  font-weight: 800;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.SaleCartItem-unitPrice {
+  color: #6c757d;
+  font-size: 11px;
+}
+.SaleCartItem-remove {
+  width: 35px;
+  height: 35px;
+  -ms-flex-negative: 0;
+      flex-shrink: 0;
+  display: -webkit-inline-box;
+  display: -ms-inline-flexbox;
+  display: inline-flex;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  -webkit-box-pack: center;
+      -ms-flex-pack: center;
+          justify-content: center;
+  border: none;
+  border-radius: 9px;
+  background: rgba(220, 53, 69, 0.1);
+  color: #dc3545;
+  cursor: pointer;
+  -webkit-transition: background-color 180ms ease, -webkit-transform 180ms ease;
+  transition: background-color 180ms ease, -webkit-transform 180ms ease;
+  transition: background-color 180ms ease, transform 180ms ease;
+  transition: background-color 180ms ease, transform 180ms ease, -webkit-transform 180ms ease;
+}
+.SaleCartItem-remove:hover {
+  background: rgba(220, 53, 69, 0.18);
+}
+.SaleCartItem-remove:active {
+  -webkit-transform: scale(0.95);
+          transform: scale(0.95);
+}
+.SaleCartItem-remove:focus-visible {
+  outline: 2px solid #dc3545;
+  outline-offset: 2px;
+}
+.SaleCartItem-bottom {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  -webkit-box-pack: justify;
+      -ms-flex-pack: justify;
+          justify-content: space-between;
+  gap: 12px;
+}
+.SaleCartItem-controls {
+  display: -webkit-inline-box;
+  display: -ms-inline-flexbox;
+  display: inline-flex;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  gap: 6px;
+}
+.SaleCartItem-controls button {
+  width: 36px;
+  height: 36px;
+  display: -webkit-inline-box;
+  display: -ms-inline-flexbox;
+  display: inline-flex;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  -webkit-box-pack: center;
+      -ms-flex-pack: center;
+          justify-content: center;
+  border: none;
+  border-radius: 9px;
+  background: rgba(116, 162, 60, 0.16);
+  color: #343a40;
+  cursor: pointer;
+  -webkit-transition: background-color 180ms ease, color 180ms ease, -webkit-transform 180ms ease;
+  transition: background-color 180ms ease, color 180ms ease, -webkit-transform 180ms ease;
+  transition: background-color 180ms ease, color 180ms ease, transform 180ms ease;
+  transition: background-color 180ms ease, color 180ms ease, transform 180ms ease, -webkit-transform 180ms ease;
+}
+.SaleCartItem-controls button:hover:not(:disabled) {
+  background: rgba(116, 162, 60, 0.25);
+  color: #74a23c;
+}
+.SaleCartItem-controls button:active:not(:disabled) {
+  -webkit-transform: scale(0.95);
+          transform: scale(0.95);
+}
+.SaleCartItem-controls button:disabled {
+  cursor: not-allowed;
+  opacity: 0.4;
+}
+.SaleCartItem-quantity {
+  min-width: 26px;
+  color: #343a40;
+  font-size: 15px;
+  font-weight: 900;
+  text-align: center;
+}
+.SaleCartItem-total {
+  color: #343a40;
+  font-size: 15px;
+  font-weight: 900;
+  white-space: nowrap;
+}/*# sourceMappingURL=SaleCartItem.css.map */

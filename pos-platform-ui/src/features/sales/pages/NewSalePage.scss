@@ -1,0 +1,141 @@
+@use "../../../assets/styles/abstracts/variables" as *;
+@use "../../../assets/styles/abstracts/mixins" as *;
+
+.NewSalePage {
+  min-height: calc(100vh - var(--header-height));
+  padding: 24px 14px 80px;
+
+  background: $bg-light;
+}
+
+.SaleProducts {
+  min-width: 0;
+
+  &-header {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+
+    margin-bottom: 18px;
+
+    h1 {
+      margin: 0;
+
+      color: $gray-secondary;
+
+      font-size: 28px;
+      font-weight: 600;
+    }
+  }
+
+  &-message {
+    padding: 16px 0;
+
+    color: $text-secondary;
+    font-size: 14px;
+
+    &--error {
+      color: #c0392b;
+    }
+  }
+
+  &-empty {
+    grid-column: 1 / -1;
+
+    padding: 40px 16px;
+
+    color: $text-secondary;
+    text-align: center;
+
+    h2 {
+      margin: 0 0 6px;
+
+      color: $gray-secondary;
+
+      font-size: 18px;
+      font-weight: 700;
+    }
+
+    p {
+      margin: 0;
+
+      font-size: 14px;
+    }
+  }
+}
+
+// =========================
+// Tablette
+// =========================
+
+@include tablette {
+  .NewSalePage {
+    display: grid;
+    grid-template-columns:
+      minmax(0, 1fr)
+      300px;
+
+    align-items: start;
+    gap: 24px;
+
+    padding: 24px 20px 50px;
+  }
+
+  .SaleProducts {
+    &-header {
+      display: grid;
+      grid-template-columns:
+        auto
+        minmax(260px, 1fr);
+
+      align-items: center;
+      gap: 24px;
+
+      h1 {
+        white-space: nowrap;
+      }
+
+      .SaleSearch {
+        min-width: 0;
+      }
+    }
+  }
+}
+
+// =========================
+// Desktop
+// =========================
+
+@include desktop {
+  .NewSalePage {
+    grid-template-columns:
+      minmax(0, 1fr)
+      340px;
+
+    gap: 32px;
+
+    padding: 32px 40px 50px;
+  }
+
+  .SaleProducts {
+    &-header {
+      grid-template-columns:
+        auto
+        minmax(320px, 460px);
+
+      justify-content: space-between;
+      gap: 40px;
+
+      margin-bottom: 20px;
+
+      h1 {
+        font-size: 28px;
+      }
+
+      .SaleSearch {
+        width: 100%;
+        justify-self: end;
+      }
+    }
+  }
+}

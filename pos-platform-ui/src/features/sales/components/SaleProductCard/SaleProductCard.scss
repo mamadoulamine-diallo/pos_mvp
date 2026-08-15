@@ -1,0 +1,188 @@
+@use "../../../../assets/styles/abstracts/variables" as *;
+@use "../../../../assets/styles/abstracts/mixins" as *;
+
+.SaleProductCard {
+  min-width: 0;
+  overflow: hidden;
+
+  display: flex;
+  flex-direction: column;
+
+  border: 1px solid $border-light;
+  border-radius: 12px;
+
+  background: $bg-white;
+
+  cursor: pointer;
+
+  transition:
+    transform 180ms ease,
+    box-shadow 180ms ease,
+    border-color 180ms ease;
+
+  &:hover {
+    border-color: rgba(116, 162, 60, 0.45);
+
+    transform: translateY(-2px);
+
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08);
+  }
+
+  &-media {
+    position: relative;
+
+    height: 130px;
+    padding: 10px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    background: $bg-light;
+  }
+
+  &-image {
+    width: 100%;
+    height: 100%;
+
+    object-fit: contain;
+  }
+
+  &-name {
+    position: absolute;
+    left: 10px;
+    right: 10px;
+    bottom: 8px;
+
+    overflow: hidden;
+
+    color: $gray-secondary;
+
+    font-size: 13px;
+    font-weight: 700;
+
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  &-stock {
+    margin: 10px 10px 0;
+    padding: 5px 8px;
+
+    align-self: flex-start;
+
+    border-radius: 999px;
+
+    background: rgba(116, 162, 60, 0.1);
+    color: $primary;
+
+    font-size: 11px;
+    font-weight: 700;
+
+    &--low {
+      background: rgba(243, 156, 18, 0.12);
+      color: #c77c0a;
+    }
+
+    &--out {
+      background: rgba(192, 57, 43, 0.1);
+      color: #c0392b;
+    }
+  }
+
+  &-footer {
+    margin-top: auto;
+    padding: 10px;
+
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+
+    strong {
+      color: $gray-secondary;
+
+      font-size: 15px;
+      font-weight: 800;
+    }
+
+    button {
+      width: 38px;
+      height: 38px;
+
+      flex-shrink: 0;
+
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+
+      border: none;
+      border-radius: 9px;
+
+      background: $primary;
+      color: $bg-white;
+
+      cursor: pointer;
+
+      transition:
+        opacity 180ms ease,
+        transform 180ms ease;
+
+      &:hover {
+        opacity: 0.9;
+      }
+
+      &:active {
+        transform: scale(0.95);
+      }
+
+      &:disabled {
+        background: $border-light;
+        color: $text-secondary;
+
+        cursor: not-allowed;
+        opacity: 0.7;
+      }
+    }
+  }
+
+  &--disabled {
+    opacity: 0.65;
+
+    cursor: not-allowed;
+
+    &:hover {
+      border-color: $border-light;
+
+      transform: none;
+      box-shadow: none;
+    }
+  }
+}
+
+@include tablette {
+  .SaleProductCard {
+    &-media {
+      height: 145px;
+    }
+  }
+}
+
+@include desktop {
+  .SaleProductCard {
+    &-media {
+      height: 150px;
+    }
+
+    &-footer {
+      strong {
+        font-size: 16px;
+      }
+
+      button {
+        width: 40px;
+        height: 40px;
+      }
+    }
+  }
+}

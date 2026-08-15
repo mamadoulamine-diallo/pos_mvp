@@ -1,0 +1,163 @@
+.SaleProductCard {
+  min-width: 0;
+  overflow: hidden;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+      -ms-flex-direction: column;
+          flex-direction: column;
+  border: 1px solid #d8caca;
+  border-radius: 12px;
+  background: #ffffff;
+  cursor: pointer;
+  -webkit-transition: border-color 180ms ease, -webkit-transform 180ms ease, -webkit-box-shadow 180ms ease;
+  transition: border-color 180ms ease, -webkit-transform 180ms ease, -webkit-box-shadow 180ms ease;
+  transition: transform 180ms ease, box-shadow 180ms ease, border-color 180ms ease;
+  transition: transform 180ms ease, box-shadow 180ms ease, border-color 180ms ease, -webkit-transform 180ms ease, -webkit-box-shadow 180ms ease;
+}
+.SaleProductCard:hover {
+  border-color: rgba(116, 162, 60, 0.45);
+  -webkit-transform: translateY(-2px);
+          transform: translateY(-2px);
+  -webkit-box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08);
+          box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08);
+}
+.SaleProductCard-media {
+  position: relative;
+  height: 130px;
+  padding: 10px;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  -webkit-box-pack: center;
+      -ms-flex-pack: center;
+          justify-content: center;
+  background: #fafaf8;
+}
+.SaleProductCard-image {
+  width: 100%;
+  height: 100%;
+  -o-object-fit: contain;
+     object-fit: contain;
+}
+.SaleProductCard-name {
+  position: absolute;
+  left: 10px;
+  right: 10px;
+  bottom: 8px;
+  overflow: hidden;
+  color: #343a40;
+  font-size: 13px;
+  font-weight: 700;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.SaleProductCard-stock {
+  margin: 10px 10px 0;
+  padding: 5px 8px;
+  -ms-flex-item-align: start;
+      align-self: flex-start;
+  border-radius: 999px;
+  background: rgba(116, 162, 60, 0.1);
+  color: #74a23c;
+  font-size: 11px;
+  font-weight: 700;
+}
+.SaleProductCard-stock--low {
+  background: rgba(243, 156, 18, 0.12);
+  color: #c77c0a;
+}
+.SaleProductCard-stock--out {
+  background: rgba(192, 57, 43, 0.1);
+  color: #c0392b;
+}
+.SaleProductCard-footer {
+  margin-top: auto;
+  padding: 10px;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  -webkit-box-pack: justify;
+      -ms-flex-pack: justify;
+          justify-content: space-between;
+  gap: 10px;
+}
+.SaleProductCard-footer strong {
+  color: #343a40;
+  font-size: 15px;
+  font-weight: 800;
+}
+.SaleProductCard-footer button {
+  width: 38px;
+  height: 38px;
+  -ms-flex-negative: 0;
+      flex-shrink: 0;
+  display: -webkit-inline-box;
+  display: -ms-inline-flexbox;
+  display: inline-flex;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  -webkit-box-pack: center;
+      -ms-flex-pack: center;
+          justify-content: center;
+  border: none;
+  border-radius: 9px;
+  background: #74a23c;
+  color: #ffffff;
+  cursor: pointer;
+  -webkit-transition: opacity 180ms ease, -webkit-transform 180ms ease;
+  transition: opacity 180ms ease, -webkit-transform 180ms ease;
+  transition: opacity 180ms ease, transform 180ms ease;
+  transition: opacity 180ms ease, transform 180ms ease, -webkit-transform 180ms ease;
+}
+.SaleProductCard-footer button:hover {
+  opacity: 0.9;
+}
+.SaleProductCard-footer button:active {
+  -webkit-transform: scale(0.95);
+          transform: scale(0.95);
+}
+.SaleProductCard-footer button:disabled {
+  background: #d8caca;
+  color: #6c757d;
+  cursor: not-allowed;
+  opacity: 0.7;
+}
+.SaleProductCard--disabled {
+  opacity: 0.65;
+  cursor: not-allowed;
+}
+.SaleProductCard--disabled:hover {
+  border-color: #d8caca;
+  -webkit-transform: none;
+          transform: none;
+  -webkit-box-shadow: none;
+          box-shadow: none;
+}
+
+@media screen and (min-width: 768px) {
+  .SaleProductCard-media {
+    height: 145px;
+  }
+}
+@media screen and (min-width: 1270px) {
+  .SaleProductCard-media {
+    height: 150px;
+  }
+  .SaleProductCard-footer strong {
+    font-size: 16px;
+  }
+  .SaleProductCard-footer button {
+    width: 40px;
+    height: 40px;
+  }
+}/*# sourceMappingURL=SaleProductCard.css.map */

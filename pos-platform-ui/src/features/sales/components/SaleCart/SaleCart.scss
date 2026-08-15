@@ -1,0 +1,214 @@
+@use "../../../../assets/styles/abstracts/variables" as *;
+@use "../../../../assets/styles/abstracts/mixins" as *;
+
+.SaleCart-backdrop {
+  position: fixed;
+  inset: 0;
+
+  z-index: 90;
+
+  border: none;
+
+  background: rgba(0, 0, 0, 0.35);
+  backdrop-filter: blur(1px);
+}
+
+.SaleCart {
+  position: fixed;
+  left: 14px;
+  right: 14px;
+  bottom: 14px;
+
+  z-index: 100;
+
+  display: flex;
+  flex-direction: column;
+
+  max-height: calc(100vh - 100px);
+
+  overflow: hidden;
+
+  border: 1px solid $border-light;
+  border-radius: 14px;
+
+  background: $bg-white;
+
+  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.16);
+
+  transform: translateY(calc(100% + 30px));
+  visibility: hidden;
+
+  transition:
+    transform 220ms ease,
+    visibility 220ms ease;
+
+  &.open {
+    transform: translateY(0);
+    visibility: visible;
+  }
+
+  &-header {
+    min-height: 60px;
+    padding: 14px 16px;
+
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+
+    flex-shrink: 0;
+
+    border-bottom: 1px solid $border-light;
+
+    h2 {
+      margin: 0;
+
+      color: $gray-secondary;
+
+      font-size: 20px;
+      font-weight: 800;
+    }
+
+    span {
+      color: $text-secondary;
+
+      font-size: 13px;
+      font-weight: 600;
+    }
+  }
+
+  &-items {
+    min-height: 120px;
+    padding: 12px 16px;
+
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+
+    flex: 1 1 auto;
+
+    overflow-y: auto;
+  }
+
+  &-empty {
+    min-height: 110px;
+
+    margin: 0;
+    padding: 28px 10px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    color: $text-secondary;
+
+    font-size: 14px;
+    text-align: center;
+  }
+
+  &-footer {
+    padding: 14px 18px 18px;
+
+    flex-shrink: 0;
+
+    border-top: 1px solid $border-light;
+
+    background: $bg-white;
+  }
+
+  &-total {
+    margin-bottom: 14px;
+
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+
+    span {
+      color: $gray-secondary;
+
+      font-size: 15px;
+      font-weight: 700;
+    }
+
+    strong {
+      color: $gray-secondary;
+
+      font-size: 21px;
+      font-weight: 900;
+    }
+  }
+
+  &-validate,
+  &-cancel {
+    width: 100%;
+    min-height: 44px;
+
+    border: none;
+    border-radius: 10px;
+
+    font-family: inherit;
+    font-size: 14px;
+    font-weight: 800;
+
+    cursor: pointer;
+
+    &:disabled {
+      cursor: not-allowed;
+      opacity: 0.5;
+    }
+  }
+
+  &-validate {
+    margin-bottom: 8px;
+
+    background: $primary;
+    color: $bg-white;
+
+    &:hover:not(:disabled) {
+      opacity: 0.92;
+    }
+  }
+
+  &-cancel {
+    background: $bg-light;
+    color: $gray-secondary;
+  }
+}
+
+// =========================
+// Tablette + desktop dockés
+// =========================
+
+@include tablette {
+  .SaleCart-backdrop {
+    display: none;
+  }
+
+  .SaleCart {
+    position: sticky;
+    top: 24px;
+
+    left: auto;
+    right: auto;
+    bottom: auto;
+
+    z-index: 10;
+
+    width: 100%;
+
+    min-height: 300px;
+    height: auto;
+
+    max-height: calc(
+      100vh - var(--header-height) - 48px
+    );
+
+    border-radius: 14px;
+
+    box-shadow: 0 6px 22px rgba(0, 0, 0, 0.08);
+
+    transform: none;
+    visibility: visible;
+  }
+}

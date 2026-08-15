@@ -1,0 +1,139 @@
+@use "../../../../assets/styles/abstracts/variables" as *;
+@use "../../../../assets/styles/abstracts/mixins" as *;
+
+.PinPad {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+
+  &-display {
+    min-height: 56px;
+    padding: 0 18px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 14px;
+
+    border: 1px solid $border-light;
+    border-radius: 14px;
+
+    background: $bg-light;
+  }
+
+  &-dot {
+    width: 13px;
+    height: 13px;
+
+    border: 2px solid #d3d6d0;
+    border-radius: 50%;
+
+    background: transparent;
+
+    transition:
+      background-color 160ms ease,
+      border-color 160ms ease,
+      transform 160ms ease;
+
+    &--filled {
+      border-color: $primary;
+      background: $primary;
+
+      transform: scale(1.08);
+    }
+  }
+
+  &-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+
+    gap: 10px;
+
+    button {
+      min-height: 58px;
+
+      display: flex;
+      align-items: center;
+      justify-content: center;
+
+      border: 1px solid $border-light;
+      border-radius: 13px;
+
+      background: $bg-white;
+      color: $gray-secondary;
+
+      font-family: inherit;
+      font-size: 21px;
+      font-weight: 800;
+
+      cursor: pointer;
+
+      box-shadow:
+        0 2px 5px rgba(0, 0, 0, 0.035);
+
+      transition:
+        background-color 150ms ease,
+        border-color 150ms ease,
+        box-shadow 150ms ease,
+        transform 120ms ease;
+
+      &:hover:not(:disabled) {
+        border-color: rgba(116, 162, 60, 0.65);
+
+        background: rgba(116, 162, 60, 0.06);
+
+        box-shadow:
+          0 4px 10px rgba(0, 0, 0, 0.05);
+      }
+
+      &:active:not(:disabled) {
+        transform: scale(0.96);
+      }
+
+      &:disabled {
+        cursor: not-allowed;
+        opacity: 0.4;
+      }
+    }
+  }
+
+  &-delete {
+    background: rgba(192, 57, 43, 0.05) !important;
+    color: #c0392b !important;
+
+    &:hover:not(:disabled) {
+      border-color: rgba(192, 57, 43, 0.5) !important;
+      background: rgba(192, 57, 43, 0.1) !important;
+    }
+  }
+
+  &-submit {
+    border-color: $primary !important;
+
+    background: $primary !important;
+    color: $bg-white !important;
+
+    box-shadow:
+      0 6px 14px rgba(116, 162, 60, 0.2) !important;
+
+    &:hover:not(:disabled) {
+      background: $primary !important;
+
+      opacity: 0.92;
+    }
+
+    &:disabled {
+      box-shadow: none !important;
+    }
+  }
+
+  @include tablette {
+    &-grid {
+      gap: 11px;
+
+      button {
+        min-height: 62px;
+      }
+    }
+  }
+}

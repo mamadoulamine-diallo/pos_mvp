@@ -1,0 +1,32 @@
+@use "../../../../assets/styles/abstracts/variables" as *;
+@use "../../../../assets/styles/abstracts/mixins" as *;
+
+.SaleProductGrid {
+  display: grid;
+  grid-template-columns:
+    repeat(auto-fill, minmax(145px, 1fr));
+
+  gap: 16px 12px;
+
+  margin-top: 20px;
+}
+
+@include tablette {
+  .SaleProductGrid {
+    grid-template-columns:
+      repeat(auto-fill, minmax(160px, 1fr));
+
+    gap: 20px 16px;
+  }
+}
+
+@include desktop {
+  .SaleProductGrid {
+    grid-template-columns:
+      repeat(auto-fill, minmax(170px, 1fr));
+
+    gap: 24px 22px;
+
+    margin-top: 24px;
+  }
+}

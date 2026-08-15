@@ -1,0 +1,103 @@
+@use "../../../assets/styles/abstracts/variables" as *;
+@use "../../../assets/styles/abstracts/mixins" as *;
+
+.UsersPage {
+  min-height: calc(100vh - var(--header-height));
+  padding: 24px 14px 60px;
+
+  background: $bg-light;
+
+  &-header {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+
+    margin-bottom: 22px;
+
+    h1 {
+      margin: 0;
+
+      color: $gray-secondary;
+
+      font-size: 28px;
+      font-weight: 600;
+    }
+
+    p {
+      margin: 4px 0 0;
+
+      color: $text-secondary;
+
+      font-size: 14px;
+    }
+  }
+
+  &-add {
+    width: 100%;
+  }
+
+  &-message {
+    padding: 16px;
+
+    color: $text-secondary;
+
+    font-size: 14px;
+
+    &--error {
+      color: #c0392b;
+    }
+  }
+
+  &-empty {
+    padding: 48px 20px;
+
+    text-align: center;
+
+    color: $text-secondary;
+
+    h2 {
+      margin: 0 0 6px;
+
+      color: $gray-secondary;
+
+      font-size: 18px;
+      font-weight: 700;
+    }
+
+    p {
+      margin: 0;
+
+      font-size: 14px;
+    }
+  }
+}
+
+@include tablette {
+  .UsersPage {
+    padding: 24px 20px 50px;
+
+    &-header {
+      flex-direction: row;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    &-add {
+      width: auto;
+    }
+  }
+}
+
+@include desktop {
+  .UsersPage {
+    padding: 32px 40px 50px;
+
+    &-header {
+      margin-bottom: 24px;
+
+      h1 {
+        font-size: 30px;
+      }
+    }
+  }
+}

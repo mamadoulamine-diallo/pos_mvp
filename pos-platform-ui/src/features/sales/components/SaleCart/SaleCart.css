@@ -1,0 +1,183 @@
+.SaleCart-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 90;
+  border: none;
+  background: rgba(0, 0, 0, 0.35);
+  backdrop-filter: blur(1px);
+}
+
+.SaleCart {
+  position: fixed;
+  left: 14px;
+  right: 14px;
+  bottom: 14px;
+  z-index: 100;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+      -ms-flex-direction: column;
+          flex-direction: column;
+  max-height: calc(100vh - 100px);
+  overflow: hidden;
+  border: 1px solid #d8caca;
+  border-radius: 14px;
+  background: #ffffff;
+  -webkit-box-shadow: 0 12px 32px rgba(0, 0, 0, 0.16);
+          box-shadow: 0 12px 32px rgba(0, 0, 0, 0.16);
+  -webkit-transform: translateY(calc(100% + 30px));
+          transform: translateY(calc(100% + 30px));
+  visibility: hidden;
+  -webkit-transition: visibility 220ms ease, -webkit-transform 220ms ease;
+  transition: visibility 220ms ease, -webkit-transform 220ms ease;
+  transition: transform 220ms ease, visibility 220ms ease;
+  transition: transform 220ms ease, visibility 220ms ease, -webkit-transform 220ms ease;
+}
+.SaleCart.open {
+  -webkit-transform: translateY(0);
+          transform: translateY(0);
+  visibility: visible;
+}
+.SaleCart-header {
+  min-height: 60px;
+  padding: 14px 16px;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  -webkit-box-pack: justify;
+      -ms-flex-pack: justify;
+          justify-content: space-between;
+  gap: 12px;
+  -ms-flex-negative: 0;
+      flex-shrink: 0;
+  border-bottom: 1px solid #d8caca;
+}
+.SaleCart-header h2 {
+  margin: 0;
+  color: #343a40;
+  font-size: 20px;
+  font-weight: 800;
+}
+.SaleCart-header span {
+  color: #6c757d;
+  font-size: 13px;
+  font-weight: 600;
+}
+.SaleCart-items {
+  min-height: 120px;
+  padding: 12px 16px;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+      -ms-flex-direction: column;
+          flex-direction: column;
+  gap: 10px;
+  -webkit-box-flex: 1;
+      -ms-flex: 1 1 auto;
+          flex: 1 1 auto;
+  overflow-y: auto;
+}
+.SaleCart-empty {
+  min-height: 110px;
+  margin: 0;
+  padding: 28px 10px;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  -webkit-box-pack: center;
+      -ms-flex-pack: center;
+          justify-content: center;
+  color: #6c757d;
+  font-size: 14px;
+  text-align: center;
+}
+.SaleCart-footer {
+  padding: 14px 18px 18px;
+  -ms-flex-negative: 0;
+      flex-shrink: 0;
+  border-top: 1px solid #d8caca;
+  background: #ffffff;
+}
+.SaleCart-total {
+  margin-bottom: 14px;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  -webkit-box-pack: justify;
+      -ms-flex-pack: justify;
+          justify-content: space-between;
+  gap: 16px;
+}
+.SaleCart-total span {
+  color: #343a40;
+  font-size: 15px;
+  font-weight: 700;
+}
+.SaleCart-total strong {
+  color: #343a40;
+  font-size: 21px;
+  font-weight: 900;
+}
+.SaleCart-validate, .SaleCart-cancel {
+  width: 100%;
+  min-height: 44px;
+  border: none;
+  border-radius: 10px;
+  font-family: inherit;
+  font-size: 14px;
+  font-weight: 800;
+  cursor: pointer;
+}
+.SaleCart-validate:disabled, .SaleCart-cancel:disabled {
+  cursor: not-allowed;
+  opacity: 0.5;
+}
+.SaleCart-validate {
+  margin-bottom: 8px;
+  background: #74a23c;
+  color: #ffffff;
+}
+.SaleCart-validate:hover:not(:disabled) {
+  opacity: 0.92;
+}
+.SaleCart-cancel {
+  background: #fafaf8;
+  color: #343a40;
+}
+
+@media screen and (min-width: 768px) {
+  .SaleCart-backdrop {
+    display: none;
+  }
+  .SaleCart {
+    position: sticky;
+    top: 24px;
+    left: auto;
+    right: auto;
+    bottom: auto;
+    z-index: 10;
+    width: 100%;
+    min-height: 300px;
+    height: auto;
+    max-height: calc(100vh - var(--header-height) - 48px);
+    border-radius: 14px;
+    -webkit-box-shadow: 0 6px 22px rgba(0, 0, 0, 0.08);
+            box-shadow: 0 6px 22px rgba(0, 0, 0, 0.08);
+    -webkit-transform: none;
+            transform: none;
+    visibility: visible;
+  }
+}/*# sourceMappingURL=SaleCart.css.map */

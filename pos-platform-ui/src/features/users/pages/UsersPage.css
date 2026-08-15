@@ -1,0 +1,85 @@
+.UsersPage {
+  min-height: calc(100vh - var(--header-height));
+  padding: 24px 14px 60px;
+  background: #fafaf8;
+}
+.UsersPage-header {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+      -ms-flex-direction: column;
+          flex-direction: column;
+  gap: 14px;
+  margin-bottom: 22px;
+}
+.UsersPage-header h1 {
+  margin: 0;
+  color: #343a40;
+  font-size: 28px;
+  font-weight: 600;
+}
+.UsersPage-header p {
+  margin: 4px 0 0;
+  color: #6c757d;
+  font-size: 14px;
+}
+.UsersPage-add {
+  width: 100%;
+}
+.UsersPage-message {
+  padding: 16px;
+  color: #6c757d;
+  font-size: 14px;
+}
+.UsersPage-message--error {
+  color: #c0392b;
+}
+.UsersPage-empty {
+  padding: 48px 20px;
+  text-align: center;
+  color: #6c757d;
+}
+.UsersPage-empty h2 {
+  margin: 0 0 6px;
+  color: #343a40;
+  font-size: 18px;
+  font-weight: 700;
+}
+.UsersPage-empty p {
+  margin: 0;
+  font-size: 14px;
+}
+
+@media screen and (min-width: 768px) {
+  .UsersPage {
+    padding: 24px 20px 50px;
+  }
+  .UsersPage-header {
+    -webkit-box-orient: horizontal;
+    -webkit-box-direction: normal;
+        -ms-flex-direction: row;
+            flex-direction: row;
+    -webkit-box-align: center;
+        -ms-flex-align: center;
+            align-items: center;
+    -webkit-box-pack: justify;
+        -ms-flex-pack: justify;
+            justify-content: space-between;
+  }
+  .UsersPage-add {
+    width: auto;
+  }
+}
+@media screen and (min-width: 1270px) {
+  .UsersPage {
+    padding: 32px 40px 50px;
+  }
+  .UsersPage-header {
+    margin-bottom: 24px;
+  }
+  .UsersPage-header h1 {
+    font-size: 30px;
+  }
+}/*# sourceMappingURL=UsersPage.css.map */

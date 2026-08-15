@@ -4,13 +4,19 @@ import useAuth from "../../../auth/hooks/useAuth";
 
 function DashboardHero() {
   const {
-    currentUser,
+    user,
     loading,
   } = useAuth();
 
+  const firstName =
+    user?.fullName
+      ?.trim()
+      .split(/\s+/)[0] ??
+    "utilisateur";
+
   const greeting = loading
     ? "Bonjour..."
-    : `Bonjour ${currentUser?.fullName ?? "utilisateur"}`;
+    : `Bonjour ${firstName}`;
 
   return (
     <section className="Dashboard-hero">

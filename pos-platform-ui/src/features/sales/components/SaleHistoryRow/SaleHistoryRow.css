@@ -1,0 +1,84 @@
+.SaleHistoryRow {
+  width: 100%;
+  padding: 14px 16px;
+  display: grid;
+  grid-template-columns: minmax(0, 1.4fr) minmax(0, 1fr) auto auto auto;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  gap: 18px;
+  border: 1px solid #d8caca;
+  border-radius: 12px;
+  background: #ffffff;
+  color: #343a40;
+  font-family: inherit;
+  text-align: left;
+  cursor: pointer;
+  -webkit-transition: border-color 180ms ease, -webkit-box-shadow 180ms ease, -webkit-transform 180ms ease;
+  transition: border-color 180ms ease, -webkit-box-shadow 180ms ease, -webkit-transform 180ms ease;
+  transition: border-color 180ms ease, box-shadow 180ms ease, transform 180ms ease;
+  transition: border-color 180ms ease, box-shadow 180ms ease, transform 180ms ease, -webkit-box-shadow 180ms ease, -webkit-transform 180ms ease;
+}
+.SaleHistoryRow:hover {
+  border-color: rgba(116, 162, 60, 0.4);
+  -webkit-transform: translateY(-1px);
+          transform: translateY(-1px);
+  -webkit-box-shadow: 0 6px 18px rgba(0, 0, 0, 0.06);
+          box-shadow: 0 6px 18px rgba(0, 0, 0, 0.06);
+}
+.SaleHistoryRow-main, .SaleHistoryRow-user {
+  min-width: 0;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+      -ms-flex-direction: column;
+          flex-direction: column;
+  gap: 3px;
+}
+.SaleHistoryRow-main strong, .SaleHistoryRow-user strong {
+  overflow: hidden;
+  font-size: 14px;
+  font-weight: 800;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.SaleHistoryRow-main span, .SaleHistoryRow-user span {
+  color: #6c757d;
+  font-size: 12px;
+}
+.SaleHistoryRow-count {
+  color: #6c757d;
+  font-size: 13px;
+  font-weight: 600;
+  white-space: nowrap;
+}
+.SaleHistoryRow-total {
+  font-size: 15px;
+  font-weight: 900;
+  white-space: nowrap;
+}
+.SaleHistoryRow-arrow {
+  color: #6c757d;
+}
+@media (max-width: 767px) {
+  .SaleHistoryRow {
+    grid-template-columns: minmax(0, 1fr) auto;
+    gap: 10px 14px;
+  }
+  .SaleHistoryRow-user {
+    grid-column: 1;
+  }
+  .SaleHistoryRow-count {
+    grid-column: 1;
+  }
+  .SaleHistoryRow-total {
+    grid-column: 2;
+    grid-row: 1/4;
+    align-self: center;
+  }
+  .SaleHistoryRow-arrow {
+    display: none;
+  }
+}/*# sourceMappingURL=SaleHistoryRow.css.map */

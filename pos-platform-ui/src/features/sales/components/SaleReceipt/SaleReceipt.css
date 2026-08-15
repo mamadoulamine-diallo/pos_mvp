@@ -1,0 +1,291 @@
+.SaleReceipt {
+  position: fixed;
+  inset: 0;
+  z-index: 300;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  -webkit-box-pack: center;
+      -ms-flex-pack: center;
+          justify-content: center;
+  padding: 16px;
+}
+.SaleReceipt-backdrop {
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.45);
+  backdrop-filter: blur(2px);
+  -webkit-backdrop-filter: blur(2px);
+}
+.SaleReceipt-panel {
+  position: relative;
+  z-index: 1;
+  width: min(100%, 460px);
+  max-height: calc(100vh - 32px);
+  overflow-y: auto;
+  padding: 20px;
+  border-radius: 16px;
+  background: #ffffff;
+  -webkit-box-shadow: 0 20px 50px rgba(0, 0, 0, 0.22);
+          box-shadow: 0 20px 50px rgba(0, 0, 0, 0.22);
+}
+.SaleReceipt-header {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-align: start;
+      -ms-flex-align: start;
+          align-items: flex-start;
+  -webkit-box-pack: justify;
+      -ms-flex-pack: justify;
+          justify-content: space-between;
+  gap: 16px;
+  padding-bottom: 18px;
+  border-bottom: 1px solid #d8caca;
+}
+.SaleReceipt-success {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  gap: 12px;
+  color: #74a23c;
+}
+.SaleReceipt-success div {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+      -ms-flex-direction: column;
+          flex-direction: column;
+  gap: 2px;
+}
+.SaleReceipt-success span {
+  font-size: 12px;
+  font-weight: 700;
+}
+.SaleReceipt-success h2 {
+  margin: 0;
+  color: #343a40;
+  font-size: 20px;
+  font-weight: 900;
+}
+.SaleReceipt-close {
+  width: 36px;
+  height: 36px;
+  -ms-flex-negative: 0;
+      flex-shrink: 0;
+  display: -webkit-inline-box;
+  display: -ms-inline-flexbox;
+  display: inline-flex;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  -webkit-box-pack: center;
+      -ms-flex-pack: center;
+          justify-content: center;
+  border: none;
+  border-radius: 9px;
+  background: #fafaf8;
+  color: #343a40;
+  cursor: pointer;
+}
+.SaleReceipt-meta, .SaleReceipt-payment {
+  padding: 14px 0;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  -webkit-box-pack: justify;
+      -ms-flex-pack: justify;
+          justify-content: space-between;
+  gap: 16px;
+  color: #6c757d;
+  font-size: 13px;
+}
+.SaleReceipt-meta strong, .SaleReceipt-payment strong {
+  color: #343a40;
+  font-weight: 800;
+}
+.SaleReceipt-items {
+  padding: 6px 0;
+  border-top: 1px solid #d8caca;
+  border-bottom: 1px solid #d8caca;
+}
+.SaleReceipt-item {
+  padding: 11px 0;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  -webkit-box-pack: justify;
+      -ms-flex-pack: justify;
+          justify-content: space-between;
+  gap: 18px;
+}
+.SaleReceipt-itemInfo {
+  min-width: 0;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+      -ms-flex-direction: column;
+          flex-direction: column;
+  gap: 3px;
+}
+.SaleReceipt-itemInfo strong {
+  overflow: hidden;
+  color: #343a40;
+  font-size: 14px;
+  font-weight: 800;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.SaleReceipt-itemInfo span {
+  color: #6c757d;
+  font-size: 12px;
+}
+.SaleReceipt-itemTotal {
+  -ms-flex-negative: 0;
+      flex-shrink: 0;
+  color: #343a40;
+  font-size: 14px;
+  font-weight: 900;
+}
+.SaleReceipt-total {
+  margin-top: 4px;
+  padding: 17px;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  -webkit-box-pack: justify;
+      -ms-flex-pack: justify;
+          justify-content: space-between;
+  gap: 16px;
+  border-radius: 12px;
+  background: rgba(116, 162, 60, 0.1);
+}
+.SaleReceipt-total span {
+  color: #343a40;
+  font-size: 14px;
+  font-weight: 800;
+}
+.SaleReceipt-total strong {
+  color: #74a23c;
+  font-size: 23px;
+  font-weight: 900;
+}
+.SaleReceipt-actions {
+  margin-top: 18px;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  gap: 10px;
+}
+.SaleReceipt-print, .SaleReceipt-newSale {
+  min-height: 44px;
+  display: -webkit-inline-box;
+  display: -ms-inline-flexbox;
+  display: inline-flex;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  -webkit-box-pack: center;
+      -ms-flex-pack: center;
+          justify-content: center;
+  gap: 8px;
+  border: none;
+  border-radius: 10px;
+  font-family: inherit;
+  font-size: 13px;
+  font-weight: 800;
+  cursor: pointer;
+}
+.SaleReceipt-print {
+  -webkit-box-flex: 0;
+      -ms-flex: 0 0 120px;
+          flex: 0 0 120px;
+  background: #fafaf8;
+  color: #343a40;
+}
+.SaleReceipt-newSale {
+  -webkit-box-flex: 1;
+      -ms-flex: 1;
+          flex: 1;
+  background: #74a23c;
+  color: #ffffff;
+}
+
+@media print {
+  @page {
+    size: 80mm auto;
+    margin: 0;
+  }
+  html,
+  body {
+    width: 80mm;
+    margin: 0;
+    padding: 0;
+    background: white;
+  }
+  .Header,
+  .Sidebar,
+  .CartFloatingButton {
+    display: none !important;
+  }
+  .MainLayout,
+  .MainLayout-body,
+  .MainLayout-content,
+  .NewSalePage {
+    display: block !important;
+    width: 80mm !important;
+    min-height: 0 !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    background: white !important;
+  }
+  .NewSalePage > *:not(.SaleReceipt) {
+    display: none !important;
+  }
+  .SaleReceipt {
+    position: static !important;
+    display: block !important;
+    width: 80mm !important;
+    margin: 0 !important;
+    padding: 0 !important;
+    background: white !important;
+  }
+  .SaleReceipt-backdrop,
+  .SaleReceipt-close,
+  .SaleReceipt-actions {
+    display: none !important;
+  }
+  .SaleReceipt-panel {
+    position: static !important;
+    width: 80mm !important;
+    max-width: 80mm !important;
+    max-height: none !important;
+    margin: 0 !important;
+    padding: 6mm 5mm !important;
+    overflow: visible !important;
+    border: none !important;
+    border-radius: 0 !important;
+    background: white !important;
+    -webkit-box-shadow: none !important;
+            box-shadow: none !important;
+  }
+}/*# sourceMappingURL=SaleReceipt.css.map */

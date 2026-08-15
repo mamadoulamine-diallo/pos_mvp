@@ -1,0 +1,67 @@
+@use "../../../../assets/styles/abstracts/variables" as *;
+@use "../../../../assets/styles/abstracts/mixins" as *;
+
+.SaleCategoryFilter {
+  display: flex;
+  gap: 8px;
+
+  width: 100%;
+  overflow-x: auto;
+
+  padding: 4px 0 6px;
+
+  scrollbar-width: none;
+  scroll-behavior: smooth;
+
+  &::-webkit-scrollbar {
+    display: none;
+  }
+
+  &-button {
+    flex-shrink: 0;
+
+    height: 38px;
+    padding: 0 14px;
+
+    border: 1px solid $border-light;
+    border-radius: 999px;
+
+    background: $bg-white;
+    color: $gray-secondary;
+
+    font-family: inherit;
+    font-size: 13px;
+    font-weight: 700;
+    white-space: nowrap;
+
+    cursor: pointer;
+
+    transition:
+      border-color 180ms ease,
+      background-color 180ms ease,
+      color 180ms ease;
+
+    &:hover {
+      border-color: $primary;
+    }
+
+    &.active {
+      background: $primary;
+      border-color: $primary;
+      color: $bg-white;
+    }
+  }
+
+  @include desktop {
+    flex-wrap: wrap;
+    overflow: visible;
+
+    gap: 10px;
+    padding: 4px 0;
+
+    &-button {
+      height: 40px;
+      padding: 0 18px;
+    }
+  }
+}

@@ -5,8 +5,10 @@ import App from "./app/App";
 
 import "./assets/styles/main.scss";
 
-ReactDOM.createRoot(document.getElementById("root")).render(
+ReactDOM.createRoot(
+  document.getElementById("root"),
+).render(
   <React.StrictMode>
     <App />
-  </React.StrictMode>
+  </React.StrictMode>,
 );
