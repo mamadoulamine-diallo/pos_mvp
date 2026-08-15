@@ -1,108 +1,179 @@
 @use "../../../../assets/styles/abstracts/variables" as *;
+@use "../../../../assets/styles/abstracts/mixins" as *;
 
 .ProductCard {
-  position: relative;
-
-  min-height: 220px;
-  padding: 14px;
+  min-width: 0;
+  overflow: hidden;
 
   display: flex;
   flex-direction: column;
-  justify-content: space-between;
+
+  border: 1px solid $border-light;
+  border-radius: 12px;
 
   background: $bg-white;
-  border: 1px solid $border-light;
-  border-radius: 4px;
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.18);
 
   cursor: pointer;
 
-  &-media {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
+  transition:
+    transform 180ms ease,
+    box-shadow 180ms ease,
+    border-color 180ms ease;
 
-    &-img {
-      width: 100%;
-      height: 110px;
+  &:hover {
+    border-color: rgba(116, 162, 60, 0.45);
 
-      object-fit: contain;
+    transform: translateY(-2px);
 
-      margin-bottom: 10px;
-    }
-
-    &-name {
-      color: $gray-secondary;
-
-      font-size: 14px;
-      font-weight: 600;
-      text-align: center;
-      letter-spacing: 0.9px;
-    }
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08);
   }
 
-  &-stock {
-    align-self: center;
+  // =========================
+  // Image
+  // =========================
 
-    margin-top: 10px;
-    margin-bottom: 10px;
-    padding: 5px 10px;
+  &-media {
+    position: relative;
 
-    display: inline-flex;
+    height: 130px;
+    padding: 10px;
+
+    display: flex;
     align-items: center;
     justify-content: center;
 
+    background: $bg-light;
+  }
+
+  &-image {
+    width: 100%;
+    height: 100%;
+
+    object-fit: contain;
+  }
+
+  &-name {
+    position: absolute;
+    left: 10px;
+    right: 10px;
+    bottom: 8px;
+
+    overflow: hidden;
+
+    color: $gray-secondary;
+
+    font-size: 13px;
+    font-weight: 700;
+
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  // =========================
+  // Stock
+  // =========================
+
+  &-stock {
+    margin: 10px 10px 0;
+    padding: 5px 8px;
+
+    align-self: flex-start;
+
     border-radius: 999px;
 
-    background: #e8f5e9;
-    color: #2e7d32;
+    background: rgba(116, 162, 60, 0.1);
+    color: $primary;
 
     font-size: 11px;
-    font-weight: 800;
+    font-weight: 700;
 
     &--low {
-      background: #fff3cd;
-      color: #b26a00;
+      background: rgba(243, 156, 18, 0.12);
+      color: #c77c0a;
     }
 
     &--out {
-      background: #fdeaea;
+      background: rgba(192, 57, 43, 0.1);
       color: #c0392b;
     }
   }
 
+  // =========================
+  // Footer
+  // =========================
+
   &-footer {
+    margin-top: auto;
+    padding: 10px;
+
     display: flex;
     align-items: center;
     justify-content: space-between;
-    gap: 8px;
+    gap: 10px;
 
-    margin-top: auto;
-    padding-top: 10px;
-
-    &-price {
+    strong {
       color: $gray-secondary;
 
-      font-size: 18px;
+      font-size: 15px;
       font-weight: 800;
-      white-space: nowrap;
     }
 
-    &-action {
-      width: 44px;
-      height: 44px;
+    button {
+      width: 34px;
+      height: 34px;
 
-      border: none;
-      border-radius: 10px;
+      flex-shrink: 0;
 
-      background: $text-secondary;
-      color: $bg-white;
-
-      display: flex;
+      display: inline-flex;
       align-items: center;
       justify-content: center;
 
+      border: none;
+      border-radius: 8px;
+
+      background: rgba(116, 162, 60, 0.1);
+      color: $primary;
+
       cursor: pointer;
+
+      transition:
+        background-color 180ms ease,
+        transform 180ms ease;
+
+      &:hover {
+        background: rgba(116, 162, 60, 0.18);
+      }
+
+      &:active {
+        transform: scale(0.95);
+      }
+
+      &:focus-visible {
+        outline: 2px solid $primary;
+        outline-offset: 2px;
+      }
+    }
+  }
+}
+
+@include tablette {
+  .ProductCard {
+    &-media {
+      height: 145px;
+    }
+  }
+}
+
+@include desktop {
+  .ProductCard {
+    &-media {
+      height: 150px;
+    }
+
+    &-footer {
+      strong {
+        font-size: 16px;
+      }
     }
   }
 }

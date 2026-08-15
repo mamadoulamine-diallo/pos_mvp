@@ -1,4 +1,4 @@
-import { ShoppingCart } from "lucide-react";
+import { Eye } from "lucide-react";
 
 import "./ProductCard.scss";
 
@@ -21,70 +21,73 @@ function ProductCard({
   product,
   onSelect,
 }) {
-  const isOutOfStock = product.stockQuantity === 0;
+  const outOfStock =
+    product.stockQuantity <= 0;
 
-  const isLowStock =
+  const lowStock =
     product.stockQuantity > 0 &&
     product.stockQuantity <= 5;
 
-  const stockClass = [
-    "ProductCard-stock",
-    isOutOfStock && "ProductCard-stock--out",
-    isLowStock && "ProductCard-stock--low",
-  ]
-    .filter(Boolean)
-    .join(" ");
-
-  function handleCardClick() {
+  function handleOpenProduct() {
     onSelect(product);
-  }
-
-  function handleCartClick(event) {
-    event.stopPropagation();
-
-    // Sera branché avec le module Caisse.
   }
 
   return (
     <article
       className="Products-list-item ProductCard"
-      onClick={handleCardClick}
+      onClick={handleOpenProduct}
     >
       <div className="ProductCard-media">
         <img
           src={getProductImage(product.imageUrl)}
-          className="ProductCard-media-img"
           alt={product.name}
+          className="ProductCard-image"
           onError={(event) => {
             event.currentTarget.onerror = null;
+
             event.currentTarget.src =
               `${imageBaseUrl}/default-product.webp`;
           }}
         />
 
-        <span className="ProductCard-media-name">
+        <strong className="ProductCard-name">
           {product.name}
-        </span>
+        </strong>
       </div>
 
-      <div className={stockClass}>
+      <span
+        className={[
+          "ProductCard-stock",
+          outOfStock &&
+            "ProductCard-stock--out",
+          lowStock &&
+            "ProductCard-stock--low",
+        ]
+          .filter(Boolean)
+          .join(" ")}
+      >
         Stock : {product.stockQuantity}
-      </div>
+      </span>
 
-      <div className="ProductCard-footer">
-        <span className="ProductCard-footer-price">
+      <footer className="ProductCard-footer">
+        <strong>
           {formatPrice(product.salePrice)}
-        </span>
+        </strong>
 
         <button
           type="button"
-          className="ProductCard-footer-action"
-          aria-label={`Ajouter ${product.name} à la vente`}
-          onClick={handleCartClick}
+          aria-label={`Voir ${product.name}`}
+          onClick={(event) => {
+            event.stopPropagation();
+            handleOpenProduct();
+          }}
         >
-          <ShoppingCart size={18} aria-hidden="true" />
+          <Eye
+            size={18}
+            aria-hidden="true"
+          />
         </button>
-      </div>
+      </footer>
     </article>
   );
 }

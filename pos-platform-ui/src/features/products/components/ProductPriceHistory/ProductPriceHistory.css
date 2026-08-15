@@ -1,0 +1,117 @@
+.ProductPriceHistory {
+  margin-top: 24px;
+  padding: 18px;
+  border: 1px solid #d8caca;
+  border-radius: 16px;
+  background: #ffffff;
+  -webkit-box-shadow: 0 8px 24px rgba(0, 0, 0, 0.04);
+          box-shadow: 0 8px 24px rgba(0, 0, 0, 0.04);
+}
+.ProductPriceHistory-header {
+  margin-bottom: 18px;
+}
+.ProductPriceHistory-header h2 {
+  margin: 0;
+  color: #343a40;
+  font-size: 20px;
+  font-weight: 800;
+}
+.ProductPriceHistory-header p {
+  margin: 4px 0 0;
+  color: #6c757d;
+  font-size: 12px;
+}
+.ProductPriceHistory-list {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+      -ms-flex-direction: column;
+          flex-direction: column;
+}
+.ProductPriceHistory-item {
+  position: relative;
+  display: grid;
+  grid-template-columns: 20px minmax(0, 1fr);
+  gap: 12px;
+  padding: 12px 0;
+}
+.ProductPriceHistory-item:not(:last-child) {
+  border-bottom: 1px solid #d8caca;
+}
+.ProductPriceHistory-item--active .ProductPriceHistory-marker span {
+  border-color: #74a23c;
+  background: #74a23c;
+}
+.ProductPriceHistory-item--active .ProductPriceHistory-period strong {
+  color: #74a23c;
+}
+.ProductPriceHistory-marker {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-pack: center;
+      -ms-flex-pack: center;
+          justify-content: center;
+  padding-top: 6px;
+}
+.ProductPriceHistory-marker span {
+  width: 11px;
+  height: 11px;
+  border: 2px solid #d8caca;
+  border-radius: 50%;
+  background: #ffffff;
+}
+.ProductPriceHistory-content {
+  min-width: 0;
+}
+.ProductPriceHistory-prices {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+}
+.ProductPriceHistory-prices div {
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+      -ms-flex-direction: column;
+          flex-direction: column;
+  gap: 2px;
+}
+.ProductPriceHistory-prices span {
+  color: #6c757d;
+  font-size: 11px;
+  font-weight: 600;
+}
+.ProductPriceHistory-prices strong {
+  color: #343a40;
+  font-size: 14px;
+  font-weight: 900;
+}
+.ProductPriceHistory-period {
+  margin-top: 8px;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-orient: vertical;
+  -webkit-box-direction: normal;
+      -ms-flex-direction: column;
+          flex-direction: column;
+  gap: 2px;
+  color: #6c757d;
+  font-size: 11px;
+}
+.ProductPriceHistory-period strong {
+  color: #343a40;
+  font-size: 12px;
+  font-weight: 800;
+}
+.ProductPriceHistory-empty {
+  padding: 30px 12px;
+  color: #6c757d;
+  font-size: 13px;
+  text-align: center;
+}/*# sourceMappingURL=ProductPriceHistory.css.map */

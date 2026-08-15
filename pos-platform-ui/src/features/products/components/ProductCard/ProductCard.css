@@ -1,7 +1,6 @@
 .ProductCard {
-  position: relative;
-  min-height: 220px;
-  padding: 14px;
+  min-width: 0;
+  overflow: hidden;
   display: -webkit-box;
   display: -ms-flexbox;
   display: flex;
@@ -9,48 +8,98 @@
   -webkit-box-direction: normal;
       -ms-flex-direction: column;
           flex-direction: column;
-  -webkit-box-pack: justify;
-      -ms-flex-pack: justify;
-          justify-content: space-between;
-  background: #ffffff;
   border: 1px solid #d8caca;
-  border-radius: 4px;
-  -webkit-box-shadow: 0 2px 5px rgba(0, 0, 0, 0.18);
-          box-shadow: 0 2px 5px rgba(0, 0, 0, 0.18);
+  border-radius: 12px;
+  background: #ffffff;
   cursor: pointer;
+  -webkit-transition: border-color 180ms ease, -webkit-transform 180ms ease, -webkit-box-shadow 180ms ease;
+  transition: border-color 180ms ease, -webkit-transform 180ms ease, -webkit-box-shadow 180ms ease;
+  transition: transform 180ms ease, box-shadow 180ms ease, border-color 180ms ease;
+  transition: transform 180ms ease, box-shadow 180ms ease, border-color 180ms ease, -webkit-transform 180ms ease, -webkit-box-shadow 180ms ease;
+}
+.ProductCard:hover {
+  border-color: rgba(116, 162, 60, 0.45);
+  -webkit-transform: translateY(-2px);
+          transform: translateY(-2px);
+  -webkit-box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08);
+          box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08);
 }
 .ProductCard-media {
+  position: relative;
+  height: 130px;
+  padding: 10px;
   display: -webkit-box;
   display: -ms-flexbox;
   display: flex;
-  -webkit-box-orient: vertical;
-  -webkit-box-direction: normal;
-      -ms-flex-direction: column;
-          flex-direction: column;
   -webkit-box-align: center;
       -ms-flex-align: center;
           align-items: center;
+  -webkit-box-pack: center;
+      -ms-flex-pack: center;
+          justify-content: center;
+  background: #fafaf8;
 }
-.ProductCard-media-img {
+.ProductCard-image {
   width: 100%;
-  height: 110px;
+  height: 100%;
   -o-object-fit: contain;
      object-fit: contain;
-  margin-bottom: 10px;
 }
-.ProductCard-media-name {
+.ProductCard-name {
+  position: absolute;
+  left: 10px;
+  right: 10px;
+  bottom: 8px;
+  overflow: hidden;
   color: #343a40;
-  font-size: 14px;
-  font-weight: 600;
-  text-align: center;
-  letter-spacing: 0.9px;
+  font-size: 13px;
+  font-weight: 700;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 .ProductCard-stock {
-  -ms-flex-item-align: center;
-      align-self: center;
-  margin-top: 10px;
-  margin-bottom: 10px;
-  padding: 5px 10px;
+  margin: 10px 10px 0;
+  padding: 5px 8px;
+  -ms-flex-item-align: start;
+      align-self: flex-start;
+  border-radius: 999px;
+  background: rgba(116, 162, 60, 0.1);
+  color: #74a23c;
+  font-size: 11px;
+  font-weight: 700;
+}
+.ProductCard-stock--low {
+  background: rgba(243, 156, 18, 0.12);
+  color: #c77c0a;
+}
+.ProductCard-stock--out {
+  background: rgba(192, 57, 43, 0.1);
+  color: #c0392b;
+}
+.ProductCard-footer {
+  margin-top: auto;
+  padding: 10px;
+  display: -webkit-box;
+  display: -ms-flexbox;
+  display: flex;
+  -webkit-box-align: center;
+      -ms-flex-align: center;
+          align-items: center;
+  -webkit-box-pack: justify;
+      -ms-flex-pack: justify;
+          justify-content: space-between;
+  gap: 10px;
+}
+.ProductCard-footer strong {
+  color: #343a40;
+  font-size: 15px;
+  font-weight: 800;
+}
+.ProductCard-footer button {
+  width: 34px;
+  height: 34px;
+  -ms-flex-negative: 0;
+      flex-shrink: 0;
   display: -webkit-inline-box;
   display: -ms-inline-flexbox;
   display: inline-flex;
@@ -60,55 +109,38 @@
   -webkit-box-pack: center;
       -ms-flex-pack: center;
           justify-content: center;
-  border-radius: 999px;
-  background: #e8f5e9;
-  color: #2e7d32;
-  font-size: 11px;
-  font-weight: 800;
-}
-.ProductCard-stock--low {
-  background: #fff3cd;
-  color: #b26a00;
-}
-.ProductCard-stock--out {
-  background: #fdeaea;
-  color: #c0392b;
-}
-.ProductCard-footer {
-  display: -webkit-box;
-  display: -ms-flexbox;
-  display: flex;
-  -webkit-box-align: center;
-      -ms-flex-align: center;
-          align-items: center;
-  -webkit-box-pack: justify;
-      -ms-flex-pack: justify;
-          justify-content: space-between;
-  gap: 8px;
-  margin-top: auto;
-  padding-top: 10px;
-}
-.ProductCard-footer-price {
-  color: #343a40;
-  font-size: 18px;
-  font-weight: 800;
-  white-space: nowrap;
-}
-.ProductCard-footer-action {
-  width: 44px;
-  height: 44px;
   border: none;
-  border-radius: 10px;
-  background: #6c757d;
-  color: #ffffff;
-  display: -webkit-box;
-  display: -ms-flexbox;
-  display: flex;
-  -webkit-box-align: center;
-      -ms-flex-align: center;
-          align-items: center;
-  -webkit-box-pack: center;
-      -ms-flex-pack: center;
-          justify-content: center;
+  border-radius: 8px;
+  background: rgba(116, 162, 60, 0.1);
+  color: #74a23c;
   cursor: pointer;
+  -webkit-transition: background-color 180ms ease, -webkit-transform 180ms ease;
+  transition: background-color 180ms ease, -webkit-transform 180ms ease;
+  transition: background-color 180ms ease, transform 180ms ease;
+  transition: background-color 180ms ease, transform 180ms ease, -webkit-transform 180ms ease;
+}
+.ProductCard-footer button:hover {
+  background: rgba(116, 162, 60, 0.18);
+}
+.ProductCard-footer button:active {
+  -webkit-transform: scale(0.95);
+          transform: scale(0.95);
+}
+.ProductCard-footer button:focus-visible {
+  outline: 2px solid #74a23c;
+  outline-offset: 2px;
+}
+
+@media screen and (min-width: 768px) {
+  .ProductCard-media {
+    height: 145px;
+  }
+}
+@media screen and (min-width: 1270px) {
+  .ProductCard-media {
+    height: 150px;
+  }
+  .ProductCard-footer strong {
+    font-size: 16px;
+  }
 }/*# sourceMappingURL=ProductCard.css.map */

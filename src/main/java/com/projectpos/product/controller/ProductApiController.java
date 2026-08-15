@@ -103,4 +103,23 @@ public class ProductApiController {
     ) {
         return productPriceService.getCurrentPricing(id);
     }
+
+    @Operation(
+            summary = "Retrieve product price history",
+            description = "Returns the complete purchase and sale price history for a product."
+    )
+    @GetMapping("/{id}/price-history")
+    public List<ProductPriceHistoryResponse> getPriceHistory(
+            @PathVariable Integer id
+    ) {
+        return productPriceService.getPriceHistory(id)
+                .stream()
+                .map(price -> new ProductPriceHistoryResponse(
+                        price.getSalePrice(),
+                        price.getPurchasePrice(),
+                        price.getStartDate(),
+                        price.getEndDate()
+                ))
+                .toList();
+    }
 }

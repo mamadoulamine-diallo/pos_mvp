@@ -1,9 +1,11 @@
 import {
   addProductStock,
-  getProductPricing,
-  createProduct as createProductRequest,
-  getProducts,
   changeProductPrice,
+  createProduct as createProductRequest,
+  getProduct,
+  getProductPriceHistory,
+  getProductPricing,
+  getProducts,
   updateProduct as updateProductRequest,
 } from "../api/productApi";
 
@@ -11,8 +13,16 @@ export async function loadProducts() {
   return getProducts();
 }
 
+export async function loadProduct(id) {
+  return getProduct(id);
+}
+
 export async function loadProductPricing(id) {
   return getProductPricing(id);
+}
+
+export async function loadProductPriceHistory(id) {
+  return getProductPriceHistory(id);
 }
 
 export async function createProduct(data) {

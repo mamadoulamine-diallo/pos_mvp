@@ -26,7 +26,7 @@ function QuickActions() {
         </Link>
 
         <Link
-          to="/sales"
+          to="/sales/history"
           className="DashboardActions-link"
         >
           Historique ventes

@@ -1,0 +1,145 @@
+@use "../../../../assets/styles/abstracts/variables" as *;
+
+.ProductPriceHistory {
+  margin-top: 24px;
+  padding: 18px;
+
+  border: 1px solid $border-light;
+  border-radius: 16px;
+
+  background: $bg-white;
+
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.04);
+
+  &-header {
+    margin-bottom: 18px;
+
+    h2 {
+      margin: 0;
+
+      color: $gray-secondary;
+
+      font-size: 20px;
+      font-weight: 800;
+    }
+
+    p {
+      margin: 4px 0 0;
+
+      color: $text-secondary;
+
+      font-size: 12px;
+    }
+  }
+
+  &-list {
+    display: flex;
+    flex-direction: column;
+  }
+
+  &-item {
+    position: relative;
+
+    display: grid;
+    grid-template-columns: 20px minmax(0, 1fr);
+
+    gap: 12px;
+
+    padding: 12px 0;
+
+    &:not(:last-child) {
+      border-bottom: 1px solid $border-light;
+    }
+
+    &--active {
+      .ProductPriceHistory-marker {
+        span {
+          border-color: $primary;
+          background: $primary;
+        }
+      }
+
+      .ProductPriceHistory-period {
+        strong {
+          color: $primary;
+        }
+      }
+    }
+  }
+
+  &-marker {
+    display: flex;
+    justify-content: center;
+
+    padding-top: 6px;
+
+    span {
+      width: 11px;
+      height: 11px;
+
+      border: 2px solid $border-light;
+      border-radius: 50%;
+
+      background: $bg-white;
+    }
+  }
+
+  &-content {
+    min-width: 0;
+  }
+
+  &-prices {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+
+    gap: 10px;
+
+    div {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+    }
+
+    span {
+      color: $text-secondary;
+
+      font-size: 11px;
+      font-weight: 600;
+    }
+
+    strong {
+      color: $gray-secondary;
+
+      font-size: 14px;
+      font-weight: 900;
+    }
+  }
+
+  &-period {
+    margin-top: 8px;
+
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+
+    color: $text-secondary;
+
+    font-size: 11px;
+
+    strong {
+      color: $gray-secondary;
+
+      font-size: 12px;
+      font-weight: 800;
+    }
+  }
+
+  &-empty {
+    padding: 30px 12px;
+
+    color: $text-secondary;
+
+    font-size: 13px;
+    text-align: center;
+  }
+}

@@ -87,7 +87,7 @@
     grid-template-columns:
       repeat(auto-fill, minmax(145px, 1fr));
 
-    gap: 18px 14px;
+    gap: 16px 12px;
   }
 
   // =========================
@@ -191,6 +191,7 @@
 
     &-addButton {
       width: 100%;
+
       align-self: stretch;
     }
 
@@ -199,7 +200,10 @@
     }
 
     &-list {
-      gap: 20px;
+      grid-template-columns:
+        repeat(auto-fill, minmax(160px, 1fr));
+
+      gap: 20px 16px;
     }
   }
 }
@@ -226,9 +230,9 @@
     }
 
     &-heading {
-      justify-self: start;
-
       min-width: max-content;
+
+      justify-self: start;
     }
 
     &-list-title {
@@ -252,12 +256,12 @@
       max-width: 190px;
       min-height: 44px;
       padding-inline: 14px;
-      letter-spacing: 0.5px;
 
       justify-self: end;
       align-self: center;
 
       font-size: 13px;
+      letter-spacing: 0.5px;
     }
 
     hr {
@@ -272,7 +276,10 @@
     }
 
     &-list {
-      gap: 28px 36px;
+      grid-template-columns:
+        repeat(auto-fill, minmax(170px, 1fr));
+
+      gap: 24px 22px;
     }
   }
 }

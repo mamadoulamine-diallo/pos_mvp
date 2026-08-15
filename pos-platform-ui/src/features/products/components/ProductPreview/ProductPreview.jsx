@@ -1,10 +1,12 @@
 import {
   Boxes,
+  ChevronRight,
   Pencil,
   RefreshCw,
   X,
 } from "lucide-react";
 import { useEffect } from "react";
+import { Link } from "react-router-dom";
 
 import "./ProductPreview.scss";
 
@@ -43,7 +45,10 @@ function ProductPreview({
       }
     }
 
-    document.addEventListener("keydown", handleKeyDown);
+    document.addEventListener(
+      "keydown",
+      handleKeyDown,
+    );
 
     return () => {
       document.removeEventListener(
@@ -102,53 +107,95 @@ function ProductPreview({
             aria-label="Fermer"
             onClick={onClose}
           >
-            <X size={20} aria-hidden="true" />
+            <X
+              size={20}
+              aria-hidden="true"
+            />
           </button>
         </header>
 
         <div className="ProductPreview-content">
           <p>
             <strong>Stock</strong>
-            <span>{product.stockQuantity}</span>
+            <span>
+              {product.stockQuantity}
+            </span>
           </p>
 
           <p>
             <strong>Prix</strong>
             <span>
-              {formatPrice(product.salePrice)}
+              {formatPrice(
+                product.salePrice,
+              )}
             </span>
           </p>
 
           <p>
             <strong>Statut</strong>
             <span>
-              {product.active ? "Actif" : "Inactif"}
+              {product.active
+                ? "Actif"
+                : "Inactif"}
             </span>
           </p>
         </div>
 
+        <Link
+          to={`/products/${product.id}`}
+          className="ProductPreview-detailLink"
+          onClick={onClose}
+        >
+          <span>
+            Voir la fiche produit
+          </span>
+
+          <ChevronRight
+            size={17}
+            aria-hidden="true"
+          />
+        </Link>
+
         <div className="ProductPreview-actions">
           <button
             type="button"
-            onClick={() => onAddStock(product)}
+            onClick={() =>
+              onAddStock(product)
+            }
           >
-            <Boxes size={18} aria-hidden="true" />
+            <Boxes
+              size={18}
+              aria-hidden="true"
+            />
+
             Ajouter du stock
           </button>
 
           <button
             type="button"
-            onClick={() => onEdit(product)}
+            onClick={() =>
+              onEdit(product)
+            }
           >
-            <Pencil size={18} aria-hidden="true" />
+            <Pencil
+              size={18}
+              aria-hidden="true"
+            />
+
             Modifier
           </button>
 
           <button
             type="button"
-            onClick={() => onChangePrice(product)}
+            onClick={() =>
+              onChangePrice(product)
+            }
           >
-            <RefreshCw size={18} aria-hidden="true" />
+            <RefreshCw
+              size={18}
+              aria-hidden="true"
+            />
+
             Modifier le prix
           </button>
         </div>
