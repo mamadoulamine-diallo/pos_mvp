@@ -1,0 +1,38 @@
+services:
+
+  consul:
+    image: consul:1.15
+    container_name: pos-consul
+    ports:
+      - "8500:8500"
+    command:
+      - agent
+      - -server
+      - -bootstrap-expect=1
+      - -ui
+      - -client=0.0.0.0
+
+  user-db:
+    image: mysql:8.0
+    container_name: pos-user-db
+    restart: unless-stopped
+    environment:
+      MYSQL_ROOT_PASSWORD: Chosenprince
+      MYSQL_DATABASE: pos_user_db
+    ports:
+      - "3307:3306"
+    volumes:
+      - user_db_data:/var/lib/mysql
+
+  config-server:
+    build:
+      context: ./config-server
+    container_name: pos-config-server
+    restart: unless-stopped
+    ports:
+      - "8888:8888"
+    depends_on:
+      - consul
+
+volumes:
+  user_db_data:
