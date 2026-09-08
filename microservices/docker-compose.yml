@@ -36,6 +36,18 @@ services:
     volumes:
       - product_db_data:/var/lib/mysql
 
+  sale-db:
+    image: mysql:8.0
+    container_name: pos-sale-db
+    restart: unless-stopped
+    environment:
+      MYSQL_ROOT_PASSWORD: Chosenprince
+      MYSQL_DATABASE: pos_sale_db
+    ports:
+      - "3309:3306"
+    volumes:
+      - sale_db_data:/var/lib/mysql
+
   config-server:
     build:
       context: ./config-server
@@ -49,3 +61,4 @@ services:
 volumes:
   user_db_data:
   product_db_data:
+  sale_db_data:
