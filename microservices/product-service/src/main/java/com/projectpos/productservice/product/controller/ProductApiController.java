@@ -95,6 +95,17 @@ public class ProductApiController {
         );
     }
 
+    @PostMapping("/stock/remove")
+    @Operation(summary = "Retirer une quantité du stock")
+    public void removeStock(
+            @Valid @RequestBody RemoveStockRequest request
+    ) {
+        productService.removeStock(
+                request.productId(),
+                request.quantity()
+        );
+    }
+
     @Operation(
             summary = "Change product price",
             description = "Closes the current active price and creates a new active price for the product."

@@ -94,6 +94,26 @@ public class ProductService {
         repository.save(product);
     }
 
+    public void removeStock(Integer productId, Integer quantity) {
+
+        Product product = repository.findById(productId)
+                .orElseThrow(
+                        () -> new IllegalArgumentException("Produit introuvable")
+                );
+
+        if (product.getStockQuantity() < quantity) {
+            throw new IllegalArgumentException(
+                    "Stock insuffisant pour " + product.getName()
+            );
+        }
+
+        product.setStockQuantity(
+                product.getStockQuantity() - quantity
+        );
+
+        repository.save(product);
+    }
+
     public Product updateProduct(
             Integer productId,
             UpdateProductRequest request
