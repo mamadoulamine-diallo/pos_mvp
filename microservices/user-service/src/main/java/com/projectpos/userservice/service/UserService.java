@@ -22,6 +22,15 @@ public class UserService {
         return repository.findAll();
     }
 
+    public AppUser findById(Integer id) {
+        return repository.findById(id)
+                .orElseThrow(
+                        () -> new IllegalArgumentException(
+                                "Utilisateur introuvable"
+                        )
+                );
+    }
+
     public AppUser authenticate(String pinCode) {
         return repository
                 .findByPinCodeAndActiveTrue(pinCode)

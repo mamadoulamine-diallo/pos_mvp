@@ -30,6 +30,15 @@ public class UserApiController {
                 .toList();
     }
 
+    @GetMapping("/{id}")
+    public UserResponse findById(
+            @PathVariable Integer id
+    ) {
+        return userService.toResponse(
+                userService.findById(id)
+        );
+    }
+
     @GetMapping("/roles")
     public UserRole[] findRoles() {
         return UserRole.values();
