@@ -4,6 +4,7 @@ import com.projectpos.saleservice.client.UserClient;
 import com.projectpos.saleservice.client.dto.CurrentUserResponse;
 import com.projectpos.saleservice.sale.dto.CreateSaleRequest;
 import com.projectpos.saleservice.sale.dto.SaleHistoryDto;
+import com.projectpos.saleservice.sale.dto.SaleDetailDto;
 import com.projectpos.saleservice.sale.entity.Sale;
 import com.projectpos.saleservice.sale.service.SaleService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -37,6 +38,14 @@ public class SaleApiController {
     @GetMapping
     public List<SaleHistoryDto> findAll() {
         return saleService.getSaleHistory();
+    }
+
+    @Operation(summary = "Get sale details")
+    @GetMapping("/{id}")
+    public SaleDetailDto findById(
+            @PathVariable Integer id
+    ) {
+        return saleService.getSaleDetailDto(id);
     }
 
     @Operation(
