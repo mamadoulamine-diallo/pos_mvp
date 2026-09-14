@@ -1,9 +1,12 @@
 package com.projectpos.saleservice.sale.service;
 
 import com.projectpos.saleservice.client.ProductClient;
+import com.projectpos.saleservice.client.UserClient;
 import com.projectpos.saleservice.client.dto.ProductResponse;
 import com.projectpos.saleservice.client.dto.RemoveStockRequest;
+import com.projectpos.saleservice.client.dto.UserResponse;
 import com.projectpos.saleservice.sale.dto.CreateSaleRequest;
+import com.projectpos.saleservice.sale.dto.SaleHistoryDto;
 import com.projectpos.saleservice.sale.dto.SaleItemRequest;
 import com.projectpos.saleservice.sale.entity.Sale;
 import com.projectpos.saleservice.sale.entity.SaleItem;
@@ -12,6 +15,7 @@ import com.projectpos.saleservice.sale.repository.SaleRepository;
 import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 @Service
@@ -19,17 +23,61 @@ public class SaleService {
 
     private final SaleRepository repository;
     private final ProductClient productClient;
+    private final UserClient userClient;
 
     public SaleService(
             SaleRepository repository,
-            ProductClient productClient
+            ProductClient productClient,
+            UserClient userClient
     ) {
         this.repository = repository;
         this.productClient = productClient;
+        this.userClient = userClient;
     }
 
     public List<Sale> findAll() {
         return repository.findAll();
+    }
+
+    public List<SaleHistoryDto> getSaleHistory() {
+
+        return repository.findAllWithItems()
+                .stream()
+                .map(sale -> {
+
+                    UserResponse user =
+                            userClient.findById(sale.getUserId());
+
+                    long itemCount = sale.getItems()
+                            .stream()
+                            .mapToLong(SaleItem::getQuantity)
+                            .sum();
+
+                    BigDecimal total = sale.getItems()
+                            .stream()
+                            .map(item ->
+                                    item.getUnitPrice()
+                                            .multiply(
+                                                    BigDecimal.valueOf(
+                                                            item.getQuantity()
+                                                    )
+                                            )
+                            )
+                            .reduce(
+                                    BigDecimal.ZERO,
+                                    BigDecimal::add
+                            );
+
+                    return new SaleHistoryDto(
+                            sale.getId(),
+                            sale.getSaleDate(),
+                            user.fullName(),
+                            user.role(),
+                            itemCount,
+                            total
+                    );
+                })
+                .toList();
     }
 
     @Transactional
@@ -64,8 +112,6 @@ public class SaleService {
             item.setSale(sale);
             item.setProductId(product.id());
             item.setQuantity(itemRequest.quantity());
-
-            // Prix figé au moment de la vente
             item.setUnitPrice(product.salePrice());
 
             sale.getItems().add(item);
