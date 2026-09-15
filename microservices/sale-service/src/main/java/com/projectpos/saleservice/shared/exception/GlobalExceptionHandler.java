@@ -22,4 +22,16 @@ public class GlobalExceptionHandler {
                         "Session invalide ou expirée"
                 ));
     }
+
+    @ExceptionHandler(FeignException.BadRequest.class)
+    public ResponseEntity<Map<String, String>> handleFeignBadRequest(
+            FeignException.BadRequest exception
+    ) {
+        return ResponseEntity
+                .status(HttpStatus.BAD_REQUEST)
+                .body(Map.of(
+                        "error",
+                        "Opération impossible sur le produit"
+                ));
+    }
 }
