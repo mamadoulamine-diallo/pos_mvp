@@ -55,7 +55,11 @@ public class SaleApiController {
     @PostMapping
     public Map<String, Object> create(
             @Valid @RequestBody CreateSaleRequest request,
-            @RequestHeader("Cookie") String cookie
+            @RequestHeader(
+                    value = "Cookie",
+                    required = false,
+                    defaultValue = ""
+            ) String cookie
     ) {
         CurrentUserResponse currentUser =
                 userClient.getCurrentUser(cookie);
