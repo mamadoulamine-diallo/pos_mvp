@@ -48,6 +48,15 @@ services:
     volumes:
       - sale_db_data:/var/lib/mysql
 
+  activity-db:
+    image: mongo:8.0
+    container_name: pos-activity-db
+    restart: unless-stopped
+    ports:
+      - "27017:27017"
+    volumes:
+      - activity_db_data:/data/db
+
   config-server:
     build:
       context: ./config-server
@@ -62,3 +71,4 @@ volumes:
   user_db_data:
   product_db_data:
   sale_db_data:
+  activity_db_data:
