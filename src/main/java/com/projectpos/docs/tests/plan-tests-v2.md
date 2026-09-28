@@ -479,3 +479,346 @@ reproductibles.
 Les tests ont également permis d'identifier les limites spécifiques
 aux transactions distribuées, qui sont documentées comme axes
 d'amélioration de l'architecture.
+
+# Résultats de la campagne de tests V2
+
+## 1. Contexte d'exécution
+
+La campagne de tests de la V2 a été réalisée sur l'environnement local de développement du projet POS.
+
+L'architecture testée comprend notamment :
+
+- API Gateway ;
+- Config Server ;
+- Consul ;
+- user-service ;
+- product-service ;
+- sale-service ;
+- activity-service ;
+- bases MySQL séparées pour les services SQL ;
+- MongoDB pour le journal d'activité.
+
+Les tests fonctionnels et système ont été réalisés principalement avec Postman. Les tests automatisés Java ont été exécutés avec Maven et les outils de test Spring.
+
+L'objectif de cette campagne est de vérifier les principales règles métier, les communications entre microservices, la persistance SQL et NoSQL, l'authentification ainsi que le comportement de l'application sous une charge locale légère.
+
+---
+
+## 2. Tests automatisés
+
+Les services disposent de tests automatisés ciblant leurs règles métier principales.
+
+### user-service
+
+Les tests couvrent notamment :
+
+- authentification avec un PIN valide ;
+- rejet d'un PIN invalide ;
+- rejet d'un PIN déjà utilisé lors de la création ;
+- création d'un utilisateur actif ;
+- contrôle de l'unicité du PIN lors d'une modification ;
+- modification valide d'un utilisateur.
+
+**Résultat : 6 tests ciblés validés.**
+
+### product-service
+
+Les tests couvrent notamment :
+
+- ajout de stock ;
+- retrait de stock disponible ;
+- rejet d'un retrait lorsque le stock est insuffisant ;
+- rejet d'une opération sur un produit inexistant ;
+- fermeture de l'ancien prix avant création du nouveau ;
+- émission d'un événement `PRICE_CHANGED` ;
+- maintien du changement de prix lorsque activity-service est indisponible ;
+- rejet d'un changement de prix lorsqu'aucun prix actif n'existe.
+
+**Résultat : 8 tests ciblés validés.**
+
+Une attention particulière est portée à l'historisation des prix. L'ancien prix est enregistré comme terminé avant la création du nouveau prix actif. Un `flush()` explicite garantit l'ordre des opérations SQL avant l'insertion du nouveau prix.
+
+### sale-service
+
+Les tests couvrent notamment :
+
+- création d'une vente ;
+- conservation du prix du produit au moment de la vente ;
+- demande de décrémentation du stock auprès de product-service ;
+- rejet d'un produit sans prix actif ;
+- absence d'enregistrement de la vente lorsque le retrait de stock échoue.
+
+**Résultat : 4 tests ciblés validés.**
+
+### activity-service
+
+Les tests du contrôleur couvrent notamment :
+
+- création d'un événement ;
+- validation des données entrantes ;
+- filtrage par type d'événement ;
+- filtrage par entité.
+
+**Résultat : 4 tests ciblés validés.**
+
+Au total, **22 tests automatisés ciblés** ont été validés sur les quatre services.
+
+---
+
+## 3. Tests système avec Postman
+
+Une collection dédiée `POS V2 Microservices` et un environnement `POS V2 - Local` ont été créés afin de tester la V2 à travers son point d'entrée principal :
+
+`http://localhost:8080`
+
+Les requêtes passent ainsi par l'API Gateway avant d'être routées vers les microservices concernés.
+
+### 3.1 Authentification
+
+Les scénarios suivants ont été vérifiés :
+
+| Test | Résultat |
+| --- | --- |
+| Connexion avec un PIN valide | Succès - HTTP 200 |
+| Consultation de l'utilisateur connecté | Succès - HTTP 200 |
+| Connexion avec un PIN invalide | Rejet - HTTP 401 |
+| Création d'une vente sans session valide | Rejet - HTTP 401 |
+
+La tentative de création d'une vente sans authentification retourne :
+
+`Session invalide ou expirée`
+
+La protection des opérations métier nécessitant une session a donc été vérifiée.
+
+---
+
+## 4. Tests du product-service
+
+Les scénarios système suivants ont été exécutés à travers l'API Gateway :
+
+- récupération de la liste des produits ;
+- récupération d'un produit ;
+- ajout de stock ;
+- vérification de la persistance du nouveau stock ;
+- changement de prix ;
+- vérification du nouveau prix actif ;
+- vérification de l'historique des prix.
+
+Un scénario de test a notamment fait évoluer le stock d'un produit de **4 à 6 unités**. La lecture suivante du produit a confirmé la persistance de cette modification.
+
+Le changement de prix testé a fait évoluer le prix de vente de **31 000 à 32 000**.
+
+La consultation de l'historique a confirmé :
+
+- la fermeture de l'ancien prix ;
+- la présence du nouveau prix actif ;
+- l'existence d'un seul prix actif.
+
+Ce scénario constitue également un test de non-régression de la gestion de l'unicité du prix actif.
+
+---
+
+## 5. Communication product-service vers activity-service
+
+Lors d'un changement de prix, product-service transmet un événement à activity-service.
+
+Le scénario système a vérifié la chaîne suivante :
+
+`API Gateway -> product-service -> activity-service -> MongoDB`
+
+L'événement `PRICE_CHANGED` correspondant au produit testé a été retrouvé dans le journal d'activité.
+
+Les informations contrôlées comprennent notamment :
+
+- le type `PRICE_CHANGED` ;
+- l'entité `PRODUCT` ;
+- l'identifiant du produit ;
+- le service source `product-service` ;
+- l'ancien prix ;
+- le nouveau prix.
+
+Ce test valide une communication inter-service ainsi que la persistance NoSQL d'un événement métier.
+
+---
+
+## 6. Tests du sale-service
+
+Une vente d'une unité a été créée à travers l'API Gateway.
+
+Le scénario a vérifié :
+
+- la création d'une vente avec le statut `VALIDEE` ;
+- l'obtention d'un identifiant de vente ;
+- l'appel de product-service pour retirer le stock ;
+- la persistance de la décrémentation du stock ;
+- la conservation du prix unitaire dans la ligne de vente.
+
+Avant la vente, le produit testé disposait d'un stock de **6 unités**.
+
+Après la vente d'une unité :
+
+`6 -> 5`
+
+La lecture du produit a confirmé un stock de **5 unités**.
+
+Le détail de la vente a également confirmé :
+
+- quantité : 1 ;
+- prix unitaire : 32 000 ;
+- total de ligne : 32 000 ;
+- total de la vente : 32 000.
+
+Le prix unitaire est donc conservé dans la ligne de vente et ne dépend plus du prix courant du produit après l'enregistrement de la vente.
+
+---
+
+## 7. Anomalie détectée pendant la campagne
+
+La campagne de tests système a permis d'identifier une route manquante dans l'API Gateway pour activity-service.
+
+Les routes de user-service, product-service et sale-service étaient présentes, mais `/api/v1/activities/**` n'était pas exposée.
+
+La route suivante a été ajoutée :
+
+    - id: activity-service
+      uri: lb://activity-service
+      predicates:
+        - Path=/api/v1/activities/**
+
+Après redémarrage de l'API Gateway, l'accès à activity-service via le port 8080 a été validé.
+
+Cette anomalie illustre l'intérêt des tests système : les services fonctionnaient individuellement mais l'un d'entre eux n'était pas accessible depuis le point d'entrée global de l'architecture.
+
+---
+
+## 8. Test de charge local
+
+Un test de charge léger a été réalisé avec le Performance Runner de Postman sur l'endpoint :
+
+`GET /api/v1/products`
+
+Cette opération de lecture a été choisie afin d'éviter toute modification des données pendant les répétitions.
+
+### 8.1 Première exécution
+
+Une première exécution a produit un taux d'erreur de **100 %**.
+
+L'analyse de la console Postman a révélé une erreur JavaScript dans le scénario de test :
+
+`SyntaxError: Identifier 'product' has already been declared`
+
+Le script Postman a été corrigé avant de reprendre les mesures.
+
+Les résultats de cette première exécution ne sont donc pas utilisés comme mesures de performance.
+
+### 8.2 Palier de référence - 1 utilisateur virtuel
+
+Configuration :
+
+- profil fixe ;
+- 1 utilisateur virtuel ;
+- durée : 1 minute.
+
+Résultats :
+
+| Métrique | Valeur |
+| --- | ---: |
+| Requêtes | 853 |
+| Débit moyen | 14,24 req/s |
+| Temps de réponse moyen | 16 ms |
+| P90 | 22 ms |
+| P95 | 27 ms |
+| P99 | 33 ms |
+| Erreurs | 0 % |
+| Échecs | 0 % |
+| Pic CPU | 47,8 % |
+| Pic mémoire | 95,3 % |
+
+### 8.3 Palier - 3 utilisateurs virtuels
+
+Configuration :
+
+- profil fixe ;
+- 3 utilisateurs virtuels ;
+- durée : 1 minute.
+
+Résultats :
+
+| Métrique | Valeur |
+| --- | ---: |
+| Requêtes | 4 033 |
+| Débit moyen | 67,53 req/s |
+| Temps de réponse moyen | 15 ms |
+| P90 | 19 ms |
+| P95 | 23 ms |
+| P99 | 45 ms |
+| Erreurs | 0 % |
+| Échecs | 0 % |
+| Pic CPU | 74,5 % |
+| Pic mémoire | 91 % |
+
+Aucune erreur fonctionnelle n'a été observée pendant ces deux scénarios.
+
+Le passage de 1 à 3 utilisateurs virtuels n'a pas entraîné de dégradation significative du temps de réponse moyen ou du P95 dans les conditions du test.
+
+---
+
+## 9. Limites du test de charge
+
+Les résultats de performance doivent être interprétés dans le contexte de l'environnement utilisé.
+
+Le poste de développement dispose de **16 Go de mémoire vive** et exécute simultanément notamment :
+
+- Postman ;
+- l'IDE ;
+- plusieurs applications Spring Boot ;
+- Docker ;
+- Consul ;
+- Config Server ;
+- plusieurs bases MySQL ;
+- MongoDB.
+
+Pendant les tests, l'utilisation mémoire du poste a atteint environ **91 à 95 %**. Postman a également signalé une contrainte sur les ressources système.
+
+Le générateur de charge et le système testé partageant la même machine, ces résultats constituent une **référence locale et non une estimation de la capacité maximale de l'application en production**.
+
+Une campagne ultérieure pourra utiliser un générateur de charge séparé et un environnement de déploiement représentatif afin d'augmenter progressivement le nombre d'utilisateurs virtuels et d'étudier les limites de l'architecture.
+
+---
+
+## 10. Limites architecturales identifiées
+
+La campagne confirme le fonctionnement des principales communications inter-services mais met également en évidence certaines limites connues de l'architecture actuelle.
+
+Lors de la création d'une vente, sale-service demande à product-service de décrémenter le stock avant de persister localement la vente.
+
+Une transaction SQL locale ne peut pas annuler automatiquement une opération déjà réalisée dans un autre microservice. Une panne entre ces opérations peut donc produire une incohérence distribuée.
+
+Une évolution pourra introduire une stratégie de compensation, une Saga ou une architecture événementielle avec mécanisme fiable de publication.
+
+De même, l'envoi d'un événement vers activity-service est actuellement tolérant à l'indisponibilité du service afin de ne pas bloquer le changement de prix. En revanche, l'événement perdu n'est pas rejoué automatiquement.
+
+Une évolution possible serait l'utilisation d'un mécanisme d'outbox et/ou d'une messagerie asynchrone.
+
+---
+
+## 11. Conclusion
+
+La campagne de tests de la V2 a permis de valider les principales règles métier et plusieurs interactions caractéristiques de l'architecture microservices.
+
+Elle couvre notamment :
+
+- des tests automatisés des services ;
+- des tests fonctionnels via l'API Gateway ;
+- des communications inter-services avec OpenFeign ;
+- la persistance SQL ;
+- la persistance NoSQL ;
+- l'historisation des prix ;
+- la décrémentation distribuée du stock ;
+- la conservation du prix au moment de la vente ;
+- l'authentification et le rejet d'une session invalide ;
+- un test de charge local avec mesure de latence, débit et taux d'erreur.
+
+La campagne a également permis d'identifier et de corriger une route manquante dans l'API Gateway et de documenter plusieurs limites de l'architecture distribuée.
+
+Les résultats obtenus constituent une base de non-régression pour la V2 et pour les futures évolutions du projet.
