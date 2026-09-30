@@ -38,4 +38,6 @@ jobs:
 
       - name: Build and run tests
         working-directory: microservices/${{ matrix.service }}
-        run: ./mvnw clean verify
+        run: |
+          chmod +x mvnw
+          ./mvnw clean verify
