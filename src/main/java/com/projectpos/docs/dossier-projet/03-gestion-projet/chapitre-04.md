@@ -87,7 +87,7 @@ Préparer une architecture distribuée capable d’accompagner la croissance du 
 
 - microservices ;
 - Spring Cloud ;
-- Eureka ;
+- Consul ;
 - OpenFeign ;
 - MongoDB ;
 - Docker Compose ;
