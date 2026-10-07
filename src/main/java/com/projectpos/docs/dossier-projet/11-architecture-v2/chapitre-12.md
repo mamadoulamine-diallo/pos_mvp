@@ -247,53 +247,15 @@ Les secrets nécessaires à l'exécution sont injectés par variables d'environn
 
 ## 12.8 Architecture générale
 
-L'architecture logique de la V2 peut être représentée de manière simplifiée de la façon suivante :
+L'architecture logique de la V2 est représentée dans le schéma suivant :
 
-```text
-                         React
-                           |
-                           v
-                    +-------------+
-                    | API Gateway |
-                    |    :8080    |
-                    +-------------+
-                           |
-          +----------------+----------------+
-          |                |                |
-          v                v                v
-   +-------------+  +-------------+  +-------------+
-   | user-service|  |product-serv.|  | sale-service|
-   |    :8081    |  |    :8082    |  |    :8083    |
-   +-------------+  +-------------+  +-------------+
-          |                |                |
-          v                v                v
-       MySQL             MySQL            MySQL
+![Architecture générale de PROJECT_POS V2](assets/architecture-v2.png)
 
-                    +----------------+
-                    |activity-service|
-                    |     :8084      |
-                    +----------------+
-                           |
-                           v
-                        MongoDB
+**Figure — Architecture générale de PROJECT_POS V2.** Le frontend accède au backend par l'API Gateway. Les responsabilités métier sont réparties entre `user-service`, `product-service`, `sale-service` et `activity-service`. Les trois services transactionnels disposent chacun de leur propre base MySQL, tandis que `activity-service` utilise MongoDB. Consul assure la découverte des services et Spring Cloud Config centralise leur configuration.
 
+Les communications inter-services restent contrôlées par les frontières métier. `sale-service` communique avec `user-service` et `product-service` via OpenFeign. `product-service` communique avec `activity-service` pour transmettre l'événement `PRICE_CHANGED` lors d'une modification de prix.
 
-                 Infrastructure commune
-
-             +-------------------------+
-             | Consul                  |
-             | Service Discovery       |
-             | :8500                   |
-             +-------------------------+
-
-             +-------------------------+
-             | Config Server           |
-             | :8888                   |
-             +-------------------------+
-```
-
-Les communications entre certains services applicatifs utilisent OpenFeign et la découverte de services.
-
+Aucun service métier n'accède directement à la base de données d'un autre service.
 ---
 
 ## 12.9 Environnement d'exécution de développement
