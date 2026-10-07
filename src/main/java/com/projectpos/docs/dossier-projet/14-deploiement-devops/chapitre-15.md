@@ -206,6 +206,11 @@ Le Config Server est contrôlé à travers son endpoint de santé.
 
 Ces contrôles améliorent la visibilité sur l'état de l'environnement et permettent également de gérer certaines dépendances de démarrage.
 
+La vérification suivante a été réalisée après le démarrage complet de l'infrastructure :
+
+![Infrastructure Docker Compose V2](assets/docker-compose-healthy.png)
+
+**Figure — Vérification de l'infrastructure V2 avec Docker Compose.** Les six conteneurs d'infrastructure (`Consul`, `Config Server`, trois instances MySQL et MongoDB) sont démarrés et déclarés `healthy` par leurs healthchecks.
 ---
 
 ## 15.7 Ordre de démarrage
@@ -240,6 +245,11 @@ Lors de la campagne de validation, les cinq applications enregistrées auprès d
 
 Cette vérification permet de confirmer le fonctionnement du mécanisme de découverte de services.
 
+La vérification dans l'interface Consul confirme l'enregistrement des cinq applications de la V2 :
+
+![Services V2 enregistrés dans Consul](assets/consul-services-v2.png)
+
+**Figure — Découverte des services de l'architecture V2 avec Consul.** Les cinq applications (`user-service`, `product-service`, `sale-service`, `activity-service` et `api-gateway`) sont enregistrées dynamiquement dans le registre et apparaissent en état sain.
 ---
 
 ## 15.8 Point d'entrée de l'application
@@ -677,7 +687,11 @@ La documentation technique détaillée de cette chaîne est conservée dans :
 ```text
 docs/devops/ci-v2.md
 ```
+L'exécution suivante montre le résultat final obtenu après correction des différents problèmes rencontrés pendant la mise en place de la CI :
 
+![Pipeline GitHub Actions V2](assets/github-actions-ci-v2.png)
+
+**Figure — Pipeline d'intégration continue de la V2 avec GitHub Actions.** Le workflow `backend-ci.yml`, déclenché sur la branche `v2-microservices`, compile et teste indépendamment les six applications Maven. Cette exécution se termine avec succès pour l'ensemble de la matrice.
 ---
 
 ## 15.22 Apport de la démarche DevOps
