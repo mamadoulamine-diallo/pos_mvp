@@ -69,6 +69,82 @@ Les tests fonctionnels ont notamment vérifié :
 
 ---
 
+### Preuve de code : authentification et gestion de session HTTP
+
+L'authentification de PROJECT_POS V2 est implémentée dans `AuthApiController`, au sein du microservice `user-service`.
+
+**Fichier source :** `microservices/user-service/src/main/java/com/projectpos/userservice/controller/AuthApiController.java`
+
+Le contrôleur utilise `HttpSession` pour conserver l'utilisateur authentifié côté serveur.
+
+```java
+@PostMapping("/login")
+public UserResponse login(
+        @Valid @RequestBody LoginRequest request,
+        HttpSession session
+) {
+    AppUser user;
+
+    try {
+        user = userService.authenticate(request.pinCode());
+    } catch (IllegalArgumentException exception) {
+        throw new ResponseStatusException(
+                HttpStatus.UNAUTHORIZED,
+                exception.getMessage()
+        );
+    }
+
+    session.setAttribute("currentUser", user);
+
+    return userService.toResponse(user);
+}
+```
+
+Cette implémentation met en évidence plusieurs mécanismes :
+
+- La requête d'authentification est reçue dans un DTO `LoginRequest`, avec validation via `@Valid`.
+- La vérification du code PIN est déléguée à `UserService`.
+- Une authentification refusée produit une réponse HTTP `401 Unauthorized`.
+- Après authentification, l'utilisateur est enregistré dans la session sous la clé `currentUser`.
+- Le contrôleur renvoie un DTO `UserResponse` plutôt que de retourner directement l'entité `AppUser`.
+
+La récupération de l'utilisateur connecté est assurée par l'endpoint `GET /api/v1/auth/me` :
+
+```java
+@GetMapping("/me")
+public UserResponse getCurrentUser(HttpSession session) {
+    AppUser currentUser =
+            (AppUser) session.getAttribute("currentUser");
+
+    if (currentUser == null) {
+        throw new ResponseStatusException(
+                HttpStatus.UNAUTHORIZED,
+                "Aucun utilisateur connecté"
+        );
+    }
+
+    return userService.toResponse(currentUser);
+}
+```
+
+Cette méthode vérifie la présence de l'utilisateur dans la session. En son absence, elle retourne une réponse HTTP `401 Unauthorized`.
+
+Enfin, la déconnexion invalide la session HTTP :
+
+```java
+@PostMapping("/logout")
+@ResponseStatus(HttpStatus.NO_CONTENT)
+public void logout(HttpSession session) {
+    session.invalidate();
+}
+```
+
+Le choix de `HttpSession` a été conservé pour la V2 afin de maintenir le mécanisme d'authentification déjà utilisé pendant le développement de PROJECT_POS.
+
+Cette solution reste adaptée au périmètre local de démonstration, mais elle présente des limites dans une architecture distribuée. Une évolution vers une authentification par jeton ou un fournisseur d'identité centralisé pourra être étudiée ultérieurement.
+
+**Limites de sécurité :** ces extraits démontrent le fonctionnement de l'authentification et de la session. Ils ne constituent pas à eux seuls une preuve de protection de l'ensemble des endpoints métier, de hachage des codes PIN, de protection CSRF ou de contrôle systématique des autorisations par rôle. Ces aspects nécessitent des vérifications ou des renforcements complémentaires avant une mise en production.
+
 ## 13.3 Gestion de la session
 
 L'authentification de la version actuelle repose sur `HttpSession`.

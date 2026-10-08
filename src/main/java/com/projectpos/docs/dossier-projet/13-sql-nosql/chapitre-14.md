@@ -198,6 +198,34 @@ Un `flush()` explicite a été conservé dans le service afin de garantir l'ordr
 
 Cette correction est issue d'un incident réel rencontré lors des tests du projet.
 
+**Fichier source :** `microservices/product-service/src/main/java/com/projectpos/productservice/product/service/ProductPriceService.java`
+
+Cette implémentation démontre la clôture du prix actif, l'utilisation explicite de `flush()` et la création d'un nouveau prix tout en préservant l'historique.
+### Extrait d'implémentation : changement du prix actif
+
+La règle d'historisation est implémentée dans `ProductPriceService`. Lors d'un changement de prix, le prix actuellement actif est d'abord clôturé avant la création du nouveau prix.
+
+```java
+currentPrice.setEndDate(LocalDateTime.now());
+
+        repository.save(currentPrice);
+repository.flush();
+
+ProductPrice newPrice = new ProductPrice();
+
+newPrice.setProduct(currentPrice.getProduct());
+        newPrice.setSalePrice(salePrice);
+newPrice.setPurchasePrice(purchasePrice);
+newPrice.setStartDate(LocalDateTime.now());
+        newPrice.setEndDate(null);
+
+repository.save(newPrice);
+```
+
+L'appel explicite à `flush()` est volontaire. Il force Hibernate à synchroniser la clôture de l'ancien prix avec la base de données avant l'insertion du nouveau prix actif.
+
+Cette correction a été introduite après la détection, pendant les tests, d'une violation de la contrainte d'unicité garantissant qu'un produit ne possède qu'un seul prix actif à un instant donné.
+
 ---
 
 ## 14.7 Gestion du stock
@@ -344,6 +372,34 @@ Cette flexibilité constitue l'une des raisons du choix d'un modèle documentair
 
 ---
 
+### Preuve de code : document MongoDB `ActivityEvent`
+
+**Fichier source :** `microservices/activity-service/src/main/java/com/projectpos/activityservice/activity/entity/ActivityEvent.java`
+
+Cette classe définit la structure documentaire des événements enregistrés dans la collection MongoDB `activity_events`.
+Le modèle documentaire est déclaré avec Spring Data MongoDB :
+
+```java
+@Document(collection = "activity_events")
+public class ActivityEvent {
+
+    @Id
+    private String id;
+
+    private String eventType;
+    private LocalDateTime occurredAt;
+    private Integer userId;
+    private String sourceService;
+    private String entityType;
+    private String entityId;
+    private Map<String, Object> metadata;
+}
+```
+
+Cet extrait de `ActivityEvent.java` (annotations Lombok omises pour la lisibilité) montre l'association à la collection `activity_events`. Le champ `metadata` accepte des attributs variables selon le type d'événement.
+
+---
+
 ## 14.12 Exemple d'événement
 
 Lorsqu'un prix est modifié dans `product-service`, un événement de type :
@@ -363,7 +419,7 @@ Un document conceptuel peut contenir les informations suivantes :
   "userId": null,
   "sourceService": "product-service",
   "entityType": "PRODUCT",
-  "entityId": 12,
+  "entityId": "12",
   "metadata": {
     "oldSalePrice": "...",
     "newSalePrice": "...",
@@ -374,6 +430,51 @@ Un document conceptuel peut contenir les informations suivantes :
 ```
 
 Le contenu de `metadata` peut évoluer en fonction du type d'événement sans nécessiter une table relationnelle spécifique pour chaque forme d'activité.
+
+**Fichier source :** `microservices/product-service/src/main/java/com/projectpos/productservice/product/service/ProductPriceService.java`
+
+Cet extrait démontre la transmission d'un événement métier vers `activity-service`, après le changement de prix enregistré dans MySQL.
+
+### Extrait d'implémentation : transmission de l'événement `PRICE_CHANGED`
+
+Après l'enregistrement du nouveau prix dans MySQL, `product-service` transmet un événement de traçabilité à `activity-service`.
+
+```java
+activityClient.create(
+        new CreateActivityEventRequest(
+                "PRICE_CHANGED",
+                null,
+                "product-service",
+                "PRODUCT",
+                productId.toString(),
+                Map.of(
+                        "oldSalePrice", oldSalePrice,
+                        "newSalePrice", salePrice,
+                        "oldPurchasePrice", oldPurchasePrice,
+                        "newPurchasePrice", purchasePrice
+                )
+        )
+);
+```
+
+L'historique métier du prix reste stocké dans MySQL. MongoDB ne remplace donc pas `ProductPrice` : il conserve ici une trace d'activité complémentaire, dont les métadonnées peuvent varier selon le type d'événement.
+
+Dans cette version, `userId` reste volontairement à `null`, car l'identité de l'utilisateur n'est pas transmise à `product-service`. Ce choix évite d'inventer une valeur ou de coupler ce service à la session HTTP.
+
+L'appel à `activity-service` est encapsulé dans une gestion d'erreur afin que l'indisponibilité du journal d'activité ne bloque pas l'opération métier principale :
+
+```java
+try {
+    activityClient.create(...);
+} catch (Exception exception) {
+    System.err.println(
+            "Activity event could not be recorded: "
+                    + exception.getMessage()
+    );
+}
+```
+
+Cette stratégie privilégie la disponibilité du changement de prix. Elle présente toutefois une limite connue : si `activity-service` est indisponible au moment de l'appel, l'événement n'est pas rejoué automatiquement. Une évolution vers un mécanisme de retry, une Outbox ou une messagerie asynchrone permettrait de fiabiliser cette transmission.
 
 ---
 
@@ -443,6 +544,32 @@ par type d'entité et identifiant d'entité
 Le contrôleur REST expose ces fonctionnalités aux autres composants de l'architecture.
 
 L'accès à MongoDB reste ainsi encapsulé dans `activity-service`, comme les accès MySQL restent encapsulés dans leurs services respectifs.
+
+---
+
+### Preuve de code : repository Spring Data MongoDB
+
+**Fichier source :** `microservices/activity-service/src/main/java/com/projectpos/activityservice/activity/repository/ActivityEventRepository.java`
+
+Cette interface utilise `MongoRepository` et des méthodes de recherche dérivées pour consulter les événements par type ou par entité concernée.
+Le fichier `ActivityEventRepository.java` contient les méthodes de recherche suivantes :
+
+```java
+public interface ActivityEventRepository
+        extends MongoRepository<ActivityEvent, String> {
+
+    List<ActivityEvent> findByEventTypeOrderByOccurredAtDesc(
+            String eventType
+    );
+
+    List<ActivityEvent> findByEntityTypeAndEntityIdOrderByOccurredAtDesc(
+            String entityType,
+            String entityId
+    );
+}
+```
+
+Spring Data génère les requêtes correspondant à ces méthodes. Bien que `MongoRepository` fournisse également des méthodes de modification et de suppression, le contrôleur REST du journal n'expose pas de routes `PUT` ou `DELETE` : l'immutabilité est ici un choix du contrat API, pas une contrainte imposée par MongoDB.
 
 ---
 

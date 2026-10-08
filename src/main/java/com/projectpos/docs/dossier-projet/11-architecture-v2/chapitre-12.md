@@ -160,6 +160,86 @@ Le prix unitaire enregistré dans la ligne de vente correspond au prix récupér
 
 Cette communication permet de respecter la séparation des responsabilités : `sale-service` ne modifie jamais directement la base de données de `product-service`.
 
+### Implémentation des clients inter-services
+
+Les communications nécessaires au processus de vente sont déclarées avec Spring Cloud OpenFeign. Les services sont référencés par leur nom logique plutôt que par une adresse codée directement dans le client.
+
+**Fichiers sources :**
+
+- `ProductClient.java` — interface OpenFeign permettant à `sale-service` de communiquer avec `product-service`.
+- `UserClient.java` — interface OpenFeign permettant à `sale-service` de communiquer avec `user-service`.
+
+**Emplacements :** `microservices/sale-service/src/main/java/com/projectpos/saleservice/`
+```java
+@FeignClient(name = "product-service")
+public interface ProductClient {
+
+    @GetMapping("/api/v1/products/{id}")
+    ProductResponse findById(@PathVariable("id") Integer id);
+
+    @PostMapping("/api/v1/products/stock/remove")
+    void removeStock(@RequestBody RemoveStockRequest request);
+}
+```
+
+Le même principe est utilisé pour communiquer avec user-service. La session HTTP actuelle est propagée lors de la récupération de l'utilisateur connecté :
+
+```java
+@FeignClient(name = "user-service")
+public interface UserClient {
+
+    @GetMapping("/api/v1/auth/me")
+    CurrentUserResponse getCurrentUser(
+            @RequestHeader("Cookie") String cookie
+    );
+}
+```
+
+Ces interfaces séparent le code métier de sale-service des détails techniques de construction des appels HTTP. Associées à la découverte de services avec Consul, elles permettent d'utiliser les noms logiques product-service et user-service.
+
+
+### Exemple d'orchestration : création d'une vente
+
+La création d'une vente illustre concrètement la communication entre les domaines `sale` et `product`.
+
+
+Cet extrait présente l'orchestration d'une vente : récupération des informations produit, retrait du stock par appel interservices et conservation du prix unitaire dans la ligne de vente.
+Pour chaque ligne demandée, `sale-service` interroge `product-service` afin d'obtenir les informations du produit et son prix actif. Il demande ensuite au service propriétaire du stock d'effectuer le retrait.
+
+**Fichier source :** `microservices/sale-service/src/main/java/com/projectpos/saleservice/sale/service/SaleService.java`
+```java
+ProductResponse product =
+        productClient.findById(itemRequest.productId());
+
+if (product.salePrice() == null) {
+    throw new IllegalArgumentException(
+            "Aucun prix actif pour " + product.name()
+    );
+}
+
+productClient.removeStock(
+        new RemoveStockRequest(
+                itemRequest.productId(),
+                itemRequest.quantity()
+        )
+);
+
+SaleItem item = new SaleItem();
+
+item.setSale(sale);
+item.setProductId(product.id());
+item.setQuantity(itemRequest.quantity());
+item.setUnitPrice(product.salePrice());
+
+sale.getItems().add(item);
+```
+
+Cet extrait montre que `sale-service` ne modifie pas directement les données appartenant à `product-service`. La communication passe par l'API du service propriétaire au moyen du client inter-service.
+
+Le prix retourné au moment de la vente est copié dans `SaleItem.unitPrice`. Il devient ainsi une donnée historique de la vente : une modification ultérieure du prix du produit ne modifie pas les transactions déjà enregistrées.
+
+> **Limite connue de la V2 :** le retrait du stock dans `product-service` et l'enregistrement de la vente dans `sale-service` appartiennent à deux transactions distinctes. Si le retrait du stock réussit mais que l'enregistrement de la vente échoue ensuite, aucune transaction SQL globale ne permet actuellement d'annuler automatiquement le retrait. Cette limite est étudiée plus en détail dans la section 12.10.
+
 ---
 
 ## 12.5 API Gateway
