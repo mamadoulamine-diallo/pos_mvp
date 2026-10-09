@@ -249,7 +249,7 @@ La vérification dans l'interface Consul confirme l'enregistrement des cinq appl
 
 ![Services V2 enregistrés dans Consul](assets/consul-services-v2.png)
 
-**Figure — Découverte des services de l'architecture V2 avec Consul.** Les cinq applications (`user-service`, `product-service`, `sale-service`, `activity-service` et `api-gateway`) sont enregistrées dynamiquement dans le registre et apparaissent en état sain.
+**Figure — Découverte des services de l'architecture V2 avec Consul. Les cinq applications (`user-service`, `product-service`, `sale-service`, `activity-service` et `api-gateway`) sont enregistrées dynamiquement dans le registre et apparaissent en état sain.**
 ---
 
 ## 15.8 Point d'entrée de l'application
@@ -349,6 +349,12 @@ Les tests couvrent notamment :
 
 ---
 
+![Exécution des tests Maven de sale-service](assets/tests-maven-v2.png)
+
+**Figure — Exécution des tests automatisés de `sale-service` avec Maven : cinq tests réussis et build validé.**
+
+---
+
 ## 15.11 Isolation des tests SQL
 
 La mise en place de l'intégration continue a révélé que certains tests dépendaient implicitement des bases MySQL locales.
@@ -440,6 +446,12 @@ Sécurité fonctionnelle
 ```
 
 La création d'une vente permet notamment de vérifier une chaîne impliquant plusieurs services.
+
+---
+
+![Création d’une vente via Postman](assets/tests-postman-v2.png)
+
+**Figure — Test d’intégration V2 via l’API Gateway : vente validée et stock décrémenté de 5 à 4 unités.**
 
 ---
 
@@ -537,6 +549,12 @@ Aucune erreur n'a été observée pendant ces deux campagnes valides.
 Compte tenu de l'utilisation importante de la mémoire et du fait que le générateur de charge partageait la même machine que l'application, il n'a pas été jugé pertinent d'augmenter davantage la charge.
 
 Ces résultats ne doivent pas être présentés comme un dimensionnement de production.
+
+---
+
+![Résultat du test de performance V2](assets/tests-performance-v2.png)
+
+**Figure — Campagne locale de trois utilisateurs virtuels : 4 033 requêtes en une minute, P95 de 23 ms et aucun échec.**
 
 ---
 

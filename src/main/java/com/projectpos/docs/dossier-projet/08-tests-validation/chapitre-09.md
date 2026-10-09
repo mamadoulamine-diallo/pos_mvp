@@ -1,4 +1,4 @@
-# 9. Tests et validation du projet
+# 9. Tests et validation du MVP
 
 ## 9.1 Objectifs des tests
 
@@ -36,7 +36,6 @@ Les tests réalisés sur le module d’authentification ont permis de vérifier 
 
 L’ensemble des scénarios testés a été validé.
 
-Dans la V2, l’authentification a également été vérifiée à travers l’API Gateway. Une connexion avec un PIN valide retourne une réponse HTTP 200 et crée la session utilisée pour les appels authentifiés suivants. Une tentative avec un PIN invalide est refusée.
 
 ---
 
@@ -90,7 +89,11 @@ Une attention particulière a été portée à la cohérence des quantités disp
 
 **Résultat :**
 
-Les fonctionnalités de gestion produit sont opérationnelles et cohérentes avec les règles métier définies.
+La consultation du catalogue affiche les produits, leurs catégories, les prix de vente et les quantités en stock. La capture permet notamment d’identifier les produits en rupture ; les autres opérations de gestion mentionnées ci-dessus ne sont pas toutes démontrées par cette image.
+
+![Catalogue des produits du MVP avec prix et états de stock](assets/mvp-produits.png)
+
+*Figure 9.1 — Consultation du catalogue : produits, prix et niveaux de stock dans le MVP Thymeleaf.*
 
 ---
 
@@ -109,7 +112,17 @@ Les vérifications ont porté sur :
 
 Un seul prix actif est présent pour un produit à un instant donné.
 
-L’historique des modifications est correctement conservé.
+L’historique des modifications est décrit par les règles métier et les validations réalisées, mais les captures ci-dessous attestent uniquement de la mise à jour visible du prix actif ; elles ne suffisent pas à prouver la conservation de l’ancien prix en base.
+
+**Scénario illustré :** le produit « Chemise blanche premium » était affiché à **35 000 F** (figure 9.1). Le prix de vente est saisi à **37 000 F** et le prix d’achat à **34 000 F** ; après enregistrement, la fiche produit affiche **37 000 F**.
+
+![Saisie du nouveau prix de vente et du prix d’achat](assets/mvp-prix-saisie.png)
+
+*Figure 9.2 — Saisie des nouveaux prix dans la fenêtre « Modifier le prix ».*
+
+![Prix de vente mis à jour à 37 000 F](assets/mvp-prix-apres.png)
+
+*Figure 9.3 — Nouveau prix actif affiché après enregistrement.*
 
 Durant le développement, un cas d’erreur a notamment mis en évidence une violation de la contrainte d’unicité lors du remplacement du prix actif. La correction consiste à clôturer et enregistrer l’ancien prix puis à forcer la synchronisation avec la base avant l’insertion du nouveau prix.
 
@@ -133,9 +146,12 @@ Les tests réalisés concernent :
 
 **Résultat :**
 
-Les ventes sont correctement enregistrées et les données nécessaires à l’historique de la transaction sont conservées.
+L’interface confirme l’enregistrement de la vente et affiche un reçu détaillé. Le reçu **n° 170**, daté du **08/10/2026 à 13:57**, indique un total payé de **385 000 F** et un paiement en **espèces**. La capture atteste de la confirmation à l’écran ; la persistance en base et la décrémentation du stock nécessitent des vérifications distinctes.
 
-Dans la V2, le prix unitaire est figé dans `SaleItem`. Une modification ultérieure du prix du produit ne modifie donc pas les ventes déjà enregistrées.
+![Confirmation de la vente et reçu numéro 170](assets/mvp-vente-validee.png)
+
+*Figure 9.4 — Confirmation de vente et reçu affiché dans le MVP.*
+
 
 ---
 
@@ -151,7 +167,6 @@ Les tests réalisés concernent :
 
 Les quantités disponibles sont correctement mises à jour après les opérations testées.
 
-Ce comportement a également été vérifié dans l’architecture microservices : `sale-service` demande la décrémentation du stock à `product-service` au cours du traitement d’une vente.
 
 ---
 
@@ -173,13 +188,17 @@ Les filtres de période ont également été vérifiés.
 
 **Résultat :**
 
-Les indicateurs affichés correspondent aux données présentes dans la base de données.
+Le tableau de bord affiche les principaux indicateurs commerciaux et leur représentation graphique : chiffre d’affaires, ventes, articles vendus, panier moyen, alertes de stock, évolution des ventes, produits les plus vendus et transactions récentes. La capture démontre leur affichage ; elle ne documente pas, à elle seule, la comparaison des valeurs avec la base.
+
+![Tableau de bord du MVP et indicateurs commerciaux](assets/mvp-dashboard.png)
+
+*Figure 9.5 — Tableau de bord du MVP : indicateurs, courbe des ventes et produits les plus vendus.*
 
 ---
 
 ## 9.10 Difficultés rencontrées pendant les validations
 
-Plusieurs difficultés ont été rencontrées durant le développement et les différentes campagnes de tests.
+Plusieurs difficultés ont été rencontrées pendant les validations du MVP.
 
 Parmi les principales :
 
@@ -188,167 +207,14 @@ Parmi les principales :
 - la gestion du stock après validation d’une vente ;
 - l’organisation et la séparation des traitements métier ;
 - la stabilisation de l’interface utilisateur ;
-- la communication entre services dans la V2 ;
-- l’isolation des dépendances externes lors des tests automatisés.
+- la vérification des règles métier avant la migration vers l’API REST.
 
 Ces difficultés ont été progressivement résolues grâce à une approche itérative : développement, test, correction puis nouvelle validation.
 
 ---
 
-## 9.11 Campagne de tests automatisés de la V2
+## 9.11 Bilan des validations du MVP
 
-Le passage à une architecture microservices a nécessité de compléter les validations fonctionnelles du MVP par des tests automatisés propres aux différents services.
+Les validations fonctionnelles du MVP ont porté sur l’authentification, les utilisateurs, les catégories, les produits, l’historisation des prix, le stock, les ventes et le tableau de bord. Elles ont accompagné la stabilisation des règles métier du monolithe avant les évolutions d’architecture.
 
-La campagne ciblée couvre notamment :
-
-- `user-service` : authentification, création et modification des utilisateurs et contrôle du PIN ;
-- `product-service` : règles métier produit, stock et gestion de l’historique des prix ;
-- `sale-service` : création des ventes et interactions avec les services distants ;
-- `activity-service` : création, validation et filtrage des événements d’activité.
-
-Au total, **22 tests automatisés ciblés** ont été exécutés sur ces composants, auxquels s’ajoutent les tests de chargement du contexte Spring présents dans les différents projets.
-
-Pour les services SQL, un profil de test utilisant H2 permet d’isoler les tests automatisés de l’infrastructure MySQL locale. Les dépendances Config Server et Consul sont également désactivées lorsque leur présence n’est pas nécessaire au scénario testé.
-
-Cette stratégie rend les tests reproductibles, y compris dans l’environnement d’intégration continue.
-
-La figure suivante présente un exemple d’exécution sur `sale-service`.
-
-![Exécution des tests Maven de sale-service](assets/tests-maven-v2.png)
-
-**Figure — Exécution automatisée des tests de `sale-service` avec Maven. Les cinq tests sont exécutés sans échec ni erreur et le build se termine avec succès.**
-
----
-
-## 9.12 Tests d’intégration avec Postman
-
-Les tests d’intégration de la V2 ont été réalisés avec Postman en utilisant l’API Gateway comme point d’entrée.
-
-Ils permettent de tester l’application dans des conditions proches de son utilisation réelle, avec plusieurs services démarrés simultanément.
-
-Parmi les scénarios vérifiés :
-
-- authentification avec une session valide ;
-- consultation des produits ;
-- ajout de stock ;
-- changement de prix ;
-- consultation du prix actif et de son historique ;
-- création d’une vente ;
-- consultation du détail d’une vente ;
-- décrémentation du stock après validation ;
-- création et consultation d’un événement d’activité.
-
-Un scénario complet de vente a notamment été exécuté avec le produit `Chemise Oxford blanche`.
-
-Avant la transaction, son stock était de **5 unités**.
-
-Une vente d’une unité a ensuite été envoyée à :
-
-`POST /api/v1/sales`
-
-via l’API Gateway.
-
-La vente n°7 a été retournée avec le statut `VALIDEE`. Une nouvelle consultation du produit a confirmé le passage du stock de **5 à 4 unités**.
-
-Ce scénario valide ainsi plusieurs composants de la V2 au cours d’une même opération :
-
-`API Gateway → sale-service → user-service / product-service → bases de données`
-
-![Création d'une vente via Postman](assets/tests-postman-v2.png)
-
-**Figure — Test d’intégration V2 avec Postman. Une vente est créée via l’API Gateway et validée par `sale-service`. Le scénario vérifie également l’intégration avec `product-service`, le stock du produit testé passant de 5 à 4 après la vente.**
-
----
-
-## 9.13 Détection d’une anomalie grâce aux tests système
-
-Les tests n’ont pas uniquement servi à confirmer le fonctionnement attendu. Ils ont également permis d’identifier des défauts de configuration.
-
-Lors de la campagne V2, l’appel à `activity-service` à travers l’API Gateway ne fonctionnait pas alors que le service lui-même était opérationnel.
-
-L’analyse a montré que la route correspondante était absente de la configuration de la Gateway.
-
-La route suivante a été ajoutée :
-
-```yaml
-- id: activity-service
-  uri: lb://activity-service
-  predicates:
-    - Path=/api/v1/activities/**
-```
-
-Après correction et redémarrage, les requêtes vers `activity-service` ont pu transiter normalement par la Gateway.
-
-Cet incident constitue un exemple concret de l’intérêt des tests système : chaque composant pouvait fonctionner indépendamment alors que la chaîne complète présentait encore une anomalie.
-
----
-
-## 9.14 Validation de la sécurité fonctionnelle
-
-Un scénario spécifique a été utilisé pour vérifier la protection du processus de vente.
-
-Une requête de création de vente envoyée sans session utilisateur valide est refusée avec une réponse HTTP **401 Unauthorized**.
-
-L’API retourne alors une erreur indiquant que la session est invalide ou expirée.
-
-Ce test confirme que la création d’une vente ne peut pas être réalisée anonymement à travers l’API Gateway.
-
-Ces vérifications portent sur la sécurité fonctionnelle de l’application. Elles ne constituent pas un audit de sécurité complet ni un test d’intrusion.
-
----
-
-## 9.15 Tests de performance
-
-Un test de charge local a été réalisé afin d’observer le comportement de la V2 sous plusieurs requêtes simultanées.
-
-La campagne retenue pour le dossier utilise :
-
-- **3 utilisateurs virtuels** ;
-- une durée de **1 minute** ;
-- **4 033 requêtes** exécutées ;
-- **67,53 requêtes par seconde** ;
-- un temps de réponse moyen de **15 ms** ;
-- un percentile P90 de **19 ms** ;
-- un percentile P95 de **23 ms** ;
-- un percentile P99 de **45 ms** ;
-- **0 % d’erreur** ;
-- **0 % d’échec**.
-
-Durant ce test, le pic CPU observé atteint **74,5 %** et l’utilisation mémoire environ **91 %**.
-
-![Résultat du test de performance V2](assets/tests-performance-v2.png)
-
-**Figure — Test de performance local de l’architecture V2. Une charge de 3 utilisateurs virtuels pendant une minute génère 4 033 requêtes, soit 67,53 requêtes/s, avec un temps de réponse moyen de 15 ms, un P95 de 23 ms et aucun échec.**
-
-Ces résultats doivent être interprétés dans leur contexte.
-
-Le générateur de charge et les composants de l’application s’exécutent sur la même machine de développement. Les ressources disponibles sont donc partagées entre l’application, Docker, les bases de données et l’outil de test.
-
-Cette campagne permet de vérifier la stabilité de l’application dans l’environnement local utilisé pour le projet, mais **ne constitue pas une mesure de capacité d’une infrastructure de production**.
-
-L’objectif n’était donc pas de déterminer le nombre maximal d’utilisateurs supportés par PROJECT_POS, mais de vérifier qu’une charge supérieure à l’utilisation unitaire habituelle ne provoquait ni erreur ni dégradation anormale dans l’environnement de test.
-
----
-
-## 9.16 Bilan de la phase de tests
-
-La stratégie de test a évolué en même temps que l’architecture de PROJECT_POS.
-
-Le MVP a permis de valider les fonctionnalités et les principales règles métier : authentification, utilisateurs, produits, prix, stock, ventes et tableau de bord.
-
-La V2 a ensuite permis d’élargir cette démarche avec :
-
-- des tests automatisés des services ;
-- des tests d’intégration via l’API Gateway ;
-- des tests de communication inter-services ;
-- des tests de sécurité fonctionnelle ;
-- des tests système ;
-- un test de performance local.
-
-Les tests ont également permis de détecter des problèmes qui n’étaient pas visibles lors du développement isolé des composants, notamment une route manquante vers `activity-service`.
-
-Les résultats obtenus montrent que les principales chaînes fonctionnelles de l’architecture V2 sont opérationnelles dans l’environnement de développement et de validation.
-
-Cette campagne constitue également une base pour l’intégration continue : les tests automatisés peuvent être rejoués indépendamment du poste de développement afin de détecter les régressions lors des futures évolutions du projet.
-
-Les limites identifiées restent documentées. En particulier, une opération distribuée telle que la création d’une vente et la décrémentation distante du stock ne constitue pas actuellement une transaction atomique entre les microservices. Cette limite fait partie des axes d’évolution étudiés pour la suite du projet.
+La validation de la V2 est documentée au chapitre 15, après la présentation de la migration REST/React et des microservices. Les résultats détaillés figurent également dans `docs/tests/plan-tests-v2.md`.
