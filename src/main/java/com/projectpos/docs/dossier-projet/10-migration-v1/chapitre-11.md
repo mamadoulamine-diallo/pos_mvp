@@ -1,184 +1,133 @@
-# 11. Migration vers la V1 : API REST et React
+# 11. Évolution vers la V1 : API REST et React
+
+## 11.1 Objectif de la V1
 
-## 11.1 Objectifs de la migration
+Après le MVP construit avec Spring MVC et Thymeleaf, la V1 sépare l'interface React du backend Spring Boot. Le monolithe conserve les règles métier et l'accès MySQL ; il expose désormais des ressources JSON sous `/api/v1`. Cette étape prépare la séparation ultérieure des domaines en microservices, présentée au chapitre 12.
 
-Après la stabilisation du MVP, une première évolution de l'architecture a été engagée afin de séparer progressivement l'interface utilisateur de la logique métier.
+## 11.2 Contrats HTTP exposés
 
-Le MVP reposait sur une architecture Spring MVC dans laquelle Spring Boot assurait à la fois le traitement métier, l'accès aux données et le rendu des interfaces avec Thymeleaf.
+Les contrôleurs annotés `@RestController` exposent notamment les routes suivantes :
+
+| Domaine | Méthode et route | Utilisation |
+|---|---|---|
+| Produits | `GET /api/v1/products` | Liste du catalogue |
+| Produits | `POST /api/v1/products` | Création |
+| Produits | `PUT /api/v1/products/{id}` | Modification |
+| Prix | `POST /api/v1/products/price` | Historisation d'un changement de prix |
+| Prix | `GET /api/v1/products/{id}/price-history` | Historique tarifaire |
+| Stock | `POST /api/v1/products/stock` | Ajout de quantité |
+| Ventes | `GET /api/v1/sales` | Historique |
+| Ventes | `GET /api/v1/sales/{id}` | Détail d'une vente |
+| Ventes | `POST /api/v1/sales` | Enregistrement d'une vente |
+| Authentification | `POST /api/v1/auth/login` | Connexion par PIN |
+| Authentification | `GET /api/v1/auth/me` | Session courante |
+| Authentification | `POST /api/v1/auth/logout` | Déconnexion |
 
-Cette architecture était adaptée à la validation rapide du besoin métier, mais elle limitait l'indépendance entre le frontend et le backend.
+Les routes de catégories, d'utilisateurs et du tableau de bord sont également exposées par des contrôleurs dédiés. La documentation OpenAPI est configurée avec `/api-docs` et `/swagger-ui`.
 
-La V1 a donc poursuivi plusieurs objectifs :
+## 11.3 Exemple complet : modification du prix d'un produit
 
-- conserver les règles métier validées pendant le MVP ;
-- exposer les fonctionnalités du backend à travers une API REST ;
-- remplacer progressivement les vues Thymeleaf par une interface React ;
-- préparer le backend à une future architecture distribuée ;
-- limiter les risques liés à une réécriture complète de l'application.
+L'interface ne manipule pas directement la table `product_price`. Elle transmet un contrat JSON au backend, qui applique la règle métier d'historisation.
 
-La migration a ainsi été réalisée comme une évolution progressive du MVP et non comme un nouveau développement indépendant.
+**1. Déclenchement dans React.** Le formulaire `ChangePriceForm.jsx` convertit les deux saisies en nombres, rejette les valeurs non positives et appelle `onSubmit` :
 
----
+```jsx
+const sale = Number(salePrice);
+const purchase = Number(purchasePrice);
 
-## 11.2 Conservation du socle métier
+if (sale <= 0 || purchase <= 0) {
+  setError("Les prix doivent être supérieurs à zéro.");
+  return;
+}
 
-L'un des choix importants de cette migration a été de conserver autant que possible les composants métier déjà validés.
+await onSubmit(sale, purchase);
+```
 
-Les entités principales restent notamment :
+Le hook `useProducts.js` reçoit cette action, transmet les données au service frontend puis actualise le catalogue :
 
-- `AppUser` ;
-- `Category` ;
-- `Product` ;
-- `ProductPrice` ;
-- `Sale` ;
-- `SaleItem`.
+```javascript
+await changePriceService({
+  productId,
+  salePrice,
+  purchasePrice,
+});
+await refreshProducts();
+```
 
-Les règles métier essentielles ont également été conservées.
+**2. Requête HTTP.** Le module `productApi.js` utilise le client Axios partagé :
 
-Une vente reste associée à un utilisateur.
+```javascript
+export async function changeProductPrice(request) {
+  await axiosClient.post("/products/price", request);
+}
+```
 
-Une catégorie peut contenir plusieurs produits.
+`axiosClient.js` définit `baseURL` à partir de `VITE_API_BASE_URL`, active `withCredentials: true` et fixe un délai maximal de dix secondes. La route relative ci-dessus est donc résolue par rapport à l'URL d'API configurée côté frontend.
 
-Un produit possède un stock et un historique de prix.
+**3. Réception par Spring Boot.** Dans `ProductApiController.java`, le contrôleur reçoit et valide le DTO avant de déléguer au service :
 
-Lorsqu'une vente est réalisée, le prix unitaire du produit est enregistré dans la ligne de vente afin que l'historique reste cohérent même si le prix du produit évolue ultérieurement.
+```java
+@PostMapping("/price")
+public void changePrice(
+        @Valid @RequestBody ChangePriceRequest request
+) {
+    productPriceService.changePrice(
+            request.productId(),
+            request.salePrice(),
+            request.purchasePrice()
+    );
+}
+```
 
-Cette stratégie a permis de capitaliser sur le travail réalisé pendant le MVP plutôt que de réécrire des règles déjà testées.
+Le record `ChangePriceRequest` déclare les trois champs obligatoires et impose `@DecimalMin("0.01")` aux prix. `@Valid` déclenche cette validation côté serveur, indépendamment du contrôle réalisé dans React.
 
----
+**4. Application de la règle métier.** Dans `ProductPriceService.java`, l'ancien prix actif est clôturé avant l'insertion du nouveau :
 
-## 11.3 Mise en place de l'API REST
+```java
+currentPrice.setEndDate(LocalDateTime.now());
+repository.save(currentPrice);
+repository.flush();
 
-La première étape technique de la migration a consisté à exposer les principales fonctionnalités du backend à travers une API REST.
+ProductPrice newPrice = new ProductPrice();
+newPrice.setProduct(currentPrice.getProduct());
+newPrice.setSalePrice(salePrice);
+newPrice.setPurchasePrice(purchasePrice);
+newPrice.setStartDate(LocalDateTime.now());
+newPrice.setEndDate(null);
+repository.save(newPrice);
+```
 
-Des contrôleurs REST ont progressivement été ajoutés pour les domaines principaux de l'application.
+L'appel `flush()` force l'exécution des écritures en attente avant l'insertion du nouveau prix actif. Cette séquence correspond à la règle d'un seul prix actif par produit et conserve les tarifs antérieurs. Dans ce contrôleur, la réussite de l'opération est signalée par une réponse HTTP sans objet métier ; le frontend recharge ensuite les produits.
 
-L'API permet notamment de gérer :
+## 11.4 Autre parcours : création d'une vente
 
-- les produits ;
-- les catégories ;
-- les utilisateurs ;
-- l'authentification ;
-- les prix ;
-- le stock ;
-- les ventes.
+Le service React `saleService.js` construit un `POST` vers `/sales` avec `credentials: "include"`. Le corps JSON contient les identifiants de produits et leurs quantités, mais **pas les prix** :
 
-Les échanges entre le frontend et le backend reposent sur des représentations JSON.
+```javascript
+body: JSON.stringify({
+  items: items.map((item) => ({
+    productId: Number(item.id),
+    quantity: item.quantity,
+  })),
+}),
+```
 
-L'utilisation de DTO permet de contrôler les données exposées par l'API et d'éviter de transmettre directement les entités de persistance.
+Dans `SaleApiController.java`, `@Valid @RequestBody CreateSaleRequest` reçoit les lignes. `CurrentUserService` retrouve le vendeur depuis la session HTTP. Le contrôleur délègue ensuite à `saleService.createSale(...)` et renvoie `saleId` et `status`.
 
-Par exemple, les opérations concernant les produits disposent de requêtes spécifiques pour :
+Le service de vente, annoté `@Transactional`, vérifie le stock, récupère le prix actif côté serveur, décrémente la quantité disponible et copie le prix dans `SaleItem.unitPrice`. La transaction JPA couvre ici les écritures du **monolithe et de sa base** ; elle ne constitue pas une transaction distribuée, question étudiée au chapitre 12.
 
-- créer un produit ;
-- modifier un produit ;
-- changer son prix ;
-- ajouter du stock.
+Cette séparation évite de faire confiance à un montant transmis par le navigateur et préserve le prix appliqué au moment de la vente.
 
-Cette organisation rend les responsabilités de l'API plus explicites et prépare également le découpage ultérieur des fonctionnalités en services indépendants.
+## 11.5 Session HTTP et gestion des réponses
 
----
+`AuthApiController.java` reçoit le PIN sur `POST /api/v1/auth/login`. Après authentification, il enregistre l'utilisateur sous la clé `currentUser` de la session. `GET /auth/me` restitue l'utilisateur courant ou renvoie `401` si aucune session n'est active ; `POST /auth/logout` invalide la session.
 
-## 11.4 Évolution de l'interface avec React
+Côté React, `authApi.js` utilise `credentials: "include"` pour transmettre les cookies nécessaires aux appels authentifiés. Le client Axios partagé utilise `withCredentials: true`. Ces options permettent l'envoi des cookies, mais ne suffisent pas, à elles seules, à prouver l'ensemble des protections de sécurité (contrôle d'accès, CSRF et configuration de déploiement), étudiées séparément.
 
-La séparation du backend a permis d'introduire React pour la nouvelle interface utilisateur.
+Pour les ventes, `saleService.js` vérifie `response.ok`, tente d'extraire le message d'erreur JSON puis déclenche une exception en cas d'échec. Le formulaire de modification des prix utilise également `try/catch/finally` pour afficher une erreur et réactiver le bouton après la requête.
 
-L'objectif n'était pas uniquement de remplacer Thymeleaf par une autre technologie, mais de rendre le frontend indépendant du moteur de rendu du serveur.
+## 11.6 Bilan technique
 
-React communique désormais avec le backend à travers les endpoints REST.
+Cette V1 conserve les services métier Spring Boot tout en introduisant un frontend React indépendant, des contrats JSON explicites et une organisation frontend par fonctionnalités (`api`, `services`, `hooks`, `components`). Les deux parcours examinés — changement de prix et création de vente — montrent que les règles déterminantes restent exécutées côté serveur.
 
-L'application frontend comprend notamment les parcours suivants :
-
-- authentification ;
-- accueil ;
-- consultation et gestion des produits ;
-- consultation d'un produit ;
-- gestion des catégories ;
-- création d'une vente ;
-- consultation de l'historique des ventes ;
-- consultation du détail d'une vente ;
-- gestion des utilisateurs.
-
-Cette organisation permet de faire évoluer l'expérience utilisateur sans modifier directement les vues du backend.
-
-Elle prépare également l'application à d'autres types de clients, par exemple une application mobile ou une interface dédiée à certaines fonctions de gestion.
-
----
-
-## 11.5 Authentification et gestion de session
-
-Pour la V1, le mécanisme d'authentification repose volontairement sur une session HTTP.
-
-L'utilisateur s'authentifie à l'aide de son code PIN.
-
-Après validation, le serveur conserve l'utilisateur authentifié dans la session et le frontend peut interroger le backend afin de connaître l'utilisateur courant.
-
-Ce choix permet de conserver un mécanisme simple et adapté au contexte actuel de l'application tout en séparant le frontend et le backend.
-
-Une authentification par jetons, par exemple avec JWT, pourrait être envisagée dans une évolution future si les contraintes de déploiement ou de distribution du système le nécessitent.
-
-Le choix a donc été fait de ne pas complexifier prématurément la sécurité tant que le besoin ne le justifie pas.
-
----
-
-## 11.6 Continuité entre le MVP et la V1
-
-La migration vers la V1 illustre la stratégie progressive retenue depuis le début du projet.
-
-Le MVP a permis de valider les fonctionnalités et les règles métier.
-
-La V1 a ensuite permis de faire évoluer l'architecture sans remettre en cause ce socle fonctionnel.
-
-La trajectoire peut être représentée de la manière suivante :
-
-MVP :
-
-`Spring Boot + Spring MVC + Thymeleaf + MySQL`
-
-↓
-
-V1 :
-
-`React → API REST Spring Boot → MySQL`
-
-Cette transition a permis de réduire le couplage entre l'interface utilisateur et le backend.
-
-Elle a également constitué une étape intermédiaire importante avant le passage à l'architecture microservices.
-
----
-
-## 11.7 Préparation de l'architecture V2
-
-La mise en place de l'API REST a facilité l'identification des principaux domaines fonctionnels de l'application.
-
-Les responsabilités peuvent notamment être regroupées autour de plusieurs domaines :
-
-- utilisateurs et authentification ;
-- catalogue produit et tarification ;
-- ventes ;
-- traçabilité des activités.
-
-Cette séparation a servi de base à la conception de la V2.
-
-La V2 ne constitue donc pas une rupture complète avec les versions précédentes.
-
-Elle reprend les règles métier validées dans le MVP et les contrats introduits pendant la V1, puis les répartit dans une architecture distribuée.
-
-Cette progression permet de maîtriser la complexité technique tout en conservant la continuité fonctionnelle du produit.
-
----
-
-## 11.8 Bilan de la migration
-
-La migration vers la V1 a constitué une étape structurante dans l'évolution de PROJECT_POS.
-
-Elle a permis de passer d'une application monolithique assurant à la fois le rendu des vues et les traitements métier à une architecture dans laquelle le frontend et le backend communiquent à travers une API REST.
-
-Cette évolution a permis :
-
-- de préserver les règles métier validées pendant le MVP ;
-- de moderniser l'interface avec React ;
-- de clarifier les contrats entre frontend et backend ;
-- de réduire le couplage entre la présentation et la logique métier ;
-- de préparer le découpage du système en microservices.
-
-La V1 constitue ainsi une architecture de transition entre le MVP monolithique et la V2 distribuée présentée dans le chapitre suivant.
+Le chapitre suivant présente le changement d'échelle architectural : la répartition de ces responsabilités entre services indépendants, avec les contraintes réseau et transactionnelles qui en découlent.

@@ -1,175 +1,38 @@
 # 12. Architecture V2 : passage aux microservices
 
-## 12.1 Objectifs de la V2
+## 12.1 Objectif et choix d'architecture
 
-Après la séparation du frontend React et du backend REST réalisée pendant la V1, la deuxième évolution majeure du projet a consisté à faire évoluer le backend vers une architecture distribuée basée sur des microservices.
+Après la séparation du frontend React et du backend REST en V1, la V2 répartit les responsabilités du backend entre des services indépendants. Cette évolution ne vise pas à recréer les fonctionnalités du MVP : elle conserve ses règles métier, notamment l'historisation des prix et l'enregistrement du prix unitaire lors d'une vente.
 
-Cette évolution répond à deux objectifs complémentaires.
+Ce choix répond à un objectif de conception et de formation CDA : expérimenter la communication réseau entre services, l'isolation des données, la découverte de services et les conséquences des transactions réparties. Il ne signifie pas que les microservices seraient, par principe, plus adaptés qu'un monolithe à la taille actuelle du projet.
 
-Le premier est architectural : expérimenter un découpage du système par domaines métier afin de réduire le couplage entre les différentes responsabilités de l'application.
+## 12.2 Vue globale de la V2
 
-Le second s'inscrit dans le cadre du titre professionnel Concepteur Développeur d'Applications. La V2 permet de mettre en œuvre plusieurs problématiques liées aux architectures distribuées, à la communication entre services, aux bases de données SQL et NoSQL, à la configuration centralisée, à la découverte de services, aux conteneurs et à l'intégration continue.
+![Architecture générale de PROJECT_POS V2](assets/architecture-v2.png)
 
-La V2 ne constitue pas une réécriture fonctionnelle de PROJECT_POS.
+*Figure 12.1 — Architecture générale de PROJECT_POS V2.*
 
-Les principales règles métier développées et validées dans les versions précédentes ont été conservées puis réparties entre plusieurs services spécialisés.
+Le frontend React utilise une **API Gateway** comme point d'entrée du backend. Celle-ci dirige les requêtes vers les services métier :
 
----
+| Service | Responsabilité principale | Stockage |
+|---|---|---|
+| `user-service` | Utilisateurs, rôles et authentification par PIN | MySQL (`pos_user_db`) |
+| `product-service` | Produits, catégories, prix et stock | MySQL (`pos_product_db`) |
+| `sale-service` | Ventes et lignes de vente | MySQL (`pos_sale_db`) |
+| `activity-service` | Traces d'événements métier | MongoDB (`pos_activity_db`) |
 
-## 12.2 Découpage fonctionnel
+**Consul** permet aux applications de se découvrir par nom logique ; **Spring Cloud Config Server** centralise leurs configurations. Les bases sont isolées : un service ne modifie pas directement les tables d'un autre.
 
-L'analyse du domaine métier a conduit à identifier quatre services applicatifs principaux.
+Par exemple, `sale-service` conserve un identifiant de produit et un identifiant d'utilisateur, sans clé étrangère SQL vers les bases de `product-service` et `user-service`. Il obtient les informations nécessaires au moyen de leurs API.
 
-### user-service
+## 12.3 Communication interservices : exemple d'une vente
 
-Le `user-service` est responsable de la gestion des utilisateurs et de l'authentification.
+La création d'une vente met en jeu plusieurs responsabilités : vérifier les informations du produit, demander le retrait du stock et enregistrer la transaction avec le prix appliqué. `sale-service` orchestre le processus, mais **le stock reste sous la responsabilité de `product-service`**.
 
-Il prend notamment en charge :
+### 12.3.1 Déclaration des clients OpenFeign
 
-- la création et la modification des utilisateurs ;
-- la consultation des utilisateurs ;
-- les rôles `VENDEUR` et `GERANT` ;
-- l'authentification par code PIN ;
-- la gestion de l'utilisateur connecté.
+**Source :** `microservices/sale-service/src/main/java/com/projectpos/saleservice/` — `ProductClient.java` et `UserClient.java`.
 
-Le service utilise une base de données MySQL dédiée.
-
-### product-service
-
-Le `product-service` centralise les responsabilités liées au catalogue.
-
-Il prend notamment en charge :
-
-- les catégories ;
-- les produits ;
-- le stock ;
-- le prix de vente ;
-- le prix d'achat ;
-- l'historique des prix.
-
-La règle d'historisation des prix provenant du MVP est conservée.
-
-Lorsqu'un prix est modifié, l'ancien prix est clôturé avant la création du nouveau prix actif.
-
-Le service utilise également une base MySQL dédiée.
-
-### sale-service
-
-Le `sale-service` est responsable du processus de vente.
-
-Il gère notamment :
-
-- la création d'une vente ;
-- les lignes de vente ;
-- l'utilisateur ayant réalisé la vente ;
-- l'historique des ventes ;
-- le détail d'une vente.
-
-Lors de la création d'une vente, le service communique avec d'autres microservices afin de récupérer les informations nécessaires.
-
-Le prix unitaire utilisé lors de la vente reste enregistré dans `SaleItem`.
-
-Cette règle garantit qu'une vente historique conserve son prix d'origine même si le prix du produit est modifié ultérieurement.
-
-Le service possède sa propre base MySQL.
-
-### activity-service
-
-Le `activity-service` a été introduit afin de gérer la traçabilité de certains événements du système.
-
-Contrairement aux trois services précédents, il utilise MongoDB.
-
-Un événement d'activité contient notamment :
-
-- un type d'événement ;
-- une date ;
-- l'utilisateur concerné lorsque cette information est disponible ;
-- le service source ;
-- le type d'entité concernée ;
-- son identifiant ;
-- des métadonnées complémentaires.
-
-Les événements sont conçus comme des traces immuables.
-
-Le service expose donc des opérations de création et de consultation, mais pas de modification ou de suppression des événements.
-
-Ce choix correspond à la fonction de journalisation du service.
-
----
-
-## 12.3 Base de données par service
-
-L'un des changements importants par rapport au monolithe concerne la gestion des données.
-
-Dans le MVP, les différents domaines partageaient une même base MySQL.
-
-Dans la V2, chaque service SQL possède sa propre base :
-
-```text
-user-service
-    ↓
-pos_user_db
-
-product-service
-    ↓
-pos_product_db
-
-sale-service
-    ↓
-pos_sale_db
-```
-
-Le `activity-service` utilise séparément :
-
-```text
-activity-service
-    ↓
-pos_activity_db (MongoDB)
-```
-
-Cette séparation évite qu'un microservice accède directement aux tables appartenant à un autre domaine.
-
-Par conséquent, les relations qui existaient auparavant sous la forme de clés étrangères entre certains domaines deviennent des références par identifiant.
-
-Par exemple, une vente conserve l'identifiant de l'utilisateur et les lignes de vente conservent les identifiants des produits, mais `sale-service` ne possède pas de clé étrangère SQL vers les bases de `user-service` ou `product-service`.
-
-Lorsque des informations complémentaires sont nécessaires, elles sont récupérées par communication inter-service.
-
----
-
-## 12.4 Communication entre microservices
-
-Les services communiquent par API HTTP REST.
-
-Spring Cloud OpenFeign est utilisé pour simplifier certains appels entre services.
-
-Le `sale-service` communique notamment avec :
-
-- `user-service` pour obtenir les informations concernant l'utilisateur ;
-- `product-service` pour obtenir les informations d'un produit et mettre à jour son stock.
-
-Lors de la création d'une vente, le processus comprend notamment les opérations suivantes :
-
-1. identifier l'utilisateur connecté ;
-2. récupérer les informations du produit ;
-3. vérifier les informations nécessaires à la vente ;
-4. décrémenter le stock via `product-service` ;
-5. enregistrer la vente et ses lignes dans `sale-service`.
-
-Le prix unitaire enregistré dans la ligne de vente correspond au prix récupéré au moment de l'opération.
-
-Cette communication permet de respecter la séparation des responsabilités : `sale-service` ne modifie jamais directement la base de données de `product-service`.
-
-### Implémentation des clients inter-services
-
-Les communications nécessaires au processus de vente sont déclarées avec Spring Cloud OpenFeign. Les services sont référencés par leur nom logique plutôt que par une adresse codée directement dans le client.
-
-**Fichiers sources :**
-
-- `ProductClient.java` — interface OpenFeign permettant à `sale-service` de communiquer avec `product-service`.
-- `UserClient.java` — interface OpenFeign permettant à `sale-service` de communiquer avec `user-service`.
-
-**Emplacements :** `microservices/sale-service/src/main/java/com/projectpos/saleservice/`
 ```java
 @FeignClient(name = "product-service")
 public interface ProductClient {
@@ -182,7 +45,7 @@ public interface ProductClient {
 }
 ```
 
-Le même principe est utilisé pour communiquer avec user-service. La session HTTP actuelle est propagée lors de la récupération de l'utilisateur connecté :
+`@FeignClient(name = "product-service")` désigne le service cible par son nom logique. L'annotation `@GetMapping` associe `findById` à une lecture HTTP ; `@PostMapping` associe `removeStock` à une demande de modification du stock. OpenFeign prend en charge la construction de ces appels à partir de l'interface Java.
 
 ```java
 @FeignClient(name = "user-service")
@@ -195,18 +58,12 @@ public interface UserClient {
 }
 ```
 
-Ces interfaces séparent le code métier de sale-service des détails techniques de construction des appels HTTP. Associées à la découverte de services avec Consul, elles permettent d'utiliser les noms logiques product-service et user-service.
+Ici, l'en-tête HTTP `Cookie` est transmis explicitement pour permettre à `user-service` de retrouver la session de l'utilisateur. Ce mécanisme suppose que la session soit correctement reconnue côté service destinataire ; l'interface seule ne démontre pas toute la configuration de sécurité.
 
+### 12.3.2 Orchestration dans `SaleService`
 
-### Exemple d'orchestration : création d'une vente
+**Source :** `microservices/sale-service/src/main/java/com/projectpos/saleservice/sale/service/SaleService.java`.
 
-La création d'une vente illustre concrètement la communication entre les domaines `sale` et `product`.
-
-
-Cet extrait présente l'orchestration d'une vente : récupération des informations produit, retrait du stock par appel interservices et conservation du prix unitaire dans la ligne de vente.
-Pour chaque ligne demandée, `sale-service` interroge `product-service` afin d'obtenir les informations du produit et son prix actif. Il demande ensuite au service propriétaire du stock d'effectuer le retrait.
-
-**Fichier source :** `microservices/sale-service/src/main/java/com/projectpos/saleservice/sale/service/SaleService.java`
 ```java
 ProductResponse product =
         productClient.findById(itemRequest.productId());
@@ -225,226 +82,90 @@ productClient.removeStock(
 );
 
 SaleItem item = new SaleItem();
-
 item.setSale(sale);
 item.setProductId(product.id());
 item.setQuantity(itemRequest.quantity());
 item.setUnitPrice(product.salePrice());
-
 sale.getItems().add(item);
 ```
 
-Cet extrait montre que `sale-service` ne modifie pas directement les données appartenant à `product-service`. La communication passe par l'API du service propriétaire au moyen du client inter-service.
+Trois instructions matérialisent la frontière entre les domaines :
 
-Le prix retourné au moment de la vente est copié dans `SaleItem.unitPrice`. Il devient ainsi une donnée historique de la vente : une modification ultérieure du prix du produit ne modifie pas les transactions déjà enregistrées.
+1. `productClient.findById(...)` récupère les données du produit, notamment son prix actif ; l'absence de prix déclenche une exception.
+2. `productClient.removeStock(...)` **demande** au service propriétaire de diminuer le stock. `sale-service` n'exécute pas de requête SQL sur `pos_product_db`.
+3. `item.setUnitPrice(product.salePrice())` copie le prix dans la ligne de vente. Ce prix historisé ne change pas lorsque le catalogue est mis à jour ultérieurement.
 
-> **Limite connue de la V2 :** le retrait du stock dans `product-service` et l'enregistrement de la vente dans `sale-service` appartiennent à deux transactions distinctes. Si le retrait du stock réussit mais que l'enregistrement de la vente échoue ensuite, aucune transaction SQL globale ne permet actuellement d'annuler automatiquement le retrait. Cette limite est étudiée plus en détail dans la section 12.10.
+Ces lignes sont un **extrait** du traitement, pas la méthode complète : elles ne suffisent pas à démontrer toutes les vérifications, la gestion des erreurs réseau ou le moment exact de la sauvegarde de la vente.
 
----
+## 12.4 API Gateway, découverte et configuration
 
-## 12.5 API Gateway
+L'**API Gateway**, exposée sur le port `8080` dans l'environnement décrit, fournit une adresse commune au frontend. Les routes présentées dans la V2 couvrent notamment `/api/v1/users/**`, `/api/v1/auth/**`, `/api/v1/products/**`, `/api/v1/categories/**`, `/api/v1/sales/**` et `/api/v1/activities/**`.
 
-Une API Gateway a été ajoutée comme point d'entrée principal de l'architecture.
+**Consul** reçoit l'enregistrement des services au démarrage et permet leur résolution par nom logique. Il complète ainsi l'utilisation de `@FeignClient(name = "product-service")`, sans imposer une adresse IP fixe dans l'interface Java.
 
-Le service :
+**Config Server** fournit une configuration centralisée depuis un dépôt Git dédié. Les valeurs propres à l'environnement sont séparées du code applicatif ; les secrets sont prévus pour être injectés par variables d'environnement plutôt que conservés en clair dans ce dépôt.
 
-```text
-api-gateway
-```
+Ces composants répondent à trois problèmes différents : **orienter les requêtes externes** (Gateway), **localiser les services** (Consul) et **fournir leur configuration** (Config Server).
 
-est accessible sur le port :
+## 12.5 Environnement Docker Compose
 
-```text
-8080
-```
+L'infrastructure de développement est démarrée avec Docker Compose : **Consul, Config Server, trois instances MySQL et MongoDB**. Les services applicatifs peuvent, quant à eux, être lancés depuis IntelliJ IDEA pour faciliter le débogage.
 
-Il route les requêtes vers les services concernés.
+Docker Compose décrit un ensemble de services et leur environnement d'exécution dans un fichier YAML. Pour chaque conteneur, la configuration peut préciser une image ou une construction, les ports publiés, les variables d'environnement, les volumes et les dépendances de démarrage.
 
-Les principales routes concernent :
+Dans PROJECT_POS, les trois instances MySQL séparent physiquement les bases de `user-service`, `product-service` et `sale-service`. MongoDB est utilisé par `activity-service`. Les ports publiés permettent de joindre ces composants depuis le poste de développement.
 
-```text
-/api/v1/users/**
-/api/v1/auth/**
-/api/v1/products/**
-/api/v1/categories/**
-/api/v1/sales/**
-/api/v1/activities/**
-```
-
-Le frontend n'a donc pas besoin de connaître directement les ports internes de chaque microservice.
-
-L'API Gateway fournit un point d'entrée commun vers le backend distribué.
-
----
-
-## 12.6 Découverte de services avec Consul
-
-Dans une architecture distribuée, l'adresse d'un service ne doit pas nécessairement être codée directement dans les autres applications.
-
-Consul a été intégré afin de fournir un mécanisme de découverte de services.
-
-Au démarrage, les applications s'enregistrent auprès de Consul.
-
-Les services applicatifs enregistrés sont notamment :
-
-```text
-user-service
-product-service
-sale-service
-activity-service
-api-gateway
-```
-
-Cette découverte est utilisée conjointement avec les noms logiques des services pour permettre leur résolution lors des communications.
-
-Elle évite de faire dépendre l'architecture uniquement de ports et d'adresses configurés directement dans le code.
-
----
-
-## 12.7 Configuration centralisée
-
-Un Config Server Spring Cloud a également été mis en place.
-
-Son rôle est de centraliser les configurations des différents services.
-
-Le serveur de configuration utilise un dépôt Git dédié contenant les configurations distantes.
-
-L'architecture sépare ainsi :
-
-- le code source des applications ;
-- leur configuration ;
-- les valeurs propres à l'environnement d'exécution.
-
-Les services récupèrent leur configuration au démarrage auprès du Config Server.
-
-Cette organisation facilite la maintenance de plusieurs services partageant une infrastructure commune.
-
-Les informations sensibles ne doivent cependant pas être stockées directement en clair dans le dépôt de configuration.
-
-Les secrets nécessaires à l'exécution sont injectés par variables d'environnement.
-
----
-
-## 12.8 Architecture générale
-
-L'architecture logique de la V2 est représentée dans le schéma suivant :
-
-![Architecture générale de PROJECT_POS V2](assets/architecture-v2.png)
-
-**Figure — Architecture générale de PROJECT_POS V2.** Le frontend accède au backend par l'API Gateway. Les responsabilités métier sont réparties entre `user-service`, `product-service`, `sale-service` et `activity-service`. Les trois services transactionnels disposent chacun de leur propre base MySQL, tandis que `activity-service` utilise MongoDB. Consul assure la découverte des services et Spring Cloud Config centralise leur configuration.
-
-Les communications inter-services restent contrôlées par les frontières métier. `sale-service` communique avec `user-service` et `product-service` via OpenFeign. `product-service` communique avec `activity-service` pour transmettre l'événement `PRICE_CHANGED` lors d'une modification de prix.
-
-Aucun service métier n'accède directement à la base de données d'un autre service.
----
-
-## 12.9 Environnement d'exécution de développement
-
-Pendant le développement de la V2, l'infrastructure est exécutée avec Docker Compose.
-
-Les conteneurs comprennent :
-
-- Consul ;
-- Config Server ;
-- trois instances MySQL ;
-- MongoDB.
-
-Les services applicatifs peuvent être démarrés depuis l'environnement de développement IntelliJ IDEA afin de conserver un cycle de développement et de débogage rapide.
-
-Les ports utilisés sont :
-
-| Composant | Port |
+| Composant | Port de développement |
 |---|---:|
 | API Gateway | 8080 |
-| user-service | 8081 |
-| product-service | 8082 |
-| sale-service | 8083 |
-| activity-service | 8084 |
-| Config Server | 8888 |
-| Consul | 8500 |
-| user-db | 3307 |
-| product-db | 3308 |
-| sale-db | 3309 |
+| `user-service` / `product-service` / `sale-service` / `activity-service` | 8081 / 8082 / 8083 / 8084 |
+| Config Server / Consul | 8888 / 8500 |
+| MySQL utilisateur / produit / vente | 3307 / 3308 / 3309 |
 | MongoDB | 27017 |
 
-Cette organisation constitue l'environnement de développement de la V2 et non une architecture de production définitive.
+**Point technique important :** publier un port rend un service accessible depuis l'hôte, mais n'assure pas qu'il soit prêt à répondre. De même, l'ordre de démarrage des conteneurs ne garantit pas, à lui seul, la disponibilité de MySQL ou de Config Server. La gestion effective de cette disponibilité dépend des vérifications de santé et des mécanismes de reconnexion configurés.
 
----
+La description ci-dessus explique l'organisation constatée dans le dossier ; pour montrer les directives exactes (`services`, `ports`, `environment`, `volumes`, `healthcheck` ou `depends_on`), il faudra sélectionner un extrait authentique du fichier Compose du dépôt. Il ne serait pas pertinent de présenter un YAML reconstitué comme une preuve de réalisation.
 
-## 12.10 Gestion des transactions distribuées
+## 12.6 Cohérence des données : transactions distribuées
 
-Le passage aux microservices introduit de nouvelles contraintes qui n'existaient pas de la même manière dans le monolithe.
+### 12.6.1 Pourquoi une transaction locale ne suffit plus
 
-La création d'une vente constitue un exemple important.
+Dans le monolithe, une transaction SQL pouvait regrouper les modifications effectuées dans une même base. Dans la V2, **le retrait du stock** est enregistré dans `pos_product_db`, tandis que **la vente** est enregistrée dans `pos_sale_db`.
 
-Le `sale-service` demande à `product-service` de décrémenter le stock avant d'enregistrer définitivement la vente dans sa propre base.
+Même si la méthode de `sale-service` utilise `@Transactional`, cette annotation ne peut pas, à elle seule, annuler une transaction déjà validée dans la base de `product-service` après un appel HTTP. Chaque service possède sa propre frontière transactionnelle.
 
-Ces opérations utilisent deux bases de données indépendantes.
+### 12.6.2 Scénarios d'échec identifiés
 
-Il n'existe donc plus de transaction SQL unique couvrant l'ensemble du processus.
+| Moment de l'échec | Conséquence possible |
+|---|---|
+| `product-service` refuse le retrait de stock avant modification | La vente doit être interrompue ; aucun stock ne devrait être retiré si le service garantit l'atomicité locale. |
+| Le stock est retiré, puis la sauvegarde de la vente échoue | **Stock diminué sans vente enregistrée** : incohérence entre les deux bases. |
+| Le retrait réussit, mais la réponse HTTP est perdue ou expire | `sale-service` peut ignorer si le stock a réellement été retiré ; une relance non maîtrisée risque un second retrait. |
+| Plusieurs lignes sont traitées et une opération ultérieure échoue | Les retraits déjà effectués peuvent subsister alors que la vente complète n'est pas enregistrée. |
 
-Une situation théorique peut alors se produire :
+Le code présenté en 12.3 montre précisément l'ordre **appel de retrait du stock → construction de `SaleItem`**. Il ne démontre pas la présence d'un mécanisme de compensation, d'une clé d'idempotence ou d'une transaction distribuée.
 
-```text
-décrémentation du stock réussie
-            ↓
-échec de l'enregistrement de la vente
-```
+### 12.6.3 Choix retenu et portée de la V2
 
-Le stock aurait alors été modifié alors que la vente n'aurait pas été enregistrée.
+**Le choix actuel est une orchestration synchrone par appels REST, sans garantie d'atomicité globale démontrée entre les bases.** Ce n'est pas une simple indisponibilité accessoire : c'est un risque d'intégrité métier qui rend ce processus insuffisant, en l'état, pour une exploitation commerciale exigeant une cohérence garantie.
 
-Cette limite est connue et assumée dans le périmètre actuel de la V2.
+Une évolution crédible consisterait à introduire une **Saga avec compensation** : si l'enregistrement de la vente échoue après le retrait, une opération explicite de restitution du stock serait demandée à `product-service`. Il faudrait également rendre les opérations **idempotentes**, pour qu'une répétition de requête après un délai réseau ne produise pas deux retraits.
 
-Dans une architecture destinée à une exploitation plus importante, plusieurs stratégies pourraient être étudiées :
+Une autre approche pourrait combiner événements métier, **Outbox Pattern** et traitement asynchrone pour fiabiliser les échanges. Ces solutions sont des pistes d'évolution, **pas des mécanismes revendiqués comme déjà implémentés**.
 
-- transaction distribuée par Saga ;
-- opération compensatoire ;
-- publication d'événements ;
-- Outbox Pattern ;
-- traitement asynchrone avec système de messagerie.
+Cette décision de périmètre est assumée pour la démonstration CDA ; elle doit être corrigée avant d'utiliser la V2 comme système transactionnel de production.
 
-L'objectif de la V2 était d'identifier et de comprendre cette problématique sans introduire prématurément une infrastructure supplémentaire.
+## 12.7 Journal d'activité et tolérance aux pannes
 
----
+`activity-service` conserve des événements métier dans MongoDB. Le dossier décrit notamment l'envoi d'un événement `PRICE_CHANGED` depuis `product-service` lorsqu'un prix est modifié.
 
-## 12.11 Tolérance aux erreurs du journal d'activité
+Le choix retenu est de ne pas faire échouer la modification du prix lorsque le service de journalisation est indisponible. **L'opération métier est donc prioritaire sur la disponibilité de la trace d'activité.** En contrepartie, un événement non transmis n'est pas automatiquement rejoué dans l'implémentation décrite.
 
-L'intégration de `activity-service` introduit également une décision architecturale particulière.
+Cette décision doit être distinguée du problème précédent : perdre une trace d'activité n'a pas la même conséquence métier que décrémenter un stock sans enregistrer une vente. Pour rendre la journalisation fiable, une publication persistée, par exemple avec un Outbox Pattern, serait à envisager.
 
-Par exemple, lorsqu'un prix est modifié, `product-service` peut transmettre un événement `PRICE_CHANGED` à `activity-service`.
+## 12.8 Bilan et articulation avec la suite du dossier
 
-La journalisation ne doit cependant pas empêcher l'opération métier principale de réussir si le service d'activité est temporairement indisponible.
+La V2 a permis de mettre en pratique le découpage par domaines, les API REST entre services, OpenFeign, Consul, Config Server, l'API Gateway et l'isolation des données SQL/NoSQL. Elle montre également le coût de cette séparation : dépendances réseau, démarrage de plusieurs composants et absence de transaction unique entre les bases.
 
-L'appel est donc traité de manière à ne pas faire échouer la modification du prix en cas d'indisponibilité du service de journalisation.
-
-Cette stratégie privilégie la disponibilité de l'opération métier.
-
-Elle présente toutefois une limite : l'événement perdu n'est actuellement pas rejoué automatiquement.
-
-Une évolution future pourrait introduire un mécanisme fiable de publication et de reprise des événements.
-
----
-
-## 12.12 Bilan architectural
-
-La V2 transforme PROJECT_POS en une architecture distribuée composée de services spécialisés.
-
-Le passage aux microservices a permis de mettre en pratique :
-
-- le découpage d'un domaine métier ;
-- l'isolation des données par service ;
-- les communications REST inter-services ;
-- OpenFeign ;
-- la découverte de services avec Consul ;
-- la configuration centralisée avec Spring Cloud Config ;
-- l'utilisation conjointe de MySQL et MongoDB ;
-- un point d'entrée commun avec API Gateway ;
-- l'exécution d'une infrastructure conteneurisée.
-
-Cette architecture apporte davantage de séparation entre les domaines mais introduit également une complexité supérieure au monolithe.
-
-Cette complexité concerne notamment les communications réseau, la configuration distribuée, la disponibilité des services et la cohérence des opérations impliquant plusieurs bases de données.
-
-Le choix de la V2 a donc été réalisé dans une démarche d'apprentissage et d'évolution architecturale maîtrisée, et non parce qu'une architecture microservices serait systématiquement préférable à un monolithe.
-
-La V2 constitue finalement l'aboutissement technique du projet présenté dans ce dossier et sert de support aux problématiques de sécurité, de persistance SQL/NoSQL, de tests, de déploiement et de DevOps présentées dans les chapitres suivants.
+Le principal enseignement architectural est concret : **une séparation correcte des responsabilités ne garantit pas, à elle seule, la cohérence d'une opération métier distribuée**. Les chapitres suivants approfondissent la sécurité, la persistance et les validations techniques de cette architecture.

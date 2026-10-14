@@ -1,522 +1,242 @@
-# 16. Perspectives et conclusion
+# 16. Bilan du projet, limites et perspectives d'évolution
 
-## 16.1 Bilan du projet
+## 16.1 Bilan général du projet
 
-PROJECT_POS est né d'un besoin concret observé dans plusieurs commerces : disposer d'un outil simple permettant de suivre les produits, le stock et les ventes sans dépendre de cahiers, de messages ou de calculs manuels.
+PROJECT_POS est né d'un besoin métier réel : améliorer la gestion des ventes, des produits et des stocks dans de petites structures commerciales utilisant encore des méthodes manuelles, notamment les cahiers et les échanges WhatsApp.
 
-Le projet a progressivement dépassé la réalisation d'une simple interface de caisse.
+L'objectif initial était de concevoir une application de caisse simple, rapide et adaptée aux conditions d'utilisation des commerçants.
 
-Le besoin métier met également en évidence des problématiques de traçabilité, de supervision et de cohérence des informations commerciales, particulièrement lorsque plusieurs boutiques ou plusieurs utilisateurs interviennent.
+Le projet a progressivement évolué vers une plateforme de gestion commerciale reposant sur une architecture distribuée.
 
-Le développement a été organisé de manière progressive :
+Cette évolution s'est organisée autour de trois grandes étapes.
 
-```text
-Besoin métier
-    ↓
-MVP monolithique
-    ↓
-API REST
-    ↓
-Frontend React
-    ↓
-Architecture microservices
-    ↓
-Tests et industrialisation
-```
+| Version | Objectif principal | Réalisations |
+|---|---|---|
+| **MVP** | Valider les fonctionnalités essentielles d'une caisse commerciale | Application monolithique Spring Boot, interface Thymeleaf, gestion des produits, prix, ventes, stocks et tableau de bord |
+| **V1** | Séparer progressivement l'interface utilisateur et le backend | Développement d'API REST, structuration des DTO et préparation d'une interface React |
+| **V2** | Faire évoluer l'architecture vers des microservices | Services métier indépendants, API Gateway, Consul, Config Server, bases SQL et NoSQL, tests automatisés et intégration continue |
 
-Cette progression a permis de conserver un produit fonctionnel tout en faisant évoluer son architecture.
+Cette progression a permis de conserver les acquis fonctionnels du MVP tout en faisant évoluer l'organisation technique de l'application.
 
----
+**Le passage aux microservices n'a pas constitué une simple modification technologique : il a nécessité de repenser la répartition des responsabilités, les communications entre composants et la gestion des données.**
 
-## 16.2 Le MVP comme première validation
+La V2 représente aujourd'hui un socle technique validé dans un environnement local de développement et de test. Elle ne constitue pas encore une plateforme de production entièrement industrialisée.
 
-La première version avait pour objectif de valider rapidement les principales règles métier.
+## 16.2 Résultats techniques obtenus
 
-Elle reposait sur :
+Les travaux réalisés ont permis de couvrir les principales dimensions d'une application distribuée : conception, développement, persistance, communication, sécurité, validation et préparation au déploiement.
 
-```text
-Spring Boot
-Spring MVC
-Thymeleaf
-JPA / Hibernate
-MySQL
-JavaScript
-HTML / CSS
-```
+### 16.2.1 Architecture applicative
 
-Cette version permettait notamment de gérer :
+L'architecture V2 repose sur quatre microservices métier :
 
-- les utilisateurs ;
-- les catégories ;
-- les produits ;
-- le stock ;
-- les prix ;
-- les ventes ;
-- l'historique commercial ;
-- les principaux indicateurs du tableau de bord.
+- `user-service` : gestion des utilisateurs et de l'authentification ;
+- `product-service` : gestion des produits, des prix et des stocks ;
+- `sale-service` : gestion des ventes et de leurs lignes ;
+- `activity-service` : enregistrement des événements importants de l'application.
 
-Le MVP a surtout permis de vérifier la cohérence du modèle métier avant d'engager des transformations architecturales plus importantes.
+Ces services sont complétés par une API Gateway, un Config Server et Consul pour la découverte des services.
 
----
+Les communications interservices utilisent principalement des API REST et OpenFeign.
 
-## 16.3 La V1 comme étape de découplage
+Chaque domaine métier possède son propre périmètre de données, ce qui limite les dépendances directes entre les bases.
 
-La V1 a introduit une séparation entre l'interface utilisateur et le backend.
+### 16.2.2 Persistance SQL et NoSQL
 
-Les fonctionnalités métier ont progressivement été exposées sous forme d'API REST et une nouvelle interface a été développée avec React.
+La V2 associe deux modèles de persistance complémentaires.
 
-La trajectoire est alors devenue :
+**MySQL** est utilisé pour les données transactionnelles structurées : utilisateurs, produits, prix, stocks et ventes.
 
-```text
-React
-   ↓
-API REST Spring Boot
-   ↓
-MySQL
-```
+**MongoDB** est utilisé pour le journal d'activité, dont les événements peuvent contenir des métadonnées variables selon leur nature.
 
-Cette évolution a permis de réduire le couplage entre la présentation et le backend tout en conservant les règles métier validées pendant le MVP.
+Cette organisation permet de choisir le modèle de stockage en fonction des caractéristiques des données et des besoins métier.
 
-Elle a également préparé le passage vers une architecture distribuée.
+Elle introduit néanmoins de nouvelles contraintes de cohérence lorsque plusieurs services participent à une même opération.
 
----
+### 16.2.3 Validation technique
 
-## 16.4 La V2 comme évolution architecturale
+La validation du projet repose sur plusieurs niveaux de vérification.
 
-La V2 répartit le backend entre plusieurs services :
+| Domaine | Résultat documenté |
+|---|---|
+| Infrastructure Docker | 6 conteneurs sur 6 déclarés `healthy` |
+| Découverte des services | 5 applications enregistrées dans Consul |
+| Tests automatisés | 22 tests ciblés documentés |
+| Tests fonctionnels | Parcours REST validés avec Postman |
+| Sécurité | Vérification du rejet d'une opération protégée sans session |
+| Tests de charge | Deux campagnes locales sans échec relevé |
+| Intégration continue | 6 jobs Maven réussis sur 6 avec GitHub Actions |
 
-```text
-user-service
-product-service
-sale-service
-activity-service
-api-gateway
-config-server
-```
+Ces résultats démontrent le fonctionnement des composants et de plusieurs parcours métier dans l'environnement testé.
 
-L'infrastructure s'appuie également sur :
+Ils ne constituent pas une garantie de disponibilité, de performance ou de sécurité en production.
 
-```text
-Consul
-MySQL
-MongoDB
-Docker Compose
-GitHub Actions
-```
+**L'un des principaux acquis du projet est la mise en place d'une démarche de validation reproductible, associant tests automatisés, vérifications fonctionnelles et intégration continue.**
 
-Cette version permet d'expérimenter concrètement les problématiques liées :
+## 16.3 Difficultés rencontrées et solutions apportées
 
-- aux architectures distribuées ;
-- à la découverte de services ;
-- à la configuration centralisée ;
-- aux communications inter-services ;
-- à la séparation des données ;
-- à l'utilisation de SQL et NoSQL ;
-- à la conteneurisation ;
-- aux tests ;
-- à l'intégration continue.
+La réalisation de PROJECT_POS a nécessité de résoudre plusieurs problèmes techniques, notamment lors du passage du monolithe à l'architecture distribuée.
 
-La V2 représente l'aboutissement technique du projet dans le cadre actuel du dossier.
+Ces difficultés ont contribué à améliorer la conception et à approfondir la compréhension des mécanismes utilisés.
 
-Elle ne constitue cependant pas la fin de l'évolution du produit.
+| Difficulté | Solution ou décision technique | Enseignement |
+|---|---|---|
+| Contrainte d'unicité sur les prix actifs | Clôture de l'ancien prix et synchronisation avant création du nouveau | Importance de l'ordre des opérations de persistance |
+| Communication entre microservices | Utilisation d'OpenFeign, Consul et de la Gateway | Nécessité de vérifier les parcours distribués |
+| Route manquante vers `activity-service` | Ajout du routage dans l'API Gateway | Un service fonctionnel isolément ne garantit pas son accessibilité |
+| Dépendances aux bases locales pendant les tests | Profil de test et base H2 en mémoire | Importance de l'isolation des environnements |
+| Différences entre Windows et Linux | Adaptation des permissions du Maven Wrapper | Nécessité de garantir la portabilité des builds |
+| Dépendance à une configuration distante | Adaptation du Config Server pour les tests | Importance de maîtriser les dépendances externes |
 
----
+La résolution de ces incidents a permis d'améliorer progressivement la fiabilité et la reproductibilité du projet.
 
-## 16.5 Une architecture volontairement progressive
+Elle a également montré qu'une architecture microservices exige davantage de contrôles qu'une application monolithique, en raison de la multiplication des composants et des communications réseau.
 
-Le développement de PROJECT_POS a confirmé l'intérêt d'une démarche progressive.
+## 16.4 Compétences mobilisées dans le cadre du titre CDA
 
-Une architecture microservices dès le début aurait introduit de nombreuses problématiques techniques avant même que les règles métier soient suffisamment stabilisées.
+La réalisation de PROJECT_POS a permis de mobiliser plusieurs compétences relevant du métier de Concepteur Développeur d'Applications.
 
-Le MVP monolithique a permis de travailler en priorité sur :
+Le projet ne se limite pas au développement de fonctionnalités : il couvre également l'analyse du besoin, la conception de l'architecture, l'organisation des données, la validation et la préparation de la livraison.
 
-```text
-le besoin
-les données
-les règles métier
-l'expérience utilisateur
-```
+| Domaine de compétence | Mise en application dans PROJECT_POS |
+|---|---|
+| Analyse et conception | Identification des besoins commerciaux, règles métier, modélisation des entités et découpage fonctionnel |
+| Développement backend | Services Java 21 et Spring Boot, contrôleurs REST, DTO, logique métier et gestion des exceptions |
+| Développement frontend | Interfaces HTML, CSS, JavaScript et Thymeleaf du MVP ; préparation de l'évolution React |
+| Bases de données relationnelles | Modélisation et exploitation de MySQL avec Spring Data JPA |
+| Bases de données NoSQL | Persistance des événements d'activité avec MongoDB |
+| Architecture applicative | Passage d'un monolithe modulaire à des microservices |
+| Sécurité applicative | Authentification, contrôles d'accès, validation des données et externalisation des secrets |
+| Tests et qualité | JUnit 5, Mockito, Maven, Postman et tests de charge locaux |
+| Déploiement et DevOps | Docker Compose, contrôles de santé et GitHub Actions |
+| Documentation technique | Documentation d'architecture, procédures de validation et suivi des évolutions |
 
-La séparation REST/React a ensuite réduit le couplage de la couche de présentation.
+Le projet a également nécessité des compétences transversales : autonomie, analyse des anomalies, recherche de solutions, organisation du travail et justification des choix techniques.
 
-Enfin, les microservices ont été introduits lorsque les principaux domaines fonctionnels étaient suffisamment identifiables.
+**L'apport principal de cette démarche est d'avoir relié les compétences techniques à un besoin métier concret, plutôt que de développer des fonctionnalités uniquement dans un objectif pédagogique.**
 
-La trajectoire :
+## 16.5 Limites de l'architecture actuelle
 
-```text
-Monolithe
-   ↓
-Frontend / Backend séparés
-   ↓
-Microservices
-```
+Malgré les résultats obtenus, plusieurs limites doivent être prises en compte avant d'envisager une exploitation commerciale à plus grande échelle.
 
-a ainsi permis d'augmenter progressivement la complexité technique.
+### 16.5.1 Cohérence des transactions distribuées
 
----
+Dans la V2, la création d'une vente peut nécessiter des opérations sur plusieurs services et bases de données indépendantes.
 
-## 16.6 Limites actuelles
+Une modification du stock peut ainsi réussir alors que l'enregistrement de la vente échoue.
 
-Malgré les évolutions réalisées, plusieurs limites restent connues.
+L'architecture actuelle ne garantit pas une transaction SQL atomique couvrant l'ensemble de ces opérations.
 
-### Transactions distribuées
+Cette limite, étudiée au chapitre 12, constitue un point important pour une future exploitation commerciale.
 
-Une vente peut nécessiter une modification du stock dans `product-service` puis un enregistrement dans `sale-service`.
+Des mécanismes tels que **Saga, les opérations compensatoires ou l'Outbox Pattern** pourraient être étudiés afin de renforcer la cohérence des traitements distribués.
 
-Ces opérations ne partagent pas une transaction SQL unique.
+### 16.5.2 Fiabilité des événements d'activité
 
-Une défaillance entre les deux opérations peut donc produire une incohérence.
+L'enregistrement des événements dans `activity-service` est secondaire par rapport à certaines opérations métier.
 
-### Journal d'activité
+Cette décision permet notamment de ne pas bloquer un changement de prix lorsque le service de journalisation est indisponible.
 
-L'indisponibilité de `activity-service` ne bloque pas l'opération métier principale.
+En revanche, elle ne garantit pas que tous les événements soient conservés en cas de panne.
 
-En revanche, la V2 ne dispose pas encore d'un mécanisme garantissant la reprise automatique d'un événement non transmis.
+Une évolution pourrait introduire une publication fiable des événements, associée à un système de messagerie et à des mécanismes de reprise.
 
-### Authentification
+### 16.5.3 Sécurité et gestion des accès
 
-L'authentification utilise encore une session HTTP.
+La sécurité actuelle répond aux besoins de développement et aux scénarios fonctionnels testés.
 
-Cette solution fonctionne dans le périmètre actuel mais pourrait devenir moins adaptée à mesure que l'architecture distribuée évolue.
+Une exploitation en production nécessiterait cependant des mécanismes complémentaires, notamment :
 
-### Déploiement
+- une politique d'authentification et d'autorisation adaptée à plusieurs établissements ;
+- la sécurisation des communications avec HTTPS ;
+- une gestion centralisée et sécurisée des secrets ;
+- une politique de journalisation et d'audit des accès ;
+- des contrôles de sécurité automatisés plus approfondis.
 
-L'intégration continue est automatisée, mais le projet ne dispose pas encore d'une chaîne complète de déploiement continu vers un environnement de production.
+Ces évolutions devront être adaptées au niveau de risque et aux conditions réelles d'exploitation.
 
-### Infrastructure
+### 16.5.4 Déploiement et exploitation
 
-L'environnement actuel est principalement conçu pour le développement et la démonstration.
+La V2 fonctionne principalement dans un environnement local de développement et de validation.
 
-Une exploitation commerciale nécessiterait une infrastructure renforcée, notamment en matière de sécurité, de supervision, de sauvegarde et de disponibilité.
+La chaîne GitHub Actions assure l'intégration continue, mais ne réalise pas encore de déploiement automatique vers un environnement distant.
 
-Ces limites sont identifiées afin de distinguer clairement l'état actuel du projet de ses évolutions possibles.
+La supervision reste également limitée par rapport aux exigences d'une plateforme commerciale en production.
 
----
+Les évolutions nécessaires concernent notamment la construction d'images applicatives, le déploiement distant, la centralisation des logs, les métriques, les sauvegardes et les procédures de restauration.
 
-## 16.7 Évolution de la gestion des transactions
+## 16.6 Perspectives d'évolution
 
-Une évolution importante concernerait la fiabilité des opérations distribuées.
+La suite de PROJECT_POS doit être guidée par les besoins réels des commerçants et par la capacité à maintenir une application fiable.
 
-Plusieurs solutions pourraient être étudiées :
+L'objectif n'est pas de multiplier les technologies, mais de faire évoluer progressivement le produit vers une solution commerciale exploitable.
 
-```text
-Saga Pattern
-opérations compensatoires
-Outbox Pattern
-messagerie asynchrone
-```
+Les perspectives sont organisées selon trois horizons.
 
-Par exemple, une architecture événementielle pourrait permettre de découpler certaines opérations :
+| Horizon | Évolutions envisagées | Objectif |
+|---|---|---|
+| **Court terme** | Finalisation de l'interface React, amélioration des parcours utilisateurs, tests complémentaires et stabilisation de la V2 | Disposer d'une application cohérente et démontrable de bout en bout |
+| **Moyen terme** | Transactions distribuées plus fiables, gestion des événements, sécurité renforcée, déploiement distant et observabilité | Préparer une exploitation plus robuste |
+| **Long terme** | Gestion multi-boutiques, supervision centralisée, traçabilité financière, indicateurs commerciaux et gestion avancée des stocks | Faire évoluer PROJECT_POS vers une plateforme de pilotage commercial |
 
-```text
-Vente validée
-     ↓
-événement
-     ↓
-mise à jour des composants concernés
-```
+### 16.6.1 Gestion multi-boutiques
 
-Une telle évolution nécessiterait cependant de traiter de nouvelles problématiques :
+Une évolution majeure consisterait à permettre à un même responsable de superviser plusieurs points de vente.
 
-- ordre des événements ;
-- duplication ;
-- idempotence ;
-- reprise après erreur ;
-- supervision ;
-- cohérence éventuelle.
+Chaque établissement disposerait de ses propres utilisateurs, stocks et opérations commerciales, tout en alimentant une vision consolidée.
 
-Elle ne doit donc être introduite que si le besoin du produit le justifie.
+Cette fonctionnalité nécessiterait une évolution du modèle de données, des droits d'accès et des mécanismes d'isolation entre établissements.
 
----
+### 16.6.2 Traçabilité des flux financiers
 
-## 16.8 Évolution de la sécurité
+Au-delà de l'enregistrement des ventes, les besoins métier initiaux font apparaître l'importance du suivi des encaissements et des versements.
 
-Une version destinée à une exploitation réelle nécessiterait également une évolution de la sécurité.
+Une future version pourrait intégrer la distinction entre les ventes réalisées, les montants effectivement encaissés et les sommes reversées.
 
-Plusieurs axes ont été identifiés :
+Cette évolution permettrait d'améliorer la transparence des opérations commerciales et de faciliter le rapprochement des flux financiers.
 
-- HTTPS/TLS ;
-- contrôle plus fin des autorisations ;
-- politique CORS adaptée ;
-- gestion centralisée des secrets ;
-- comptes de base de données à privilèges limités ;
-- protection des composants d'administration ;
-- centralisation des journaux ;
-- surveillance des dépendances ;
-- stratégie de sauvegarde et de restauration.
+### 16.6.3 Supervision et indicateurs de gestion
 
-L'authentification pourrait également évoluer vers une solution mieux adaptée à une architecture distribuée, par exemple à base de jetons ou d'un fournisseur d'identité.
+Le tableau de bord du MVP constitue une première base de suivi commercial.
 
-Cette évolution devra conserver la simplicité d'utilisation recherchée pour le personnel en boutique.
+À terme, PROJECT_POS pourrait proposer des indicateurs consolidés sur les ventes, les stocks, les marges, les performances par établissement et les écarts constatés.
 
----
+Ces fonctionnalités devront reposer sur des données suffisamment fiables et historisées pour produire des indicateurs exploitables.
 
-## 16.9 Évolution du déploiement
+**La valeur future de PROJECT_POS repose avant tout sur la fiabilité et la centralisation des informations commerciales, et non sur la complexité de son architecture technique.**
 
-La chaîne GitHub Actions actuelle valide automatiquement les six applications Maven.
+## 16.7 Bilan personnel et enseignements
 
-Une évolution naturelle serait de prolonger cette intégration continue vers une chaîne de livraison :
+La réalisation de PROJECT_POS a constitué une expérience complète de conception et de développement d'applications.
 
-```text
-Push Git
-   ↓
-Tests
-   ↓
-Build
-   ↓
-Images Docker
-   ↓
-Registry
-   ↓
-Environnement de recette
-   ↓
-Tests système
-   ↓
-Validation
-   ↓
-Production
-```
+Le projet a permis de travailler sur un besoin concret, de formaliser des règles métier, de développer une première application fonctionnelle, puis d'en faire évoluer l'architecture.
 
-Les microservices applicatifs pourraient alors disposer chacun de leur propre image.
+Le passage aux microservices a représenté une étape particulièrement formatrice.
 
-Cette évolution faciliterait la reproductibilité entre les environnements.
+Il a nécessité de dépasser la logique d'une application unique pour aborder les problématiques de communication réseau, d'indépendance des données, de configuration distribuée et de résilience.
 
-Elle permettrait également de préparer un hébergement distant lorsque le produit atteindra un niveau de maturité suffisant.
+La mise en place des tests automatisés et de l'intégration continue a également fait évoluer la méthode de travail.
 
----
+Les corrections techniques ont progressivement été accompagnées de vérifications permettant de limiter les risques de régression.
 
-## 16.10 Supervision et observabilité
+Cette démarche a renforcé plusieurs compétences essentielles : analyser un problème, identifier ses causes, proposer une solution, la tester et documenter les décisions prises.
 
-Une architecture composée de plusieurs services nécessite davantage de visibilité qu'un monolithe.
+Le projet a également permis de mieux comprendre les compromis d'architecture.
 
-Une évolution future pourrait introduire des mécanismes permettant de suivre :
+**Une solution techniquement plus distribuée n'est pas nécessairement plus adaptée à tous les contextes.** Le choix d'une architecture doit rester cohérent avec les besoins métier, les contraintes d'exploitation et les ressources disponibles.
 
-- l'état des services ;
-- les erreurs ;
-- les temps de réponse ;
-- les ressources utilisées ;
-- les appels entre services ;
-- les événements métier importants.
+Cette réflexion constitue un enseignement important du parcours de conception et de développement.
 
-Des métriques et des tableaux de bord permettraient d'identifier plus rapidement un dysfonctionnement.
+## 16.8 Conclusion générale
 
-Une centralisation des logs faciliterait également l'analyse d'une opération traversant plusieurs microservices.
+PROJECT_POS a permis de transformer un besoin de gestion commerciale en une application progressivement structurée, testée et documentée.
 
-L'observabilité deviendrait particulièrement importante dans le cas d'un déploiement multi-boutiques.
+Le MVP a validé les fonctionnalités fondamentales d'une caisse commerciale. Les évolutions suivantes ont introduit des API REST, puis une architecture microservices séparant les responsabilités métier et les données.
 
----
+La V2 a permis de mettre en œuvre des mécanismes de communication interservices, une persistance SQL et NoSQL, des tests automatisés et une chaîne d'intégration continue.
 
-## 16.11 Évolution fonctionnelle : supervision multi-boutiques
+Les résultats obtenus constituent un socle technique cohérent, tout en laissant apparaître les limites à résoudre avant une exploitation en production.
 
-La perspective fonctionnelle principale dépasse le fonctionnement d'une caisse isolée.
+Au-delà des technologies utilisées, ce projet démontre une démarche complète : **analyser un besoin, concevoir une solution, développer ses composants, vérifier leur fonctionnement, résoudre les anomalies et préparer les évolutions futures**.
 
-Le besoin métier observé conduit vers une plateforme capable de superviser plusieurs commerces ou plusieurs points de vente.
-
-Une telle évolution pourrait permettre de disposer d'une vision consolidée :
-
-```text
-Entreprise
-   │
-   ├── Boutique A
-   │     ├── ventes
-   │     ├── stock
-   │     └── utilisateurs
-   │
-   ├── Boutique B
-   │     ├── ventes
-   │     ├── stock
-   │     └── utilisateurs
-   │
-   └── Boutique C
-         ├── ventes
-         ├── stock
-         └── utilisateurs
-```
-
-Le responsable pourrait alors consulter les informations de chaque établissement ainsi qu'une vue globale de l'activité.
-
-Cette évolution nécessiterait notamment d'introduire explicitement les notions d'entreprise et de point de vente dans le modèle métier.
-
----
-
-## 16.12 Traçabilité des flux commerciaux
-
-L'une des problématiques identifiées sur le terrain concerne la capacité à comprendre les flux générés par chaque boutique.
-
-Lorsque les marchandises sont fournies à crédit ou que plusieurs établissements participent à l'activité, connaître uniquement le chiffre d'affaires ne suffit pas.
-
-Une évolution du produit pourrait permettre de rapprocher plusieurs informations :
-
-```text
-marchandise reçue
-      ↓
-stock disponible
-      ↓
-marchandise vendue
-      ↓
-chiffre d'affaires
-      ↓
-encaissements
-      ↓
-versements
-      ↓
-solde attendu
-```
-
-Cette vision permettrait d'améliorer la traçabilité et de détecter plus facilement les écarts entre les ventes enregistrées et les mouvements financiers.
-
-Cette problématique constitue une perspective métier importante du produit.
-
-Elle n'est toutefois pas intégrée artificiellement à la V2 actuelle : elle nécessitera la conception d'un véritable domaine fonctionnel consacré aux flux financiers.
-
----
-
-## 16.13 Vers un domaine financier dédié
-
-À terme, les fonctionnalités liées aux flux financiers pourraient former un nouveau domaine métier.
-
-Il pourrait couvrir, selon les besoins validés avec les utilisateurs :
-
-- les encaissements ;
-- les versements ;
-- les dépenses ;
-- les créances ;
-- les montants dus aux fournisseurs ;
-- les écarts de caisse ;
-- les rapprochements entre ventes et flux d'argent.
-
-Ce domaine ne doit pas être ajouté uniquement comme une extension technique.
-
-Il devra être conçu à partir des processus réellement utilisés dans les boutiques.
-
-Une phase d'analyse fonctionnelle sera donc nécessaire avant de définir son modèle de données et son architecture.
-
-Cette évolution a volontairement été reportée après le périmètre actuel afin de ne pas déstabiliser la version présentée pour le titre professionnel.
-
----
-
-## 16.14 Évolution vers une offre SaaS
-
-La séparation progressive des domaines ouvre également la possibilité de faire évoluer PROJECT_POS vers une offre de type SaaS.
-
-Deux niveaux de produit pourraient notamment être étudiés.
-
-Une offre simple pourrait répondre au besoin d'un commerce indépendant :
-
-```text
-1 commerce
-gestion produits
-gestion stock
-ventes
-utilisateurs
-tableau de bord
-```
-
-Une offre plus avancée pourrait cibler les structures disposant de plusieurs boutiques :
-
-```text
-plusieurs points de vente
-supervision centralisée
-consolidation des données
-traçabilité avancée
-gestion des flux
-reporting
-```
-
-Cette distinction correspondrait à des besoins métier différents plutôt qu'à une simple limitation artificielle des fonctionnalités.
-
-Avant toute commercialisation, cette hypothèse devrait être confrontée à de nouveaux utilisateurs et à des conditions réelles d'exploitation.
-
----
-
-## 16.15 Retour sur les choix techniques
-
-Le projet a également permis de comprendre qu'une technologie ne constitue pas une finalité.
-
-Plusieurs choix ont été réalisés en fonction de l'état du projet.
-
-Le monolithe était adapté à la validation initiale.
-
-React a répondu au besoin de découplage de l'interface.
-
-Les microservices ont permis d'étudier la séparation des domaines et les architectures distribuées.
-
-MySQL reste adapté aux données transactionnelles fortement structurées.
-
-MongoDB répond au besoin documentaire du journal d'activité.
-
-Docker améliore la reproductibilité de l'infrastructure.
-
-GitHub Actions automatise la validation des applications.
-
-Chaque technologie répond donc à une problématique identifiée.
-
-Cette démarche est plus importante que l'accumulation de technologies dans le projet.
-
----
-
-## 16.16 Apports professionnels
-
-PROJECT_POS a constitué un projet transversal couvrant plusieurs dimensions du métier de concepteur développeur d'applications.
-
-Sa réalisation a nécessité :
-
-- l'analyse d'un besoin réel ;
-- la modélisation des données ;
-- la conception d'interfaces ;
-- le développement d'une application web ;
-- la création d'API REST ;
-- l'utilisation de bases SQL et NoSQL ;
-- la conception d'une architecture distribuée ;
-- l'intégration de services ;
-- la gestion des erreurs ;
-- la prise en compte de la sécurité ;
-- la conception et l'exécution de tests ;
-- la conteneurisation d'une infrastructure ;
-- l'utilisation de Git ;
-- la mise en place d'une intégration continue ;
-- l'analyse et la résolution d'incidents techniques.
-
-Le projet a également nécessité de prendre des décisions de périmètre.
-
-Certaines solutions techniquement possibles n'ont volontairement pas été implémentées lorsqu'elles n'étaient pas nécessaires à la version actuelle.
-
-Cette capacité à arbitrer entre besoin, complexité, délai et maintenabilité fait partie des principaux enseignements du projet.
-
----
-
-## 16.17 Conclusion générale
-
-PROJECT_POS a commencé comme une application destinée à simplifier la gestion quotidienne d'un commerce.
-
-Le projet a progressivement évolué vers une plateforme de gestion commerciale dont l'objectif est de centraliser des informations auparavant dispersées entre plusieurs supports.
-
-La première étape a consisté à construire un MVP fonctionnel permettant de valider les règles métier.
-
-La deuxième a séparé le frontend et le backend à travers React et une API REST.
-
-La troisième a réparti le backend dans une architecture microservices et introduit de nouvelles problématiques liées aux systèmes distribués, aux données SQL et NoSQL, à la configuration, aux tests et à l'intégration continue.
-
-Cette évolution peut être résumée ainsi :
-
-```text
-PROBLÈME TERRAIN
-      ↓
-MVP FONCTIONNEL
-      ↓
-API REST + REACT
-      ↓
-MICROSERVICES
-      ↓
-SQL + NoSQL
-      ↓
-DOCKER + TESTS + CI
-      ↓
-PLATEFORME ÉVOLUTIVE
-```
-
-Le projet présenté n'est donc pas considéré comme un produit définitivement terminé.
-
-Il constitue un socle fonctionnel et technique sur lequel pourront être développées les futures fonctionnalités de supervision multi-boutiques et de traçabilité des flux commerciaux.
-
-La priorité reste cependant la même que lors de la création du MVP : faire évoluer l'architecture uniquement lorsqu'elle apporte une réponse à un besoin réel du produit.
+PROJECT_POS représente ainsi à la fois un support concret de validation des compétences du titre Concepteur Développeur d'Applications et la première étape d'un projet logiciel destiné à répondre à des besoins réels de gestion et de supervision commerciale.

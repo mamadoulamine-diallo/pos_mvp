@@ -29,27 +29,15 @@ Le code est organisé par domaines fonctionnels :
 
 Au sein des modules, les responsabilités sont réparties entre **contrôleurs**, **services métier**, **repositories** et **entités JPA**. Le contrôleur reçoit la requête, le service applique les règles de gestion et le repository assure l'accès aux données à travers Spring Data JPA et Hibernate.
 
-### 8.2.2 Circulation d'une requête
+### 8.2.2 Circulation complète d'une requête MVC
 
-Lorsqu'un utilisateur modifie un produit, l'interface transmet les données au contrôleur Spring MVC. Celui-ci délègue l'opération au service métier, qui vérifie les informations et sollicite la couche de persistance. Le résultat est ensuite restitué à l'interface.
+Le parcours d'une modification de produit illustre la séparation des responsabilités. L'utilisateur agit depuis une page Thymeleaf ; le navigateur transmet sa demande au contrôleur Spring MVC. Celui-ci récupère les données reçues, délègue le traitement à `ProductService`, puis restitue le résultat à l'interface. Le service applique les règles métier et utilise `ProductRepository` pour accéder à MySQL via JPA/Hibernate.
 
-```text
-Interface Thymeleaf / JavaScript
-               |
-               v
-       Controller Spring MVC
-               |
-               v
-          Service métier
-               |
-               v
-     Repository Spring Data JPA
-               |
-               v
-             MySQL
-```
+![Schéma du parcours d’une requête HTTP dans le MVP](assets/parcours-requete-mvc.png)
 
-Cette organisation évite de placer les règles métier directement dans les pages HTML ou les contrôleurs. Elle a également facilité leur réutilisation lors de l'ajout ultérieur des API REST.
+*Figure 8.1 — Parcours logique d'une requête dans le MVP monolithique.*
+
+Après le traitement, le résultat remonte dans le sens inverse : MySQL → repository → service → contrôleur → navigateur. Ce schéma représente le parcours entre les couches, sans présumer d’une route HTTP particulière. La distinction essentielle est que **le contrôleur orchestre l'entrée et la sortie**, tandis que **le service porte les règles métier**. La réutilisation de ces services a ensuite facilité l'exposition d'API REST pour la V1.
 
 ### 8.2.3 Technologies d'interface et outils
 
@@ -224,8 +212,6 @@ La méthode de validation du service utilise **`@Transactional`**. Cette annotat
 
 Cette protection est différente de la gestion des **ventes concurrentes sur un même stock**. L'annotation seule ne prouve pas que les contrôles de disponibilité, les verrous ou les mécanismes de concurrence sont suffisants.
 
-Pour le jury, un extrait réel de la méthode de validation montrant `@Transactional` et la coordination des écritures constitue une preuve plus pertinente qu'une nouvelle capture d'écran.
-
 ### 8.7.3 Reçu et résultat de l'opération
 
 Après validation, l'application affiche un reçu récapitulant la référence de vente, la date, les articles, les quantités, les prix unitaires et le montant total.
@@ -238,33 +224,11 @@ La vente est donc le meilleur exemple d'**intégration des différentes couches 
 
 ## 8.8 Historique des ventes
 
-L'historique des ventes permet de retrouver les transactions enregistrées dans PROJECT_POS et de consulter leurs informations détaillées.
+Le MVP propose une **page regroupant les ventes enregistrées**. La sélection d'une transaction ouvre une **fenêtre modale de détail** ; il ne s'agit pas encore d'un écran de recherche multicritère.
 
-Dans le MVP, cette fonctionnalité repose sur une page regroupant les ventes et sur une fenêtre modale permettant d'afficher le détail d'une transaction sélectionnée.
+La modale présente la référence et la date de la vente, le vendeur et son rôle, le statut, les articles, les quantités, les prix unitaires et le total. Ces données proviennent de `Sale` et de ses lignes `SaleItem`, reliées à l'utilisateur et aux produits concernés.
 
-### 8.8.1 Consultation de l'historique
-
-La page d'historique centralise les transactions enregistrées dans l'application. Elle constitue un premier outil de consultation et de traçabilité commerciale.
-
-Cette première version privilégie une présentation simple. Les fonctionnalités de recherche multicritère, de filtrage avancé et d'analyse approfondie sont réservées aux évolutions ultérieures.
-
-### 8.8.2 Affichage du détail d'une vente
-
-La sélection d'une transaction ouvre une fenêtre modale présentant les informations enregistrées :
-
-- la référence et la date de la vente ;
-- l'identité et le rôle du vendeur ;
-- le statut de la transaction ;
-- les produits vendus, leurs quantités et leurs prix unitaires ;
-- le nombre d'articles et le montant total.
-
-Les informations sont restituées à partir des données persistées dans les entités `Sale` et `SaleItem`, associées à l'utilisateur et aux produits concernés.
-
-Le prix unitaire conservé sur chaque ligne permet de restituer le montant historique de la transaction, indépendamment des modifications ultérieures des tarifs du catalogue.
-
-Cette fonctionnalité constitue une première réponse au besoin de traçabilité exprimé lors de l'analyse métier, sans prétendre couvrir l'ensemble des flux financiers.
-
-**Les fonctionnalités avancées de recherche, de filtrage et de supervision seront développées dans les versions suivantes.**
+Le champ `SaleItem.unit_price` restitue le prix effectivement appliqué à la transaction, même lorsque le tarif du catalogue change ensuite. Cet écran apporte une première traçabilité des ventes, mais **ne retrace pas les encaissements, versements et transferts financiers** entre boutiques. Les filtres avancés sont réservés à une évolution ultérieure.
 
 ## 8.9 Tableau de bord et indicateurs commerciaux
 
@@ -286,7 +250,7 @@ Les calculs reposent principalement sur les données de vente et leurs lignes. L
 
 Le backend Spring Boot prépare les données transmises aux pages Thymeleaf. La bibliothèque **Chart.js** prend en charge la représentation graphique des évolutions et des classements.
 
-Une distinction est nécessaire entre les ventes validées et les opérations en brouillon ou annulées pour produire des résultats cohérents. **Le filtrage effectivement implémenté dans les requêtes du MVP reste à confirmer dans le code** ; il ne doit pas être présenté comme vérifié sans cette lecture.
+Les indicateurs de vente doivent distinguer les transactions validées des brouillons et des annulations afin de ne pas fausser les résultats. La logique exacte de filtrage dépend des requêtes utilisées par le tableau de bord.
 
 Enfin, le chiffre d'affaires enregistré ne représente pas nécessairement les sommes réellement encaissées ou reversées. Cette différence est importante au regard du besoin métier de suivi des flux financiers. Les captures et contrôles fonctionnels du tableau de bord figurent au chapitre 9.
 
@@ -296,13 +260,17 @@ Enfin, le chiffre d'affaires enregistré ne représente pas nécessairement les 
 
 L'interface a été pensée pour les opérations répétitives d'une boutique : identifier rapidement un produit, le sélectionner et finaliser une vente avec un minimum de manipulations. L'utilisation tactile fait partie des contraintes prises en compte dès la conception.
 
-### 8.10.1 Traduction des maquettes en composants
+### 8.10.1 Des maquettes à l'interface réalisée
 
-La réalisation s'appuie notamment sur des **cartes produits**, un **panier visible pendant la vente** et des **fenêtres modales** pour certaines opérations de gestion, le changement de prix et la consultation du reçu.
+La réalisation reprend les principes des maquettes du chapitre 5 : **catalogue visuel**, **actions accessibles rapidement** et **fenêtres modales** pour limiter les changements de page. Les fragments Thymeleaf mutualisent les composants d'interface, Sass/BEM organise les styles et les modules JavaScript ES6 pilotent les interactions.
 
-Les fragments Thymeleaf facilitent la réutilisation des éléments communs. Sass et la convention BEM contribuent à structurer les styles ; les modules JavaScript ES6 gèrent l'ouverture des modales, les interactions avec les produits et les mises à jour du panier sans rechargement systématique de la page.
+| Version desktop | Version mobile |
+|:---:|:---:|
+| ![Catalogue Produits sur desktop](assets/produits-desktop.png) | ![Catalogue Produits sur mobile](assets/produits-mobile.png) |
 
-Le chapitre 5 détaille les maquettes et les choix de parcours. L'intérêt de cette section est de montrer **comment ces choix ont été traduits dans le code**.
+*Figure 8.2 — Adaptation responsive de la page Produits : vues desktop et mobile de l'application.*
+
+Sur desktop, le catalogue s'organise en grille multicolonnes avec les catégories et les filtres accessibles dans une barre latérale. Sur mobile, les cartes produits s'affichent sur deux colonnes, les catégories sont regroupées en haut de l'écran et une barre de navigation inférieure facilite l'accès aux fonctions principales. Les deux vues illustrent l'adaptation de la même fonctionnalité aux contraintes d'affichage et d'interaction des terminaux.
 
 ### 8.10.2 Objectif de rapidité et limites de validation
 

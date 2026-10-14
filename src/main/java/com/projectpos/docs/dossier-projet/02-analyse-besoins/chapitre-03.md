@@ -1,81 +1,59 @@
 # 3. Analyse des besoins
 
-## 3.1 Identification des acteurs
+## 3.1 Acteurs et usages
 
-L’analyse du besoin a permis d’identifier plusieurs acteurs principaux concernés par l’utilisation de l’application.
-
-Le premier acteur est le vendeur. Il utilise l’application au quotidien pour consulter les produits disponibles, enregistrer les ventes et générer un reçu. Son besoin principal est de réaliser une vente rapidement, avec le moins de manipulations possible.
-
-Le deuxième acteur est le gérant. Il supervise l’activité du commerce, gère les produits, les catégories, les utilisateurs et consulte les indicateurs du tableau de bord. Il a besoin d’une vision synthétique de l’activité afin de piloter le commerce plus efficacement.
-
-Le troisième acteur est l’associé ou propriétaire distant. Il n’intervient pas nécessairement dans les opérations quotidiennes, mais il souhaite consulter les ventes, le stock et les indicateurs principaux afin de disposer d’une information fiable sur l’activité du commerce.
+L’analyse du besoin distingue trois profils. Le **vendeur** utilise quotidiennement la caisse pour retrouver un produit, constituer un panier, enregistrer une vente et remettre un reçu. Le **gérant** administre le catalogue, les prix, les stocks et les utilisateurs, puis consulte les indicateurs d’activité. Enfin, le **propriétaire ou associé distant** souhaite suivre les résultats sans être présent dans la boutique. Ce dernier besoin constitue une orientation de la plateforme ; il ne signifie pas qu’un accès distant multi-boutiques est déjà livré dans le MVP.
 
 ## 3.2 Besoins fonctionnels
 
-Les besoins fonctionnels correspondent aux actions que l’application doit permettre de réaliser.
+Le périmètre initial a été organisé autour de cinq ensembles fonctionnels :
 
-L’application doit permettre l’authentification des utilisateurs afin de contrôler l’accès aux fonctionnalités. Chaque utilisateur dispose d’un code PIN et d’un rôle permettant de différencier les droits d’accès.
+- **Accès à l’application :** authentification par code PIN, identification du rôle vendeur ou gérant et gestion des comptes actifs.
+- **Catalogue :** création et modification des catégories et produits, consultation du stock et activation ou désactivation des références.
+- **Tarification :** définition d’un prix actif et conservation des anciens prix lors d’un changement de tarif.
+- **Vente :** sélection des produits, gestion des quantités, validation du panier, décrémentation du stock et consultation du reçu et de l’historique.
+- **Pilotage :** tableau de bord présentant notamment le chiffre d’affaires, le nombre de ventes, les articles vendus et les informations utiles au suivi du stock.
 
-Elle doit également permettre la gestion des utilisateurs : création, modification, activation et désactivation. Cette fonctionnalité est nécessaire pour adapter l’accès à l’application selon les personnes travaillant dans le commerce.
-
-La gestion des produits constitue un besoin central. Le gérant doit pouvoir créer, modifier, rechercher, activer ou désactiver un produit. Chaque produit est rattaché à une catégorie, possède un stock et un prix actif.
-
-La gestion des catégories permet d’organiser le catalogue de produits et de faciliter la recherche lors de la vente.
-
-L’application doit aussi permettre l’historisation des prix. Lorsqu’un prix est modifié, l’ancien prix n’est pas supprimé mais conservé dans l’historique. Cette approche permet de garder une trace des évolutions tarifaires.
-
-La gestion des ventes doit permettre au vendeur de sélectionner des produits, constituer un panier, modifier les quantités, valider la vente et obtenir un reçu. Une vente validée doit décrémenter automatiquement le stock des produits concernés.
-
-Enfin, le tableau de bord doit fournir une synthèse de l’activité commerciale : chiffre d’affaires, nombre de ventes, articles vendus, panier moyen, produits les plus vendus, ventes récentes, stocks faibles et ruptures.
+Le besoin de traçabilité porte à la fois sur les ventes enregistrées et sur la conservation des prix pratiqués. Le suivi exhaustif des encaissements, des versements et des mouvements financiers entre boutiques relève d’un périmètre ultérieur.
 
 ## 3.3 Besoins non fonctionnels
 
-Au-delà des fonctionnalités, plusieurs besoins non fonctionnels ont été identifiés.
+L’interface doit être accessible à des utilisateurs peu familiers des outils informatiques. La navigation privilégie donc des actions visibles, des écrans lisibles et des commandes adaptées au tactile.
 
-L’application doit être simple à utiliser. Les utilisateurs visés ne sont pas nécessairement des profils techniques. L’interface doit donc rester lisible, directe et adaptée à une utilisation quotidienne.
+La rapidité d’encaissement constitue un objectif de conception : le parcours de vente vise environ **30 secondes** pour une opération courante. Cette durée représente une cible métier, et non une performance mesurée ou garantie.
 
-La rapidité est également un critère important. Une vente doit pouvoir être enregistrée rapidement afin de ne pas ralentir l’activité du commerce.
+La fiabilité impose de conserver le prix réellement appliqué à une vente, même si le tarif du produit change ensuite, et de maintenir la cohérence entre validation de la vente et mise à jour du stock dans le MVP monolithique.
 
-L’application doit être adaptée à un usage tactile sur tablette ou ordinateur. Les boutons, cartes produits, menus et actions principales ont été pensés pour une utilisation confortable dans un contexte de point de vente.
+Enfin, la maintenabilité repose sur une séparation entre contrôleurs, services métier et accès aux données, afin de préparer l’évolution de l’application. L’authentification et la gestion des rôles constituent un premier niveau de contrôle d’accès ; leurs limites et leur évolution sont traitées dans le chapitre consacré à la sécurité.
 
-La maintenabilité du code est un autre besoin important. Le projet doit pouvoir évoluer vers une version plus avancée. Pour cette raison, l’application a été organisée selon une architecture modulaire et une séparation claire des responsabilités.
+## 3.4 Contraintes et périmètre
 
-La sécurité est également prise en compte. L’accès à l’application est contrôlé par authentification, les utilisateurs disposent de rôles, et les données sensibles telles que le code PIN sont soumises à des contraintes d’unicité.
+Le projet répond à un besoin réel de petites boutiques dont le suivi des ventes et du stock repose encore largement sur des méthodes manuelles. Il doit également permettre de démontrer les compétences attendues dans le cadre du titre de Concepteur Développeur d’Applications.
 
-## 3.4 Contraintes du projet
+Pour livrer une première version exploitable, le MVP a été limité à la gestion d’un commerce, sans paiement intégré, synchronisation multi-boutiques ni application mobile native. Les évolutions vers React, les API REST puis les microservices sont présentées dans les chapitres suivants.
 
-Le projet doit répondre à plusieurs contraintes.
+## 3.5 User stories et critères d’acceptation
 
-La première contrainte est liée au contexte d’utilisation. L’application vise des commerces de petite ou moyenne taille, avec des utilisateurs qui recherchent avant tout un outil simple, rapide et fiable.
+Les user stories traduisent les besoins des utilisateurs en fonctionnalités observables. Pour chacune, les **critères d’acceptation** précisent les conditions permettant de considérer le comportement attendu comme satisfait. Ils servent de référence lors de la conception et de la validation fonctionnelle ; ils ne constituent pas, à eux seuls, la preuve qu’un test automatisé a été exécuté.
 
-La deuxième contrainte est technique. Le projet étant réalisé dans le cadre de la formation CDA, il doit démontrer des compétences en analyse, conception, développement, base de données, architecture, sécurité, tests et déploiement.
+| Réf. | User story | Critères d’acceptation |
+|---|---|---|
+| **US01** | En tant que vendeur, je veux me connecter avec mon PIN pour accéder à la caisse. | Un PIN reconnu pour un compte actif ouvre une session ; un PIN invalide ne permet pas l’accès. |
+| **US02** | En tant que vendeur, je veux ajouter un produit au panier pour préparer une vente. | Le produit sélectionné apparaît dans le panier avec son prix actif ; le total est recalculé. |
+| **US03** | En tant que vendeur, je veux ajuster les quantités pour répondre à la demande du client. | La modification d’une quantité actualise le sous-total et le total ; la vente ne doit pas conduire à un stock négatif. |
+| **US04** | En tant que gérant, je veux créer ou modifier un produit pour tenir le catalogue à jour. | Les informations valides sont enregistrées et visibles dans la liste des produits. |
+| **US05** | En tant que gérant, je veux changer le prix d’un produit pour adapter son tarif. | Le nouveau prix devient actif ; l’ancien prix reste consultable ; une vente antérieure conserve son prix unitaire enregistré. |
+| **US06** | En tant que gérant, je veux repérer les stocks faibles et les ruptures pour préparer le réapprovisionnement. | Les produits concernés sont identifiables à partir des quantités en stock et des règles d’affichage retenues. |
+| **US07** | En tant que gérant, je veux consulter les résultats de la boutique pour suivre son activité. | Le tableau de bord affiche les indicateurs calculés à partir des ventes enregistrées. L’accès distant d’un associé relève des évolutions de la plateforme. |
 
-La troisième contrainte concerne le périmètre. Le MVP devait rester réaliste afin d’être terminé, testé et stabilisé. Certaines fonctionnalités comme le paiement intégré, la gestion multi-boutiques, l’application mobile native ou les microservices complets ont donc été volontairement repoussées à une version ultérieure.
+**Exemple de scénario d’acceptation — US05, changement de prix**
 
-## 3.5 User stories principales
+- **Étant donné** un produit possédant un prix actif de 35 000 F et une vente déjà enregistrée à ce tarif ;
+- **Lorsque** le gérant fixe son nouveau prix à 37 000 F ;
+- **Alors** le catalogue affiche 37 000 F pour les nouvelles ventes, tandis que la vente précédente conserve 35 000 F sur sa ligne de vente.
 
-Plusieurs user stories ont été définies pour guider la conception fonctionnelle du projet.
+Ce scénario relie une demande métier à deux choix de conception : l’historisation dans `ProductPrice` et l’enregistrement du prix appliqué dans `SaleItem.unitPrice`. Leur implémentation est détaillée au chapitre 8, puis leur vérification fonctionnelle au chapitre 9.
 
-En tant que vendeur, je souhaite m’authentifier rapidement afin d’accéder à l’écran de vente.
+## 3.6 Synthèse
 
-En tant que vendeur, je souhaite ajouter un produit au panier en un clic afin d’enregistrer une vente rapidement.
-
-En tant que vendeur, je souhaite modifier les quantités dans le panier afin d’adapter la vente à la demande du client.
-
-En tant que gérant, je souhaite créer et modifier des produits afin de maintenir le catalogue à jour.
-
-En tant que gérant, je souhaite modifier les prix des produits afin d’adapter les tarifs à l’évolution du commerce.
-
-En tant que gérant, je souhaite consulter les stocks faibles et les ruptures afin d’anticiper les réapprovisionnements.
-
-En tant que propriétaire ou associé distant, je souhaite consulter le tableau de bord afin de suivre l’activité commerciale sans être présent physiquement dans le commerce.
-
-## 3.6 Synthèse des besoins
-
-L’analyse des besoins montre que le projet doit répondre à un double objectif.
-
-Le premier objectif est opérationnel : permettre aux vendeurs et gérants de gérer les ventes, les produits et le stock de manière simple et rapide.
-
-Le second objectif est décisionnel : fournir une meilleure visibilité sur l’activité commerciale grâce à des données centralisées et consultables depuis le tableau de bord.
-
-Ces besoins ont conduit à la conception d’un MVP centré sur les fonctionnalités essentielles, tout en préparant une évolution progressive vers une architecture plus complète.
+L’analyse a conduit à privilégier un parcours de vente simple, la maîtrise du catalogue et la traçabilité des opérations. Les critères d’acceptation rendent ces attentes vérifiables et servent de fil conducteur entre les besoins, les règles métier, le développement du MVP et sa validation.

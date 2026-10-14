@@ -1,429 +1,124 @@
 # 6. Modélisation des données
 
-## 6.1 Règles de gestion
+## 6.1 Traduction des besoins en règles de gestion
 
-Avant la conception de la base de données, plusieurs règles de gestion ont été identifiées à partir des besoins métier du projet.
+La base de données du MVP a été conçue à partir des opérations réelles d'une boutique : identifier un vendeur, organiser les produits, suivre leur stock, enregistrer les ventes et conserver les prix appliqués. La difficulté principale n'était pas de créer six tables, mais de garantir que les données restent interprétables après plusieurs transactions et changements de tarifs.
 
-Ces règles permettent de garantir la cohérence des données et de structurer le modèle de manière conforme au fonctionnement réel d’un commerce.
+Les règles retenues sont regroupées par domaine :
 
-Les principales règles retenues sont les suivantes :
+| Domaine | Règles métier structurantes |
+|---|---|
+| Utilisateurs | Chaque utilisateur possède un PIN unique, un rôle (`VENDEUR` ou `GERANT`) et un état actif/inactif. Une vente est rattachée à son vendeur. |
+| Catalogue | Un produit appartient à une catégorie ; une catégorie peut regrouper plusieurs produits. Le produit conserve une quantité disponible et un état actif/inactif. |
+| Tarification | Un produit peut avoir plusieurs prix successifs, mais un seul prix courant doit être retenu pour une vente. Les anciens tarifs doivent rester consultables. |
+| Vente | Une vente comporte des lignes associant produit, quantité et prix unitaire appliqué. Les états métier prévus sont `BROUILLON`, `VALIDEE` et `ANNULEE`. |
+| Stock et traçabilité | La validation d'une vente diminue les quantités disponibles. Une modification ultérieure du catalogue ne doit pas modifier les montants d'une vente enregistrée. |
 
-* Un utilisateur se connecte à l’application grâce à un code PIN unique.
-* Un utilisateur possède un rôle permettant de définir ses droits d’accès.
-* Un utilisateur peut être actif ou inactif.
-* Une catégorie peut contenir plusieurs produits.
-* Un produit appartient obligatoirement à une seule catégorie.
-* Un produit peut être actif ou inactif.
-* Un produit possède une quantité disponible en stock.
-* Un produit peut apparaître dans plusieurs ventes.
-* Un produit peut avoir plusieurs prix dans le temps.
-* Un seul prix peut être actif pour un produit à un instant donné.
-* Une vente est réalisée par un utilisateur.
-* Une vente contient une ou plusieurs lignes de vente.
-* Chaque ligne de vente concerne un seul produit.
-* Chaque ligne de vente conserve le prix unitaire appliqué lors de la transaction.
-* La validation d’une vente entraîne la décrémentation du stock.
-* Les indicateurs du tableau de bord sont calculés uniquement à partir des ventes validées.
-
-Ces règles constituent le socle fonctionnel de la modélisation des données.
-
----
+Ces règles ont conduit à séparer l'identité d'un produit, ses tarifs successifs et les prix réellement facturés. Ce sont trois informations différentes, qui ne doivent pas être confondues dans une même colonne.
 
 ## 6.2 Dictionnaire de données
 
-Le dictionnaire de données permet de recenser les principales informations manipulées par l’application.
+Le dictionnaire décrit les attributs métier principaux. Les noms présentés ci-dessous correspondent aux propriétés Java ; les noms SQL physiques sont précisés dans le MPD.
 
-### AppUser
+| Entité | Attributs principaux | Rôle dans le modèle |
+|---|---|---|
+| `AppUser` | `id`, `fullName`, `email`, `pinCode`, `role`, `active` | Identifier l'utilisateur et son rôle lors d'une vente. |
+| `Category` | `id`, `name`, `active` | Classer les articles du catalogue. |
+| `Product` | `id`, `name`, `imageUrl`, `stockQuantity`, `active` | Décrire le produit et son stock courant. |
+| `ProductPrice` | `id`, `purchasePrice`, `salePrice`, `startDate`, `endDate` | Historiser les prix d'achat et de vente. |
+| `Sale` | `id`, `saleDate`, `status` | Identifier une transaction, sa date et son état. |
+| `SaleItem` | `id`, `quantity`, `unitPrice` | Mémoriser les articles et les prix effectivement appliqués. |
 
-| Attribut | Description                  |
-| -------- | ---------------------------- |
-| id       | Identifiant unique           |
-| fullName | Nom complet de l'utilisateur |
-| email    | Adresse électronique         |
-| pinCode  | Code PIN de connexion        |
-| role     | Rôle métier                  |
-| active   | État du compte               |
-
-### Category
-
-| Attribut | Description          |
-| -------- | -------------------- |
-| id       | Identifiant unique   |
-| name     | Nom de la catégorie  |
-| active   | État de la catégorie |
-
-### Product
-
-| Attribut      | Description         |
-| ------------- | ------------------- |
-| id            | Identifiant unique  |
-| name          | Nom du produit      |
-| imageUrl      | Image du produit    |
-| stockQuantity | Quantité disponible |
-| active        | État du produit     |
-
-### ProductPrice
-
-| Attribut      | Description               |
-| ------------- | ------------------------- |
-| id            | Identifiant unique        |
-| purchasePrice | Prix d'achat              |
-| salePrice     | Prix de vente             |
-| startDate     | Date de début de validité |
-| endDate       | Date de fin de validité   |
-
-### Sale
-
-| Attribut | Description        |
-| -------- | ------------------ |
-| id       | Identifiant unique |
-| saleDate | Date de la vente   |
-| status   | Statut de la vente |
-
-### SaleItem
-
-| Attribut  | Description            |
-| --------- | ---------------------- |
-| id        | Identifiant unique     |
-| quantity  | Quantité vendue        |
-| unitPrice | Prix unitaire appliqué |
-
----
+Les références entre entités ne sont pas répétées dans ce tableau : elles sont matérialisées par les associations du MCD puis par les clés étrangères du MLD.
 
 ## 6.3 Modèle Conceptuel de Données (MCD)
 
 Le Modèle Conceptuel de Données représente les informations métier indépendamment de toute considération technique.
 
-Les entités principales identifiées sont :
-
-* AppUser
-* Category
-* Product
-* ProductPrice
-* Sale
-* SaleItem
-
-Les relations métier sont les suivantes :
-
-### Utilisateur et vente
-
-Un utilisateur peut réaliser plusieurs ventes.
-
-Une vente est obligatoirement réalisée par un seul utilisateur.
-
-```text
-AppUser 1 ─── * Sale
-```
-
-### Catégorie et produit
-
-Une catégorie peut contenir plusieurs produits.
-
-Un produit appartient obligatoirement à une catégorie.
-
-```text
-Category 1 ─── * Product
-```
-
-### Produit et historique de prix
-
-Un produit peut posséder plusieurs prix dans le temps.
-
-Chaque prix est associé à un seul produit.
-
-```text
-Product 1 ─── * ProductPrice
-```
-
-### Vente et lignes de vente
-
-Une vente contient une ou plusieurs lignes.
-
-Chaque ligne appartient à une seule vente.
-
-```text
-Sale 1 ─── * SaleItem
-```
-
-### Produit et lignes de vente
-
-Un produit peut apparaître dans plusieurs lignes de vente.
-
-Chaque ligne concerne un seul produit.
-
-```text
-Product 1 ─── * SaleItem
-```
-
-Le MCD permet de représenter fidèlement les règles métier identifiées lors de l’analyse des besoins.
-
 ![MCD initial du MVP PROJECT_POS](assets/mcd-mvp-initial.png)
 
-**Figure 6.1 — MCD initial du MVP.** Réalisé pendant la phase de conception, ce schéma présente les six entités métier et leurs associations. Les cardinalités constituent des hypothèses initiales de conception : certaines participations minimales (par exemple une catégorie possédant au moins un produit) ne doivent pas être confondues avec des contraintes automatiquement imposées par la base finale.
+*Figure 6.1 — MCD initial : entités et associations du MVP.*
 
-Le schéma utilise les noms `User` et `Sale_item`, alors que le code Java emploie notamment `AppUser` et `SaleItem`. Il s'agit de deux niveaux de représentation du même domaine métier.
+Ce modèle fait apparaître une relation de plusieurs-à-plusieurs entre les ventes et les produits, résolue par l'entité `SaleItem`. Celle-ci porte les informations propres à chaque occurrence de vente : quantité et prix unitaire. Elle ne représente donc pas seulement une liaison technique.
 
----
+Les cardinalités expriment les règles envisagées à la conception. Leur traduction effective dépend ensuite des clés étrangères, de leur nullabilité et des contrôles métier. Le nom `User` figurant sur le schéma correspond à l'entité `AppUser` dans le code Java.
 
 ## 6.4 Modèle Logique de Données (MLD)
 
-Le MLD constitue la traduction relationnelle du MCD.
+Le passage au modèle relationnel transforme les entités en relations et les associations en clés étrangères. Dans le MVP, les relations logiques sont les suivantes :
 
-Les principales tables obtenues sont :
-
-```text
-APP_USER
-(
-    id,
-    full_name,
-    email,
-    pin_code,
-    role,
-    active
-)
-
-CATEGORY
-(
-    id,
-    name,
-    active
-)
-
-PRODUCT
-(
-    id,
-    name,
-    image_url,
-    stock_quantity,
-    active,
-    category_id
-)
-
-PRODUCT_PRICE
-(
-    id,
-    product_id,
-    purchase_price,
-    sale_price,
-    start_date,
-    end_date
-)
-
-SALE
-(
-    id,
-    sale_date,
-    status,
-    user_id
-)
-
-SALE_ITEM
-(
-    id,
-    sale_id,
-    product_id,
-    quantity,
-    unit_price
-)
-```
-
-Les clés étrangères permettent de matérialiser les relations identifiées dans le modèle conceptuel.
-
-**Lecture relationnelle du MLD — identifiants et dépendances :**
-
-| Relation | Clé primaire (PK) | Clés étrangères (FK) |
+| Relation | Clé primaire | Clés étrangères |
 |---|---|---|
-| `APP_USER` (nom logique) | `id` | — |
+| `APP_USER` | `id` | — |
 | `CATEGORY` | `id` | — |
 | `PRODUCT` | `id` | `category_id` → `CATEGORY.id` |
 | `PRODUCT_PRICE` | `id` | `product_id` → `PRODUCT.id` |
 | `SALE` | `id` | `user_id` → `APP_USER.id` |
 | `SALE_ITEM` | `id` | `sale_id` → `SALE.id` ; `product_id` → `PRODUCT.id` |
 
-Les identifiants du MLD sont ici **logiques**. Dans le MPD réellement généré depuis MySQL, ils sont nommés `id_user`, `id_product`, `id_category`, `id_sale`, `id_sale_item` et `id_price`. La table logique `APP_USER` correspond à la table physique `user`.
+Deux transformations méritent d'être explicitées.
 
-Le MLD présente les relations indépendamment des détails SQL ; les noms des colonnes et les contraintes exactes sont à vérifier dans le MPD et les scripts de création de la base.
+**La relation catégorie–produit (1,N).** La clé étrangère est portée par `PRODUCT` : chaque produit référence sa catégorie. Il n'est pas nécessaire d'enregistrer une liste de produits dans la table `CATEGORY`.
 
----
+**La relation vente–produit (N,N).** Une vente contient plusieurs produits et un produit peut apparaître dans plusieurs ventes. La table `SALE_ITEM` porte donc deux clés étrangères. Elle possède également sa propre clé primaire, car chaque ligne constitue un enregistrement métier distinct, avec une quantité et un prix propres.
+
+Les identifiants du tableau sont des noms *logiques*. Dans MySQL, la table utilisateur s'appelle `user` et les identifiants portent notamment les noms `id_user`, `id_category`, `id_product`, `id_price`, `id_sale` et `id_sale_item`.
 
 ## 6.5 Modèle Physique de Données (MPD)
 
-Le MPD correspond à l’implémentation effective du modèle dans MySQL.
-
-### Évolution du modèle physique
+Le MPD correspond à la traduction du modèle relationnel dans MySQL 8 : tables, colonnes, types et relations physiques. Deux états sont conservés pour montrer l'évolution entre la conception et la réalisation.
 
 ![MPD initial du MVP PROJECT_POS](assets/mpd-mvp-initial.png)
 
-**Figure 6.2 — MPD initial.** Première traduction du modèle métier en tables SQL. Ce schéma historique ne représente pas toutes les colonnes finalement ajoutées pendant la réalisation.
+*Figure 6.2 — Premier MPD établi lors de la conception.*
 
 ![MPD final extrait de MySQL Workbench](assets/mpd-mvp-final.png)
 
-**Figure 6.3 — MPD final du MVP.** Diagramme EER obtenu par rétro-ingénierie du schéma `project_pos` avec MySQL Workbench. Il montre les six tables physiques, les types de colonnes visibles et les relations définies par clés étrangères.
+*Figure 6.3 — MPD final obtenu par rétro-ingénierie du schéma `project_pos`.*
 
-Les principales évolutions constatées entre ces deux états sont :
+Le MPD final a été extrait de la base existante avec MySQL Workbench : il reflète donc les tables et relations présentes au moment de cette extraction, contrairement au premier diagramme qui décrivait la conception initiale.
 
-| Élément | Conception initiale | Implémentation finale observée |
-|---|---|---|
-| Produit | Identification, libellé, image, statut | Ajout de `stock_quantity` pour le stock disponible |
-| Utilisateur | Rôle, PIN, email, statut | Ajout de `full_name` |
-| Prix | Montant `price` | Distinction `sale_price` / `purchase_price` |
-| Période de validité | Dates de début et de fin | `date_debut`, `date_fin` et indicateur `is_active` |
-| Ligne de vente | Quantité et prix de la transaction | Maintien de `unit_price` dans `sale_item` |
+| Point d'évolution | Effet sur le modèle physique |
+|---|---|
+| Stock | Ajout de `stock_quantity` au produit pour conserver la quantité disponible. |
+| Utilisateur | Ajout de `full_name` pour identifier le vendeur dans l'application et l'historique. |
+| Tarifs | Distinction entre `purchase_price` et `sale_price` dans `product_price`. |
+| Validité des prix | Présence de dates de début et de fin, ainsi que de l'indicateur `is_active` dans le modèle final documenté. |
+| Historique des ventes | Maintien de `unit_price` dans `sale_item`, indépendamment du prix actuel du produit. |
 
-Cette évolution n'a pas modifié les six domaines de données fondamentaux ; elle a précisé les attributs nécessaires à l'exploitation métier. Le MPD final est la référence pour les **noms physiques** des colonnes, qui diffèrent parfois du dictionnaire Java et du MLD logique.
+Les clés primaires identifient les enregistrements et les clés étrangères préservent les références entre tables. Les montants monétaires sont représentés par des types décimaux dans la conception physique. Le diagramme ne suffit toutefois pas à prouver toutes les contraintes métier : en particulier, l'unicité d'un prix actif relève aussi de la logique de mise à jour et des contraintes effectivement définies.
 
+## 6.6 Deux décisions déterminantes pour la cohérence métier
 
-Les principales décisions techniques retenues sont :
+### 6.6.1 Historiser les prix sans écraser le catalogue
 
-* utilisation de clés primaires auto-incrémentées ;
-* utilisation de clés étrangères pour garantir l’intégrité référentielle ;
-* utilisation de DECIMAL pour les montants financiers ;
-* utilisation de DATETIME pour les dates métier ;
-* utilisation de contraintes d’unicité sur les données sensibles ;
-* utilisation d’index sur les colonnes fréquemment sollicitées.
+Un prix n'est pas une propriété immuable du produit. Stocker uniquement le prix courant dans `product` ferait disparaître les anciens tarifs lors de chaque modification. La séparation `Product` / `ProductPrice` permet de conserver les versions successives.
 
-Exemples :
+Lors d'un changement de tarif, le service métier clôture l'enregistrement actif avant d'en créer un nouveau. Cette séquence est importante : deux enregistrements simultanément considérés comme actifs créeraient une ambiguïté au moment d'enregistrer une vente. Le chapitre 8 présente le traitement applicatif de ce changement, y compris l'incident rencontré autour de l'unicité du prix actif.
 
-* PIN utilisateur unique ;
-* index sur les dates de vente ;
-* index sur les relations entre produits et catégories ;
-* index sur les prix actifs.
+### 6.6.2 Figer le prix réellement appliqué à la vente
 
-Cette structure vise à assurer la cohérence des données tout en facilitant leur interrogation.
+La table `sale_item` conserve `unit_price`. Cette colonne ne fait pas doublon avec `product_price.sale_price` : les deux champs répondent à des questions différentes.
 
-**Portée des preuves :** le diagramme Workbench permet de constater les tables, les colonnes et les relations affichées. Il ne suffit pas, à lui seul, à prouver toutes les règles d'unicité, les index secondaires, les contrôles de quantité ou le respect d'un seul prix actif. Ces points doivent être rapprochés des contraintes SQL et de la logique applicative. En particulier, `is_active` et `date_fin` décrivent l'état d'un prix, mais leur seule présence ne garantit pas l'unicité du prix actif.
+- `product_price.sale_price` : quel tarif était proposé dans le catalogue pour une période donnée ?
+- `sale_item.unit_price` : quel prix a effectivement été enregistré pour cet article dans cette transaction ?
 
----
+Par exemple, une chemise vendue à **35 000 F** doit rester à **35 000 F** dans l'historique, même si son tarif passe ensuite à **37 000 F**. Le total historique se calcule à partir des lignes enregistrées : `quantity × unit_price`, et non en rejoignant le prix courant du catalogue.
 
-## 6.6 Justification des choix de modélisation
+Cette décision protège la traçabilité commerciale et évite qu'une simple mise à jour tarifaire modifie rétroactivement le chiffre d'affaires affiché pour une vente passée.
 
-La conception du modèle de données a été guidée par des considérations métier avant les considérations techniques.
+## 6.7 Intégrité et accès aux données
 
-L’une des décisions les plus importantes concerne la séparation entre Product et ProductPrice.
+La cohérence des données repose sur plusieurs niveaux complémentaires : les relations SQL, les types de colonnes et les contrôles du service métier. Une clé étrangère peut empêcher une référence vers un produit inexistant ; elle ne suffit pas, à elle seule, à empêcher une quantité négative ou à garantir qu'un seul tarif est actif.
 
-Plutôt que de stocker directement le prix dans la table produit, une entité dédiée a été créée afin de conserver l’historique des évolutions tarifaires.
+Le MVP utilise Spring Data JPA et Hibernate pour les opérations courantes de persistance. Les méthodes de repository dérivées permettent de transmettre les valeurs recherchées comme paramètres plutôt que de concaténer des saisies utilisateur dans une instruction SQL. Ce mécanisme réduit les risques d'injection dans ces accès, sans constituer une garantie générale pour toute requête native écrite manuellement.
 
-Cette approche permet de connaître les anciens prix, d’assurer la traçabilité des modifications et de préparer la mise en place future d’analyses statistiques plus avancées.
-
-Une autre décision importante concerne l’entité SaleItem.
-
-Le prix unitaire est conservé directement dans chaque ligne de vente afin de préserver l’historique réel des transactions. Ainsi, une modification ultérieure du prix d’un produit n’altère jamais les ventes déjà enregistrées.
-
-Enfin, le choix d’une base de données relationnelle a été retenu pour le MVP afin de bénéficier des garanties ACID, de l’intégrité référentielle et de la cohérence des données nécessaires à une application manipulant des transactions commerciales.
-
-Cette modélisation constitue une base structurée pour le MVP et ses évolutions. La comparaison entre les schémas initiaux et le MPD extrait de la base illustre le passage des besoins métier à une implémentation concrète.
-
-Dans la V2, la séparation des bases MySQL par service et l'introduction de MongoDB sont présentées au chapitre 14. Le présent chapitre reste volontairement centré sur la **modélisation du MVP monolithique**.
-
-## 6.7 La sécurité des données : parce que l'argent, ça compte
-
-PROJECT_POS est une application de gestion commerciale. Elle manipule des informations directement liées à l'activité économique d'un commerce : ventes, prix d'achat, prix de vente, quantités en stock et historique des transactions.
-
-Une erreur, une modification non autorisée ou une perte de données peut donc avoir des conséquences financières.
-
-Dès la conception du MVP, la sécurité de la base de données a été prise en compte à travers la séparation des accès, les mécanismes de persistance et les contraintes d'intégrité.
-
-### 6.7.1 Un utilisateur dédié, pas de root
-
-Une première règle consiste à ne pas utiliser le compte administrateur `root` pour les connexions courantes de l'application.
-
-Pour PROJECT_POS, un utilisateur MySQL spécifique, nommé `lamine`, a été créé afin de permettre à Spring Boot d'accéder à la base `project_pos`.
-
-La configuration `application.properties` utilise effectivement ce compte.
-
-Cette séparation permet de ne pas exposer les identifiants administrateur du serveur MySQL à l'application.
-
-Elle constitue une première application du **principe du moindre privilège**, même si les permissions accordées doivent encore être affinées.
-
-**Preuve technique :**
-
-La commande suivante a été exécutée dans MySQL Workbench :
+Un compte MySQL applicatif distinct de `root` a également été utilisé. Le contrôle de ses droits a été réalisé avec :
 
 ```sql
 SHOW GRANTS FOR 'lamine'@'localhost';
 ```
 
-Elle confirme l'existence du compte et l'attribution de privilèges sur le schéma `project_pos`.
+La configuration documentée lui attribue `ALL PRIVILEGES` sur le schéma `project_pos`. Ce choix fonctionne en développement, mais dépasse les permissions strictement nécessaires à une application exploitée en production. Les droits d'administration du schéma devraient alors être séparés des opérations ordinaires de lecture et d'écriture.
 
-### 6.7.2 Des permissions adaptées aux besoins
-
-Le principe du moindre privilège consiste à n'accorder à un utilisateur que les autorisations nécessaires à ses opérations.
-
-Dans la configuration actuelle du MVP, le compte `lamine` dispose de `ALL PRIVILEGES` sur la base `project_pos`, sans privilèges globaux accordés par les lignes vérifiées.
-
-Cette configuration est fonctionnelle pour le développement, mais elle reste plus permissive que nécessaire pour une exploitation en production.
-
-Une configuration plus restrictive pourrait être définie ainsi :
-
-```sql
-GRANT SELECT, INSERT, UPDATE, DELETE
-ON project_pos.*
-TO 'lamine'@'localhost';
-```
-
-Cet exemple illustre les permissions courantes nécessaires à l'exploitation de l'application. Il ne représente pas la configuration actuellement appliquée.
-
-Les opérations de création ou de modification des tables (`CREATE`, `ALTER`, `DROP`) devraient être réservées à un compte d'administration ou à un processus de migration.
-
-Cette évolution permettrait de limiter les conséquences d'une compromission du compte applicatif.
-
-### 6.7.3 Protéger les données contre les injections SQL
-
-Une injection SQL consiste à détourner une requête en introduisant des instructions malveillantes dans une donnée fournie à l'application.
-
-Pour limiter ce risque, PROJECT_POS utilise **Spring Data JPA et Hibernate** pour accéder à MySQL.
-
-Les opérations standards des repositories reposent sur des mécanismes de requêtes paramétrées, qui séparent les valeurs transmises par l'utilisateur de la structure des requêtes SQL.
-
-Par exemple, un repository Spring Data JPA peut définir une recherche de cette manière :
-
-```java
-List<Product> findByCategoryId(Integer categoryId);
-```
-
-Cet extrait illustre le principe d'une méthode de requête dérivée ; il ne constitue pas une reproduction vérifiée du code source du MVP.
-
-L'utilisation de JPA ne supprime pas automatiquement tous les risques. Les requêtes natives ou construites dynamiquement doivent également respecter la séparation entre les paramètres et les instructions SQL.
-
-La validation des entrées utilisateur complète cette protection, sans remplacer les requêtes paramétrées.
-
-### 6.7.4 Protéger les informations d'authentification
-
-L'application utilise un système de connexion par code PIN pour identifier les utilisateurs.
-
-Le modèle de données prévoit notamment les champs `pin_code`, `role` et `active`.
-
-Ces informations doivent faire l'objet d'une protection particulière, car elles participent au contrôle des accès à l'application.
-
-Le hachage des codes PIN avec un algorithme adapté, tel que BCrypt, constitue une mesure de sécurité à prévoir ou à vérifier avant une exploitation en production.
-
-### 6.7.5 Les index : trouver rapidement les informations
-
-La performance des accès aux données constitue également un enjeu pour un logiciel de caisse.
-
-À mesure que les ventes et les produits s'accumulent, certaines recherches peuvent devenir plus coûteuses.
-
-Les index permettent à MySQL d'accélérer l'accès aux enregistrements, notamment lors des recherches par identifiant, des jointures et des filtrages.
-
-Les colonnes suivantes constituent des candidates pertinentes :
-
-- `product.id_category`, pour retrouver les produits d'une catégorie ;
-- `sale.sale_date`, pour consulter les ventes d'une période ;
-- `product_price.id_product`, pour retrouver l'historique tarifaire d'un produit.
-
-Cette optimisation complète les choix de modélisation visant à assurer la cohérence et les performances de l'application.
-
-### 6.7.6 Bilan : sécurité, intégrité et performance
-
-La modélisation de PROJECT_POS repose sur plusieurs mécanismes complémentaires :
-
-- Un compte MySQL dédié, distinct de `root`.
-- Une séparation des accès au niveau du schéma de données.
-- L'utilisation de Spring Data JPA et Hibernate pour les opérations de persistance.
-- Des clés primaires et étrangères pour préserver la cohérence relationnelle.
-- La conservation du prix unitaire dans chaque ligne de vente pour garantir l'historique commercial.
-- Une réflexion sur les privilèges, la protection des codes PIN et l'optimisation des accès.
-
-Ces choix constituent une base technique pour la sécurisation du MVP.
-
-
+Ainsi, le modèle relationnel assure les liens entre les données, tandis que les règles de tarification et de vente sont appliquées dans les services. Les mécanismes d'authentification et de gestion des erreurs sont détaillés au chapitre 13.
