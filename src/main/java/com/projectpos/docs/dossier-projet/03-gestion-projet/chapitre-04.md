@@ -1,160 +1,44 @@
 # 4. Gestion de projet
 
-## 4.1 Organisation générale du projet
+## 4.1 Organisation et démarche
 
-Le projet POS Platform a été réalisé dans le cadre de la préparation du titre professionnel Concepteur Développeur d’Applications (CDA).
+PROJECT_POS a été développé dans le cadre de la préparation du titre professionnel Concepteur Développeur d'Applications (CDA), à partir d'un besoin métier identifié auprès de commerces utilisant encore des outils manuels pour suivre les ventes et les stocks.
 
-Dès le lancement du projet, une approche progressive a été privilégiée afin de limiter les risques techniques et de concentrer les efforts sur la validation du besoin métier.
+Le projet a suivi une démarche **itérative et incrémentale** : construire d'abord un MVP fonctionnel, séparer ensuite le frontend et le backend, puis expérimenter une architecture distribuée. Ce découpage a permis de conserver un socle métier exploitable tout en introduisant progressivement de nouvelles contraintes techniques.
 
-L’objectif n’était pas de construire immédiatement une architecture complexe mais de développer une première version fonctionnelle permettant de vérifier la pertinence de la solution proposée.
+Pour chaque fonctionnalité, le travail s'est organisé autour d'un cycle court : analyse du besoin, conception, implémentation, vérification et correction. Les endpoints REST ont notamment été vérifiés avec Postman au cours de leur développement. Cette organisation s'inspire des pratiques agiles, sans prétendre à l'application formelle d'un cadre Scrum.
 
-Cette démarche a conduit à la réalisation d’un MVP (Minimum Viable Product) regroupant les fonctionnalités essentielles nécessaires à l’exploitation quotidienne d’un commerce.
+## 4.2 Phases de réalisation
 
-## 4.2 Approche méthodologique
+| Phase | Objectif | Réalisations principales | Repère |
+|---|---|---|---|
+| **MVP — Monolithe** | Valider les processus métier essentiels | Authentification par PIN, catalogue, catégories, prix historisés, ventes, stock, tableau de bord ; Spring Boot, Thymeleaf et MySQL | Tag `v1.0-mvp` |
+| **V1 — API REST et React** | Séparer l'interface de la logique métier | Exposition d'API REST, utilisation de DTO, consommation des API par React, conservation des services métier Spring Boot | Branche `v1-preparation` et travaux V1 |
+| **V2 — Microservices** | Étudier les contraintes d'une architecture distribuée | Découpage des services métier, échanges REST/OpenFeign, découverte avec Consul, configuration centralisée, Docker Compose, persistance SQL et MongoDB | Réalisation et validation technique présentées aux chapitres 12 à 15 |
 
-Le projet a été mené selon une approche itérative et incrémentale.
+La progression du projet n'a pas consisté à reconstruire l'application à chaque étape. Les règles métier élaborées dans le MVP ont servi de base à l'API REST, puis au découpage en services. En revanche, la V2 a nécessité de revoir les communications et la gestion des données, puisqu'une transaction SQL locale ne couvre plus plusieurs services indépendants.
 
-Chaque fonctionnalité a été développée par étapes successives :
+## 4.3 Gestion du code source
 
-Analyse du besoin
+Le code est versionné avec **Git** et hébergé sur **GitHub**. La branche `main` et le tag `v1.0-mvp` permettent d'identifier le socle stabilisé du MVP. La branche `v1-preparation` a servi aux travaux préparatoires de l'API REST et de React.
 
-↓
+Les modifications ont été réalisées par étapes, avec des vérifications fonctionnelles ou techniques avant leur intégration. Le versionnement a permis de conserver des points de référence et de distinguer les évolutions successives de l'application.
 
-Conception
+## 4.4 Outils et livrables
 
-↓
+| Domaine | Outils et technologies mobilisés |
+|---|---|
+| Backend | Java 21, Spring Boot, Maven, Spring Data JPA |
+| Frontend | Thymeleaf, HTML, Sass, JavaScript, React |
+| Données | MySQL, MongoDB |
+| Architecture et exécution | Spring Cloud, OpenFeign, Consul, Docker Compose |
+| Vérification et intégration | Postman, JUnit, Mockito, GitHub Actions |
+| Conception et suivi | Git, GitHub, Markdown, diagrammes UML et MERISE |
 
-Développement
+Les livrables sont organisés par étapes : application MVP, API et interface V1, services et infrastructure V2, puis documentation technique et preuves de validation. Les chapitres suivants détaillent les choix de conception, les extraits de code et les résultats obtenus.
 
-↓
+## 4.5 Bilan de l'organisation
 
-Tests
+Le découpage en trois phases a permis de répondre d'abord au besoin métier, puis d'approfondir progressivement les compétences attendues en conception et développement d'applications. Il a également facilité l'identification des limites de chaque architecture, en particulier la cohérence des données dans la V2 distribuée.
 
-↓
-
-Validation
-
-Cette organisation a permis de livrer progressivement des fonctionnalités opérationnelles tout en conservant une vision globale du produit.
-
-L’approche retenue s’inspire des principes agiles, avec un développement orienté valeur métier et des validations régulières tout au long du projet.
-
-## 4.3 Découpage du projet
-
-Le projet a été structuré en plusieurs phases.
-
-### Phase 1 : Validation métier
-
-Objectif :
-
-Construire un MVP permettant de répondre aux besoins essentiels des utilisateurs.
-
-Fonctionnalités réalisées :
-
-- authentification ;
-- gestion des utilisateurs ;
-- gestion des catégories ;
-- gestion des produits ;
-- historique des prix ;
-- gestion des ventes ;
-- suivi du stock ;
-- tableau de bord.
-
-Cette phase correspond à la version stabilisée du projet identifiée par le tag Git :
-
-v1.0-mvp
-
-### Phase 2 : Préparation de la V1
-
-Objectif :
-
-Faire évoluer l’application vers une architecture Frontend / Backend séparée.
-
-Évolutions prévues :
-
-- API REST ;
-- React ;
-- amélioration de la sécurité ;
-- tests automatisés ;
-- conteneurisation.
-
-### Phase 3 : Vision V2
-
-Objectif :
-
-Préparer une architecture distribuée capable d’accompagner la croissance du produit.
-
-Évolutions envisagées :
-
-- microservices ;
-- Spring Cloud ;
-- Consul ;
-- OpenFeign ;
-- MongoDB ;
-- Docker Compose ;
-- supervision avancée.
-
-## 4.4 Gestion du code source
-
-Le code source du projet est géré avec Git et hébergé sur GitHub.
-
-Une stratégie simple de gestion des branches a été utilisée afin de sécuriser les développements.
-
-Branche principale :
-
-main
-
-Cette branche contient les versions stables du projet.
-
-Branche de préparation :
-
-v1-preparation
-
-Cette branche est utilisée pour préparer les évolutions futures du produit.
-
-La version stable du MVP a été identifiée par le tag :
-
-v1.0-mvp
-
-Cette approche permet de conserver un historique clair des évolutions du projet et de faciliter le retour à une version stable si nécessaire.
-
-## 4.5 Outils utilisés
-
-Les principaux outils utilisés durant le projet sont :
-
-### Développement
-
-- Java 21
-- Spring Boot
-- Maven
-- IntelliJ IDEA
-
-### Base de données
-
-- MySQL
-- Spring Data JPA / Hibernate
-
-### Frontend
-
-- Thymeleaf
-- HTML
-- SCSS
-- JavaScript ES Modules
-
-### Gestion de version
-
-- Git
-- GitHub
-
-### Documentation
-
-- Markdown
-- README
-- Diagrammes UML et MERISE
-
-## 4.6 Bilan de l'organisation du projet
-
-L’approche progressive retenue a permis de sécuriser le développement du produit tout en conservant une vision à long terme.
-
-La réalisation d’un MVP fonctionnel a facilité la validation des besoins métier avant d’envisager des évolutions architecturales plus ambitieuses.
-
-Cette stratégie permet aujourd’hui d’aborder sereinement la migration vers une architecture moderne reposant sur une API REST, un frontend React et, à terme, une architecture distribuée basée sur des microservices.
+Cette démarche distingue les fonctionnalités réalisées, les mécanismes effectivement vérifiés et les améliorations encore envisagées pour une exploitation commerciale à plus grande échelle.
