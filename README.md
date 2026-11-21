@@ -159,23 +159,18 @@ Principales entités :
 Suivi de l'activité commerciale en temps réel.
 Le tableau de bord centralise les principaux indicateurs de performance : chiffre d'affaires, ventes réalisées, produits vendus, panier moyen ainsi que les alertes de stock. Il permet au gérant de suivre l'activité commerciale en temps réel.
 
-![img.png](img.png)
 ## Gestion des ventes
 
 L'interface de vente a été pensée pour une utilisation rapide sur tablette ou ordinateur. Elle permet d'ajouter des produits au panier, de calculer automatiquement le montant total et d'enregistrer les transactions.
-![img_1.png](img_1.png)
 ## Catalogue produits
 
 Les produits sont organisés par catégories avec recherche, filtres et informations de stock. Cette vue facilite la gestion quotidienne du catalogue.
-![img_2.png](img_2.png)
 Fiche produit
 
 Chaque produit dispose d'une fiche détaillée comprenant son historique de prix, ses informations principales et les opérations de gestion associées.
-![img_3.png](img_3.png)
 ## Gestion des utilisateurs
 
 L'application permet de gérer les utilisateurs, leurs rôles et leurs accès afin de sécuriser l'utilisation du système.
-![img_4.png](img_4.png)
 ---
 
 ## Roadmap
